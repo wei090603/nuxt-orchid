@@ -1,14 +1,15 @@
 <template>
   <div class="app">
-    layout
+    <Header />
     <slot />
+    <Footer />
   </div>
 </template>
 
 <style>
 .app {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  background: red;
+  /* overflow: hidden; */
 }
 </style>
