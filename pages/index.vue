@@ -1,21 +1,10 @@
 <template>
   <div>
     <n-carousel show-arrow autoplay>
-      <img
+      <img v-for="(item, index) in advertiseList" :key="index"
         class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-      />
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-      />
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-      />
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
+        :src="imgUrl + item.picture"
+        :alt="item.title"
       />
       <template #arrow="{ prev, next }">
         <div class="custom-arrow">
@@ -44,6 +33,14 @@
 <script setup lang="ts">
 import { NIcon, NCarousel } from "naive-ui";
 import { ArrowBack, ArrowForward } from "@vicons/ionicons5";
+
+const env = useRuntimeConfig();
+const baseUrl: string = env.public.VITE_API_URL;
+const imgUrl: string = env.public.VITE_FILE_URL
+console.log(baseUrl, "baseUrl");
+const { data, error } = await useFetch(`${baseUrl}/advertise?position=home`);
+console.log(data, 'data111');
+const advertiseList = data._rawValue.data;
 </script>
 
 <style scoped>
