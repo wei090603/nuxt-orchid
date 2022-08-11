@@ -8,12 +8,21 @@
       <div class="content-box">
         <div class="content">
           <h3 class="title">注册登录</h3>
-          <div class="wx-way">wx</div>
-          <div class="email-way">email</div>
+          <div class="wx-way">
+            <div class="code"></div>
+            <div class="tip">wx微信扫码登录</div>
+          </div>
+          <div class="email-way">
+            <n-form-item label="这是个 FormItem" :rule="rule">
+              <n-input v-model:value="account" />
+            </n-form-item>
+          </div>
           <div class="select-way">
-            <span>微信登录</span>
+            <span class="active">微信登录</span>
+            <span class="two">免密码登录</span>
             <span>密码登录</span>
           </div>
+          <div class="service">继续即代表同意<span>《服务协议》</span>和<span>《隐私政策》</span></div>
         </div>
       </div>
     </div>
@@ -34,6 +43,19 @@ withDefaults(defineProps<IProps>(),{
 
 const emit = defineEmits(['update:isShowModal'])
 
+const state = reactive({
+  account: '',
+  password: ''
+})
+
+const rule ={
+  trigger: ['input', 'blur'],
+  validator () {
+    if (state.account.length !== 13) {
+      return new Error('test')
+    }
+  }
+}
 
 // const message = useMessage()
 
@@ -46,6 +68,8 @@ const onPositiveClick  = () => {
   // message.success('Submit')
   emit('update:isShowModal')
 }
+
+const { account } = toRefs(state)
 </script>
 
 <style scoped>
@@ -84,19 +108,62 @@ const onPositiveClick  = () => {
 }
 
 .content {
-  width: 370px;
+  width: 330px;
   height: 100%;
-  padding-top: 60px;
+  padding-top: 40px;
+}
+
+.code {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  background: #000;
+}
+.tip {
+  text-align: center;
+  color: #252219;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .content .title {
   text-align: center;
   color: #252219;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 500;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
 }
 
 .select-way {
+  display: flex;
+  margin-top: 25px;
+}
+.select-way span {
+  flex: 1;
+  padding: 0 10px;
+  color: #1abc9c;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+}
 
+.select-way span.active {
+  color: #252219;
+}
+
+.select-way .two {
+  border-left: 1px solid #dee2e6!important;
+  border-right: 1px solid #dee2e6!important;
+}
+
+.service {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6c757d!important;
+}
+.service span {
+  color: #1abc9c;
 }
 </style>
