@@ -6,8 +6,9 @@
         <span v-for="item in navgationList">{{ item.title }}</span>
       </menu>
     </div>
-    <div class="header-right">登录/注册</div>
+    <div class="header-right" @click="handleLoginRegisterBtn">登录/注册</div>
   </header>
+  <login-register v-model:isShowModal="isShowModal" />
 </template>
 
 <script lang="ts" setup>
@@ -16,6 +17,16 @@ const baseUrl: string = env.public.VITE_API_URL;
 console.log(baseUrl, "baseUrl");
 const { data, error } = await useFetch(`${baseUrl}/navgation`);
 const navgationList = data._rawValue.data;
+
+const state = reactive({
+  isShowModal: false
+})
+
+const handleLoginRegisterBtn = () => {
+  state.isShowModal = true
+}
+
+const { isShowModal } = toRefs(state)
 </script>
 
 <style scoped>

@@ -46,7 +46,9 @@ export default defineNuxtConfig({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
     ],
   },
-  css: [],
+  css: [
+    '@/styles/rest.css'
+  ],
   components: {
     global: true,
     dirs: ["~/components"],
