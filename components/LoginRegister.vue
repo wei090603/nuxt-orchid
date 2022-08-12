@@ -8,19 +8,28 @@
       <div class="content-box">
         <div class="content">
           <h3 class="title">注册登录</h3>
-          <div class="wx-way">
+          <div class="wx-way" v-if="loginWayActive === 0">
             <div class="code"></div>
             <div class="tip">wx微信扫码登录</div>
           </div>
-          <div class="email-way">
-            <n-form-item label="这是个 FormItem" :rule="rule">
-              <n-input v-model:value="account" />
-            </n-form-item>
+          <div class="email-way" v-if="loginWayActive === 1">
+            <n-space vertical>
+              <n-input v-model:value="account" placeholder="请输入邮箱" size="large" />
+              <n-input  v-model:value="account" placeholder="请输入验证码" size="large" />
+              <div class="tip">新手机号将自动注册</div>
+            </n-space>
+            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">登录</n-button>
+          </div>
+          <div class="account-way" v-if="loginWayActive === 2">
+            <n-space vertical>
+              <n-input v-model:value="account" placeholder="用户名/手机号/邮箱" size="large" />
+              <n-input type="password" v-model:value="password" placeholder="请输入密码" size="large" />
+              <div class="tip">忘记密码？</div>
+            </n-space>
+            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">登录</n-button>
           </div>
           <div class="select-way">
-            <span class="active">微信登录</span>
-            <span class="two">免密码登录</span>
-            <span>密码登录</span>
+            <span @click="handleLoginWay(index)" :class="{active: loginWayActive===index}" v-for="(item, index) in loginWayList" :key="index">{{item}}</span>
           </div>
           <div class="service">继续即代表同意<span>《服务协议》</span>和<span>《隐私政策》</span></div>
         </div>
@@ -31,7 +40,7 @@
 
 <script lang="ts" setup>
 // import { useMessage } from 'naive-ui'
-import { NModal } from 'naive-ui'
+import { NModal, NInput, NButton, NSpace } from 'naive-ui'
 
 type IProps = {
   isShowModal: boolean
@@ -43,19 +52,16 @@ withDefaults(defineProps<IProps>(),{
 
 const emit = defineEmits(['update:isShowModal'])
 
+const env = useRuntimeConfig();
+const baseUrl: string = env.public.VITE_API_URL;
+
 const state = reactive({
-  account: '',
-  password: ''
+  account: 'test',
+  password: '',
+  loginWayActive: 0,
+  loginWayList: ['微信登录', '免密码登录', '密码登录'],
 })
 
-const rule ={
-  trigger: ['input', 'blur'],
-  validator () {
-    if (state.account.length !== 13) {
-      return new Error('test')
-    }
-  }
-}
 
 // const message = useMessage()
 
@@ -69,13 +75,27 @@ const onPositiveClick  = () => {
   emit('update:isShowModal')
 }
 
-const { account } = toRefs(state)
+const handleLoginWay = (index: number) => {
+  state.loginWayActive = index
+}
+
+const handleLoginBtn = async () => {
+  const { data } = await useFetch(`${baseUrl}/auth/login`, {
+    method: 'post',
+    body: {account: state.account, password: state.password}
+  });
+
+  const token = data._rawValue.data;
+  console.log(token, 'userInfo')
+}
+
+const { account, password, loginWayList, loginWayActive } = toRefs(state)
 </script>
 
 <style scoped>
 .op-box {
   width: 500px;
-  height: 500px;
+  height: 450px;
   background: #fff;
 }
 .header {
@@ -104,7 +124,7 @@ const { account } = toRefs(state)
 .content-box {
   display: flex;
   justify-content: center;
-  height: 450px;
+  height: 400px;
 }
 
 .content {
@@ -114,12 +134,12 @@ const { account } = toRefs(state)
 }
 
 .code {
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto;
   background: #000;
 }
-.tip {
+.wx-way .tip {
   text-align: center;
   color: #252219;
   font-size: 16px;
@@ -135,6 +155,19 @@ const { account } = toRefs(state)
   margin-bottom: 20px;
 }
 
+.email-way .tip{
+  color: #6c757d;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.account-way .tip{
+  color: #1abc9c;
+  margin-bottom: 10px;
+  font-size: 15px;
+  text-align: right;
+}
+
 .select-way {
   display: flex;
   margin-top: 25px;
@@ -146,6 +179,10 @@ const { account } = toRefs(state)
   font-size: 16px;
   text-align: center;
   cursor: pointer;
+}
+.select-way span:nth-child(2) {
+  border-left: 1px solid #dee2e6!important;
+  border-right: 1px solid #dee2e6!important;
 }
 
 .select-way span.active {
