@@ -11,12 +11,10 @@
   <login-register v-model:isShowModal="isShowModal" />
 </template>
 
-<script lang="ts" setup>
-const env = useRuntimeConfig();
-const baseUrl: string = env.public.VITE_API_URL;
-console.log(baseUrl, "baseUrl");
-const { data, error } = await useFetch(`${baseUrl}/navgation`);
-const navgationList = data._rawValue.data;
+<script lang="ts" setup
+>import { navgation } from '~~/composables/home';
+const data= await navgation();
+const navgationList = data.value;
 
 const state = reactive({
   isShowModal: false

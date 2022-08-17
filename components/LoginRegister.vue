@@ -16,7 +16,7 @@
             <n-space vertical>
               <n-input v-model:value="account" placeholder="请输入邮箱" size="large" />
               <n-input  v-model:value="account" placeholder="请输入验证码" size="large" />
-              <div class="tip">新手机号将自动注册</div>
+              <div class="tip">新邮箱将自动注册</div>
             </n-space>
             <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">登录</n-button>
           </div>
@@ -41,13 +41,18 @@
 <script lang="ts" setup>
 // import { useMessage } from 'naive-ui'
 import { NModal, NInput, NButton, NSpace } from 'naive-ui'
+import { login, userInfo } from '~~/composables/home';
+import { setStorage } from '~~/utils/storage';
+import useUserStore from "~~/store/user";
+
+const userStore = useUserStore();
 
 type IProps = {
   isShowModal: boolean
 }
 
 withDefaults(defineProps<IProps>(),{
-  isShowModal: true
+  isShowModal: false
 })
 
 const emit = defineEmits(['update:isShowModal'])
@@ -56,7 +61,7 @@ const env = useRuntimeConfig();
 const baseUrl: string = env.public.VITE_API_URL;
 
 const state = reactive({
-  account: 'test',
+  account: '',
   password: '',
   loginWayActive: 0,
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
@@ -80,14 +85,12 @@ const handleLoginWay = (index: number) => {
 }
 
 const handleLoginBtn = async () => {
-  const { data } = await useFetch(`${baseUrl}/auth/login`, {
-    method: 'post',
-    body: {account: state.account, password: state.password}
-  });
-
-  const token = data._rawValue.data;
-  console.log(token, 'userInfo')
+  const data = await login({account: state.account, password: state.password})
+  setStorage('token', data.value.token)
+  userStore.getUserInfo()
 }
+
+
 
 const { account, password, loginWayList, loginWayActive } = toRefs(state)
 </script>

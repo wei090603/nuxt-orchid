@@ -33,14 +33,14 @@
 <script setup lang="ts">
 import { NIcon, NCarousel } from "naive-ui";
 import { ArrowBack, ArrowForward } from "@vicons/ionicons5";
+import { advertise } from "~~/composables/home";
 
 const env = useRuntimeConfig();
-const baseUrl: string = env.public.VITE_API_URL;
 const imgUrl: string = env.public.VITE_FILE_URL
-console.log(baseUrl, "baseUrl");
-const { data, error } = await useFetch(`${baseUrl}/advertise?position=home`);
-console.log(data, 'data111');
-const advertiseList = data._rawValue.data;
+
+const data = await advertise({ position: 'home'});
+const advertiseList = data.value;
+
 </script>
 
 <style scoped>

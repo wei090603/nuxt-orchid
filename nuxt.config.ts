@@ -55,8 +55,12 @@ export default defineNuxtConfig({
   },
   head: {
     link: [
-      { rel: "shortcut icon", href: "/favicon.svg" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      { rel: "shortcut icon", href: "favicon.svg" },
+      { rel: "apple-touch-icon", href: "favicon.svg" },
     ],
   },
+  plugins: [
+    { src: '@/plugins/userAuth', ssr: false}
+  ],
+  modules: ['@pinia/nuxt'],
 });
