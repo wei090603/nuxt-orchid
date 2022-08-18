@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="header-left">
-      <div class="logo">兰花交流</div>
+      <div class="logo"><img src="~/assets/images/logo.png" />兰花交流</div>
       <menu class="menu">
         <span v-for="item in navgationList">{{ item.title }}</span>
       </menu>

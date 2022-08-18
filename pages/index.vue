@@ -38,6 +38,11 @@ import { advertise } from "~~/composables/home";
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL
 
+useHead({
+  title: '兰花交流',
+  
+})
+
 const data = await advertise({ position: 'home'});
 const advertiseList = data.value;
 
