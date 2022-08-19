@@ -27,6 +27,15 @@
         </ul>
       </template>
     </n-carousel>
+
+    <div class="content">
+      <div class="hot-article">
+        <h3>热门文章</h3>
+      </div>
+      <div class="right-menu">
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -48,7 +57,7 @@ const advertiseList = data.value;
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 .wrapper {
   margin-top: 20px;
@@ -115,4 +124,16 @@ const advertiseList = data.value;
   width: 40px;
   background: #fff;
 }
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 1200px;
+  margin: 0 auto;
+  .right-menu {
+    width: 200px;
+    background: red;
+  }
+}
+
 </style>
