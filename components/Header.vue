@@ -6,7 +6,7 @@
         <span v-for="item in navgationList">{{ item.title }}</span>
       </menu>
     </div>
-    <div class="header-right" @click="handleLoginRegisterBtn">登录/注册</div>
+    <div class="header-right" @click="handleLoginRegisterBtn">{{user.userInfo.account}}登录/注册</div>
   </header>
   <login-register v-model:isShowModal="isShowModal" />
 </template>
@@ -15,6 +15,8 @@
 >import { navgation } from '~~/composables/home';
 const data= await navgation();
 const navgationList = data.value;
+
+const user = useUser()
 
 const state = reactive({
   isShowModal: false

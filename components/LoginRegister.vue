@@ -43,9 +43,6 @@
 import { NModal, NInput, NButton, NSpace } from 'naive-ui'
 import { login, userInfo } from '~~/composables/home';
 import { setStorage } from '~~/utils/storage';
-import useUserStore from "~~/store/user";
-
-const userStore = useUserStore();
 
 type IProps = {
   isShowModal: boolean
@@ -63,7 +60,7 @@ const baseUrl: string = env.public.VITE_API_URL;
 const state = reactive({
   account: '',
   password: '',
-  loginWayActive: 0,
+  loginWayActive: 0, // 登录方式
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
 })
 
@@ -87,7 +84,6 @@ const handleLoginWay = (index: number) => {
 const handleLoginBtn = async () => {
   const data = await login({account: state.account, password: state.password})
   setStorage('token', data.value.token)
-  userStore.getUserInfo()
 }
 
 

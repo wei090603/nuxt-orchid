@@ -14,7 +14,6 @@
     "@pinia/nuxt": "^0.4.0",
     "@vicons/ionicons5": "^0.12.0",
     "naive-ui": "^2.31.0",
-    "pinia": "^2.0.18",
     "vfonts": "^0.0.3"
   }
 }
