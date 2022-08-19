@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <n-carousel show-arrow autoplay>
       <img v-for="(item, index) in advertiseList" :key="index"
         class="carousel-img"
@@ -33,10 +33,15 @@
 <script setup lang="ts">
 import { NIcon, NCarousel } from "naive-ui";
 import { ArrowBack, ArrowForward } from "@vicons/ionicons5";
-import { advertise } from "~~/composables/home";
+import { advertise } from "~~/api/home";
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL
+
+useHead({
+  title: '兰花交流',
+  
+})
 
 const data = await advertise({ position: 'home'});
 const advertiseList = data.value;
@@ -44,6 +49,11 @@ const advertiseList = data.value;
 </script>
 
 <style scoped>
+
+.wrapper {
+  margin-top: 20px;
+}
+
 .carousel-img {
   width: 100%;
   height: 500px;

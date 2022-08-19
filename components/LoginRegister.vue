@@ -40,8 +40,8 @@
 
 <script lang="ts" setup>
 // import { useMessage } from 'naive-ui'
-import { NModal, NInput, NButton, NSpace } from 'naive-ui'
-import { login, userInfo } from '~~/composables/home';
+import { NModal, NInput, NButton, NSpace } from 'naive-ui';
+import { login, userInfo } from '~~/api/home';
 import { setStorage } from '~~/utils/storage';
 
 type IProps = {

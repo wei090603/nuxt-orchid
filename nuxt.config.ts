@@ -44,11 +44,11 @@ export default defineNuxtConfig({
   meta: {
     meta: [
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "keyword", conntent: "1111" },
+      { name: "description", content: "描述" },
     ],
   },
-  css: [
-    '@/styles/rest.css'
-  ],
+  css: ["@/styles/rest.css"],
   components: {
     global: true,
     dirs: ["~/components"],
@@ -59,5 +59,4 @@ export default defineNuxtConfig({
       { rel: "apple-touch-icon", href: "favicon.svg" },
     ],
   },
-  modules: ['@pinia/nuxt'],
 });

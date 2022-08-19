@@ -4,7 +4,7 @@ import { getStorage } from "~~/utils/storage";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const token = getStorage("token");
-  const user = useUser();
+  const userInfo = useUserInfo();
   //未登录
   if (!token) {
     if (process.client) {
