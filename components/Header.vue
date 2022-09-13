@@ -1,36 +1,44 @@
 <template>
   <header>
-    <div class="header-left">
-      <div class="logo"><img src="~/assets/images/logo.png" /></div>
-      <menu class="menu">
-        <span v-for="item in navgationList" :key="item.link">
-          <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
-        </span>
-      </menu>
-    </div>
-    <div class="header-right">
-      <div class="search">
-        <n-input-group>
-          <n-input type="text" placeholder="请搜索" :style="{ width: '70%' }" /><n-button type="primary" ghost>搜索</n-button>
-        </n-input-group>
+    <div class="container">
+      <div class="header-left">
+        <div class="logo"><img src="~/assets/images/logo.png" /></div>
+        <menu class="menu">
+          <span v-for="item in navgationList" :key="item.link">
+            <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
+          </span>
+        </menu>
       </div>
-      <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">登录/注册</div>
-      <div class="" v-else>{{userInfo.account}}</div>
+      <div class="header-right">
+        <div class="search">
+          <n-input-group>
+            <n-input
+              type="text"
+              placeholder="请搜索"
+              :style="{ width: '70%' }"
+            /><n-button type="primary" ghost>搜索</n-button>
+          </n-input-group>
+        </div>
+        <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">
+          登录/注册
+        </div>
+        <div class="" v-else>{{ userInfo.account }}</div>
+      </div>
     </div>
   </header>
   <login-register v-model:isShowModal="isShowModal" />
 </template>
 
 <script lang="ts" setup>
-import { NInput, NButton, NInputGroup } from 'naive-ui';
-import { navgation } from '~~/api/home';
-const navgationList = await navgation();
+import { NInput, NButton, NInputGroup } from 'naive-ui'
+import { navgation } from '~~/api/home'
+const navgationList = await navgation()
 
 const isLogin = useIsLogin()
 const userInfo = useUserInfo()
 
 const state = reactive({
-  isShowModal: false
+  isShowModal: false,
 })
 
 const handleLoginRegisterBtn = () => {
@@ -42,13 +50,22 @@ const { isShowModal } = toRefs(state)
 
 <style lang="less" scoped>
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 60px;
   width: 100%;
   border-bottom: 1px solid #f1f1f1;
-  padding: 0px 50px;
+  background: #fff;
+  z-index: 9;
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1250px;
+    height: 100%;
+    margin: 0 auto;
+  }
   .header-left {
     display: flex;
     align-items: center;
@@ -63,13 +80,13 @@ header {
     .login-btn {
       height: 34px;
       line-height: 34px;
-      background: rgba(30,255,130,.05);
+      background: rgba(30, 255, 130, 0.05);
       border: 1px solid #1abc9c;
       border-radius: 4px;
       color: #1abc9c;
       font-size: 14px;
       outline: none;
-      transition: background-color .3s, color .3s;
+      transition: background-color 0.3s, color 0.3s;
       cursor: pointer;
       padding: 0 14px;
     }
@@ -87,8 +104,8 @@ header {
 
 .menu span {
   margin: 0 1rem;
-  a{
-    color:#515767;
+  a {
+    color: #515767;
     font-size: 14px;
     &.active {
       color: #1abc9c;

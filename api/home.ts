@@ -7,7 +7,7 @@ export const getTags = (params?: { size?: number, page?: number }) => {
 }
 
 
-export const login = (body?: { account: string, password: string }) => {
+export const login = (body: { account: string, password: string }) => {
   return http.post('/auth/login', body)
 }
 
@@ -19,5 +19,6 @@ export const advertise = (params: { position: string }) => {
 }
 
 export const navgation = () => http.get('/navgation')
+
 
 
