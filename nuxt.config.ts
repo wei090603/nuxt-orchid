@@ -48,7 +48,7 @@ export default defineNuxtConfig({
       { name: 'description', content: '描述' },
     ],
   },
-  css: ['@/styles/rest.css'],
+  css: ['@/styles/rest.css', '@/assets/font/iconfont.css'],
   components: {
     global: true,
     dirs: ['~/components'],

@@ -2,7 +2,7 @@
   <header>
     <div class="container">
       <div class="header-left">
-        <div class="logo"><img src="~/assets/images/logo.png" /></div>
+        <NuxtLink to="/" class="logo"></NuxtLink>
         <menu class="menu">
           <span v-for="item in navgationList" :key="item.link">
             <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
@@ -16,8 +16,12 @@
               type="text"
               placeholder="请搜索"
               :style="{ width: '70%' }"
-            /><n-button type="primary" ghost>搜索</n-button>
+            />
+            <n-button type="primary" ghost>搜索</n-button>
           </n-input-group>
+        </div>
+        <div class="release-btn">
+          <n-button type="primary" @click="handleToAdd">发表文章</n-button>
         </div>
         <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">
           登录/注册
@@ -30,22 +34,29 @@
 </template>
 
 <script lang="ts" setup>
-import { NInput, NButton, NInputGroup } from 'naive-ui'
-import { navgation } from '~~/api/home'
-const navgationList = await navgation()
+import { NInput, NButton, NInputGroup } from 'naive-ui';
+import { navgation } from '~~/api/home';
 
-const isLogin = useIsLogin()
-const userInfo = useUserInfo()
+const navgationList = await navgation();
+
+const isLogin = useIsLogin();
+const userInfo = useUserInfo();
 
 const state = reactive({
   isShowModal: false,
-})
+});
 
 const handleLoginRegisterBtn = () => {
-  state.isShowModal = true
-}
+  state.isShowModal = true;
+};
 
-const { isShowModal } = toRefs(state)
+const handleToAdd = () => {
+  navigateTo({
+    path: '/article/add',
+  });
+};
+
+const { isShowModal } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
@@ -75,6 +86,8 @@ header {
     align-items: center;
     .search {
       width: 300px;
+    }
+    .release-btn {
       margin-right: 10px;
     }
     .login-btn {
@@ -94,12 +107,11 @@ header {
 }
 
 .logo {
-  width: 60px;
-  height: 100%;
-  img {
-    display: block;
-    width: 100%;
-  }
+  display: block;
+  width: 50px;
+  height: 60px;
+  background: url(@/assets/images/logo.png) no-repeat center;
+  background-size: 100%;
 }
 
 .menu span {

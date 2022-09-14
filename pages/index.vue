@@ -38,59 +38,60 @@
           <!-- 列表 -->
           <ul>
             <li v-for="item in articleList" :key="item.id">
-              <!-- 文章缩略图 -->
-              <div class="left">
-                <a href="./article.html">
-                  <img
-                    src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e7d37251bc04bf48caafe62eae2991e~tplv-k3u1fbpfcp-zoom-crop-mark:1304:1304:1304:734.awebp?"
-                    alt=""
-                  />
-                </a>
+              <NuxtLink
+                class="item"
+                target="_blank"
+                :to="{ path: `/article/${item.id}` }"
+              >
+                <!-- 文章缩略图 -->
+                <div class="left">
+                  <img :src="imgUrl + item.coverPicture" alt="" />
+                  <span class="tags_blue">{{ item.category.title }}</span>
+                </div>
 
-                <span class="tags_blue">{{ item.category.title }}</span>
-              </div>
-
-              <!-- 文章内容 -->
-              <div class="right">
-                <!-- 文章标题 -->
-                <h2>
-                  <a href="./article.html">
+                <!-- 文章内容 -->
+                <div class="right">
+                  <!-- 文章标题 -->
+                  <h2>
                     <!-- <span class="tags_purple">精品</span>
                     <span class="tags_red">置顶</span>
                     <span class="tags_yellow">推荐</span> -->
                     {{ item.title }}
-                  </a>
-                </h2>
+                  </h2>
 
-                <!-- 文章摘要 -->
-                <p class="list-length">
-                  最近大厂裁员不断，好多人思考要不要搞个副业抵御风险。那你知道程序员的副业怎么做吗？来和我一探究竟吧～
-                </p>
+                  <!-- 文章摘要 -->
+                  <p class="summary">
+                    {{ item.summary }}
+                  </p>
 
-                <!-- 文章信息 -->
-                <div class="meta">
-                  <!-- 作者头像 -->
-                  <a href="javascript:;">
-                    <img :src="imgUrl + item.author.avatar" alt="" />
-                    <span>{{ item.author.nickName }}</span>
-                  </a>
+                  <!-- 文章信息 -->
+                  <div class="meta">
+                    <!-- 作者头像 -->
+                    <div class="author">
+                      <img :src="imgUrl + item.author.avatar" alt="" />
+                      <span>{{ item.author.nickName }}</span>
+                    </div>
 
-                  <div class="interact">
-                    <!-- 文章点赞数 -->
-                    <a href="javascript:;"
-                      ><i class="iconfont icon-dianzan"></i>{{ item.likes }}</a
-                    >
-                    <!-- 文章浏览量 -->
-                    <a href="javascript:;"
-                      ><i class="iconfont icon-huo"></i>{{ item.comments }}</a
-                    >
-                    <!-- 文章发布时间 -->
-                    <a href="javascript:;"
-                      ><i class="iconfont icon-shijian"></i>{{ item.createdAt }}
-                    </a>
+                    <div class="interact">
+                      <!-- 文章点赞数 -->
+                      <a href="javascript:;">
+                        <i class="iconfont icon-dianzan"></i>
+                        {{ item.likes }}
+                      </a>
+                      <!-- 文章浏览量 -->
+                      <a href="javascript:;">
+                        <i class="iconfont icon-huo"></i>
+                        {{ item.comments }}
+                      </a>
+                      <!-- 文章发布时间 -->
+                      <a href="javascript:;">
+                        <i class="iconfont icon-shijian"></i>
+                        {{ item.createdAt }}
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -136,7 +137,8 @@
               <!-- 标题 -->
               <div class="title">
                 <h3>
-                  <i class="iconfont icon-suijishushengcheng"></i> 随机文章
+                  <i class="iconfont icon-suijishushengcheng"></i>
+                  随机文章
                 </h3>
                 <!-- 小圆点 -->
                 <div class="dots">
@@ -158,38 +160,38 @@
 
                   <li>
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;"
-                      >字节跳动自研高性能微服务框架 Kitex 的演进之旅</a
-                    >
+                    <a href="javascript:;">
+                      字节跳动自研高性能微服务框架 Kitex 的演进之旅
+                    </a>
                   </li>
 
                   <li>
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;"
-                      >两年前端，广州求职，要价
-                      14k，依我说，小伙子可以多要点，涉及组件建设、工程化以及丰富的项目经验</a
-                    >
+                    <a href="javascript:;">
+                      两年前端，广州求职，要价
+                      14k，依我说，小伙子可以多要点，涉及组件建设、工程化以及丰富的项目经验
+                    </a>
                   </li>
 
                   <li>
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;"
-                      >解放双手！推荐一款阿里开源的低代码工具，YYDS！</a
-                    >
+                    <a href="javascript:;">
+                      解放双手！推荐一款阿里开源的低代码工具，YYDS！
+                    </a>
                   </li>
 
                   <li>
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;"
-                      >Web3.0来了，花呗借呗前端团队开源的Web图形引擎会成为元宇宙的技术支撑吗？</a
-                    >
+                    <a href="javascript:;">
+                      Web3.0来了，花呗借呗前端团队开源的Web图形引擎会成为元宇宙的技术支撑吗？
+                    </a>
                   </li>
 
                   <li>
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;"
-                      >超越 Nginx！号称下一代 Web 服务器，用起来够优雅！</a
-                    >
+                    <a href="javascript:;">
+                      超越 Nginx！号称下一代 Web 服务器，用起来够优雅！
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -199,7 +201,10 @@
             <div class="containerA">
               <!-- 标题 -->
               <div class="title">
-                <h3><i class="iconfont icon-tuya_huabanfuben"></i> 标签栏</h3>
+                <h3>
+                  <i class="iconfont icon-tuya_huabanfuben"></i>
+                  标签栏
+                </h3>
                 <!-- 小圆点 -->
                 <div class="dots">
                   <ol>
@@ -236,41 +241,49 @@
 </template>
 
 <script setup lang="ts">
-import { NIcon, NCarousel } from 'naive-ui'
-import { ArrowBack, ArrowForward } from '@vicons/ionicons5'
-import { advertise } from '~~/api/home'
-import { getArticle } from '~~/api/article'
+import { NIcon, NCarousel } from 'naive-ui';
+import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
+import { advertise } from '~~/api/home';
+import { getArticle } from '~~/api/article';
 
-const env = useRuntimeConfig()
-const imgUrl: string = env.public.VITE_FILE_URL
+const env = useRuntimeConfig();
+const imgUrl: string = env.public.VITE_FILE_URL;
 
 useHead({
   title: '兰花交流',
-})
+});
 
 const state = reactive({
   page: 1,
   toatal: 0,
   articleList: [],
-})
+  advertiseList: [],
+});
 
-const data = await advertise({ position: 'home' })
-const advertiseList = data.value
+const getAdvertise = async () => {
+  const data = await advertise({ position: 'home' });
+  state.advertiseList = data.value;
+};
 
 const getArticleList = async () => {
-  const data = await getArticle({ page: state.page, size: 10 })
-  state.articleList = data.value.list
-  state.toatal = data.value.total
-  console.log(data.value.list, 'list')
-
-  console.log(state.articleList, 'articleList')
-}
+  try {
+    const data = await getArticle({ page: state.page, size: 10 });
+    console.log(data, 'data');
+    state.articleList = data.value.list;
+    state.toatal = data.value.total;
+    console.log(data.value.list, 'list');
+    console.log(state.articleList, 'articleList');
+  } catch (error) {
+    console.log(error, 'error');
+  }
+};
 
 onMounted(() => {
-  getArticleList()
-})
+  // getAdvertise();
+  getArticleList();
+});
 
-const { articleList } = toRefs(state)
+const { articleList, advertiseList } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
@@ -343,7 +356,7 @@ const { articleList } = toRefs(state)
 /* 主体内容 */
 .main {
   padding-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   .container {
     display: flex;
     justify-content: space-between;
@@ -352,34 +365,44 @@ const { articleList } = toRefs(state)
     .list {
       overflow: hidden;
       width: 1250px;
-      padding: 0 20px;
-      background-color: var(--Yuexing-bg);
+      background-color: #fff;
       border-radius: 3px;
-      box-shadow: 0 1px 3px rgb(26 26 26 / 20%);
+      box-shadow: 0 1px 3px rgba(26 26 26 / 20%);
       transition: all 0.3s;
       ul li {
         position: relative;
-        display: flex;
-        height: 190px;
-        padding: 20px 0;
-        background-color: var(--Yuexing-bg);
-        border-bottom: 1px solid var(--Yuexing-hr);
+        width: 100%;
+        height: 160px;
+        padding: 0 15px;
+        background-color: #fff;
         transition: all 0.3s;
         &::after {
           content: '';
           position: absolute;
-          left: -20px;
+          left: 0px;
           width: 5px;
           height: 0px;
           border-radius: 3px;
-          background-color: #539dfd;
+          background-color: var(--Yuexing-color);
           transition: all 0.3s;
+          top: 20px;
         }
         &:hover::after {
           height: 30px;
         }
         &:hover .left span {
           right: 10px;
+        }
+        &:hover {
+          background-color: #fafafa;
+        }
+        .item {
+          position: relative;
+          display: flex;
+          width: 100%;
+          height: 100%;
+          padding: 15px 0;
+          border-bottom: 1px solid #ededed;
         }
         .left {
           overflow: hidden;
@@ -420,15 +443,12 @@ const { articleList } = toRefs(state)
             object-fit: fill;
           }
           .tags_blue {
-            background-color: #539dfd;
+            background-color: var(--Yuexing-color);
             padding: 4px;
             color: #fff;
             border-radius: 3px;
             font-size: 14px;
             font-family: '黑体';
-          }
-          &:hover::before {
-            animation: imgMove 0.4s linear forwards;
           }
         }
         .right {
@@ -439,37 +459,17 @@ const { articleList } = toRefs(state)
           margin-left: 20px;
           height: 100%;
           h2 {
-            width: 640px;
+            width: 100%;
             font-size: 20px;
-            /* 单行文本溢出省略号显示 */
-            /* 文字不允许换行（单行文本） */
             white-space: nowrap;
-            /* 溢出部分隐藏 */
             overflow: hidden;
-            /* 文本溢出后，使用 ... 代替 */
             text-overflow: ellipsis;
             margin-right: 3px;
-            a {
-              display: inline-block;
-              width: 100%;
-              font-size: 18px;
-              color: var(--Yuexing-a);
-              transition: all 0.3s;
-
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              font-weight: bold;
-              &:hover {
-                color: var(--Yuexing-color);
-              }
-            }
           }
           p {
             color: var(--Yuexing-a-vice) !important;
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.3s;
-
             /* 多行文本溢出省略号显示 */
             display: -webkit-box !important;
             overflow: hidden;
@@ -481,18 +481,14 @@ const { articleList } = toRefs(state)
           .meta {
             display: flex;
             justify-content: space-between;
-            a {
-              color: var(--Yuexing-a-vice);
+            .author {
               font-size: 14px;
-              transition: all 0.3s;
-              &:hover {
-                color: var(--Yuexing-color);
-              }
               img {
                 width: 24px;
                 height: 24px;
                 border-radius: 50%;
                 vertical-align: bottom;
+                margin-right: 5px;
               }
             }
             .interact {
@@ -769,7 +765,7 @@ const { articleList } = toRefs(state)
   display: inline-block;
   padding: 10px;
   margin: 3px 4px 3px 0;
-  border: 1px solid var(--Yuexing-tags-bk);
+  border: 1px solid #f3f4f9;
   border-radius: 3px;
   color: var(--Yuexing-a-vice);
   font-size: 13px;

@@ -15,35 +15,14 @@
 
 :root {
   /* 白天 */
-  --Yuexing-color: #539dfd;
+  --Yuexing-color: #1abc9c;
   --Yuexing-body-bg: #f9f9f9;
   --Yuexing-bg: #fff;
   --Yuexing-a: #333;
   --Yuexing-a-vice: #5a5a5a;
-  --Yuexing-hr: #ededed;
-  --Yuexing-footer: #fff;
-  --Yuexing-ripple: rgba(249, 249, 249, 0.7);
-  --Yuexing-tags-a: #539dfd;
-  --Yuexing-nav-tags: #666;
   --Yuexing-banner-linear: 249, 249, 249;
   --Yuexing-pagination-a: #ebf1ff;
-  --Yuexing-hover-color: #539dfd;
-  --Yuexing-article: #333;
-  --Yuexing-select: #f2f3fc;
-  --Yuexing-input-bk: #dedede;
-  --Yuexing-input-bj: #fff;
-  --Yuexing-tags-bk: #f3f4f9;
-  --Yuexing-text-bk: #ddd;
-  --Yuexing-dashed: #eee;
-  --Yuexing-mNav: #fff;
-  --Yuexing-mNav-two: #f9f9f9;
-  --Yuexing-mNav-two-active1: #539dfd;
-  --Yuexing-mNav-two-active2: #fff;
-  --Yuexing-links-item-bg: #fff;
-  --Yuexing-title: #333;
-  --Yuexing-tool: #f4f9ff;
-  --Yuexing-commentTextarea:#f2f7ff;
-  --Yuexing-commentList: #fbfcfc;
+  --Yuexing-hover-color: #1abc9c;
 
   /* 昼夜 */
   /* 
@@ -90,7 +69,6 @@ body {
   color: #333;
   background-color: var(--Yuexing-body-bg);
   transition: all 0.3s;
-  background: #eee;
 }
 
 #app {
@@ -169,11 +147,6 @@ a {
   color: #333;
 }
 
-a:hover {
-  color: var(--Yuexing-hover-color) !important;
-}
-
-
 /* 设置图片默认对齐方式 */
 img {
   vertical-align: middle;
@@ -211,7 +184,7 @@ h6 {
   margin: 0;
 }
 
-::selection {
+/* ::selection {
   background-color: var(--Yuexing-select);
   color: var(--Yuexing-hover-color);
-}
+} */

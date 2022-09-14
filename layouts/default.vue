@@ -2,7 +2,7 @@
   <div class="app">
     <Header />
     <slot />
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -10,6 +10,5 @@
 .app {
   width: 100%;
   height: inherit;
-  /* overflow: hidden; */
 }
 </style>

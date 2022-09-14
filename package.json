@@ -4,10 +4,19 @@
     "build": "nuxt build",
     "dev": "nuxt dev --mode dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix",
+    "format": "prettier --write ./**/*.{vue,ts,tsx,js,jsx,css,less,scss,json,md}"
   },
   "devDependencies": {
-    "nuxt": "3.0.0-rc.4"
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.4.0",
+    "nuxt": "3.0.0-rc.4",
+    "prettier": "^2.7.1"
   },
   "dependencies": {
     "@css-render/vue3-ssr": "^0.15.10",
