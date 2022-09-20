@@ -1,9 +1,9 @@
 <template>
-  <n-modal v-model:show="isShowModal">
+  <n-modal v-model:show="isShowModal" :mask-closable="false">
     <div class="op-box">
       <div class="header">
         <span class="title">注册登录</span>
-        <span class="close"></span>
+        <span class="close" @click="handleCloseClick">X</span>
       </div>
       <div class="content-box">
         <div class="content">
@@ -14,35 +14,17 @@
           </div>
           <div class="email-way" v-if="loginWayActive === 1">
             <n-space vertical>
-              <n-input
-                v-model:value="account"
-                placeholder="请输入邮箱"
-                size="large"
-              />
-              <n-input
-                v-model:value="account"
-                placeholder="请输入验证码"
-                size="large"
-              />
+              <n-input v-model:value="account" placeholder="请输入邮箱" size="large" />
+              <n-input v-model:value="account" placeholder="请输入验证码" size="large" />
               <div class="tip">新邮箱将自动注册</div>
             </n-space>
-            <n-button
-              color="#1abc9c"
-              type="info"
-              block
-              size="large"
-              @click="handleLoginBtn"
-            >
+            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">
               登录
             </n-button>
           </div>
           <div class="account-way" v-if="loginWayActive === 2">
             <n-space vertical>
-              <n-input
-                v-model:value="account"
-                placeholder="用户名/手机号/邮箱"
-                size="large"
-              />
+              <n-input v-model:value="account" placeholder="用户名/手机号/邮箱" size="large" />
               <n-input
                 type="password"
                 v-model:value="password"
@@ -51,13 +33,7 @@
               />
               <div class="tip">忘记密码？</div>
             </n-space>
-            <n-button
-              color="#1abc9c"
-              type="info"
-              block
-              size="large"
-              @click="handleLoginBtn"
-            >
+            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">
               登录
             </n-button>
           </div>
@@ -102,22 +78,16 @@ const env = useRuntimeConfig();
 const baseUrl: string = env.public.VITE_API_URL;
 
 const state = reactive({
-  account: '',
-  password: '',
+  account: '17802093443',
+  password: '123456',
   loginWayActive: 0, // 登录方式
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
 });
 
 // const message = useMessage()
 
-const onNegativeClick = () => {
-  // message.success('Cancel')
-  emit('update:isShowModal');
-};
-
-const onPositiveClick = () => {
-  // message.success('Submit')
-  emit('update:isShowModal');
+const handleCloseClick = () => {
+  emit('update:isShowModal', false);
 };
 
 const handleLoginWay = (index: number) => {
@@ -125,13 +95,12 @@ const handleLoginWay = (index: number) => {
 };
 
 const handleLoginBtn = async () => {
-  const data = await login({
+  const { data } = await login({
     account: state.account,
     password: state.password,
   });
   const token = useCookie('token');
-  token.value =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudCI6InRlc3QiLCJpYXQiOjE2NjM1NzUwMTl9.UZ1GIhdYRJne4AZycashQTNUJLKKd91-eNqDAZtQZ6Q';
+  token.value = data.value.token;
 };
 
 const { account, password, loginWayList, loginWayActive } = toRefs(state);
@@ -163,7 +132,12 @@ const { account, password, loginWayList, loginWayActive } = toRefs(state);
   height: 20px;
   cursor: pointer;
   box-sizing: border-box;
-  background: red;
+  color: #6c757d;
+  font-size: 18px;
+  text-align: center;
+  line-height: 20px;
+  font-weight: 500;
+  font-family: revert;
 }
 
 .content-box {

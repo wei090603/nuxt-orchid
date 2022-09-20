@@ -159,7 +159,6 @@
 import { NIcon, NCarousel } from 'naive-ui';
 import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
 import { getAdvertise, getHotTag } from '@/api/home';
-import { getArticle } from '@/api/article';
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;

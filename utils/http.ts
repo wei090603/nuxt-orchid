@@ -57,28 +57,35 @@ async function fetch(key: string, url: string, options: any) {
       });
   }
 
-  const { data, pending, error, refresh }: AsyncData<any> = await useFetch(
-    url,
-    {
-      ...option,
-      // 相当于响应拦截器
-      transform: (res: { data: object }) => {
-        return res.data;
-      },
-    }
-  );
+  const { data, pending, error, refresh }: AsyncData<any> = await useFetch(url, {
+    ...option,
+    // 相当于响应拦截器
+    transform: (res: { data: object; code: number; message: string }) => {
+      console.log(res, 'res');
+      if (res?.code !== 200) {
+        const { message } = createDiscreteApi(['message']);
+        message.error(res.message || '服务端错误');
+        return;
+      }
+      return res.data;
+    },
+  });
 
   // 客户端错误处理
   if (process.client && error.value) {
-    const msg = error.value?.data?.data;
+    const msg = error.value?.data?.message;
     if (!options.lazy) {
+      if (error.value?.data.code === 401) {
+        // $router.replace('/login');
+        return;
+      }
       const { message } = createDiscreteApi(['message']);
       message.error(msg || '服务端错误');
       return;
     }
   }
 
-  return { data, pending, refresh };
+  return { data, pending, refresh, error };
 }
 
 class Http {

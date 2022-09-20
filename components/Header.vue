@@ -12,20 +12,14 @@
       <div class="header-right">
         <div class="search">
           <n-input-group>
-            <n-input
-              type="text"
-              placeholder="请搜索"
-              :style="{ width: '70%' }"
-            />
+            <n-input type="text" placeholder="请搜索" :style="{ width: '70%' }" />
             <n-button type="primary" ghost>搜索</n-button>
           </n-input-group>
         </div>
         <div class="release-btn">
           <n-button type="primary" @click="handleToAdd">发表文章</n-button>
         </div>
-        <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">
-          登录/注册
-        </div>
+        <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">登录/注册</div>
         <div class="" v-else>{{ userInfo.account }}</div>
       </div>
     </div>
@@ -43,6 +37,10 @@ const userInfo = useUserInfo();
 const state = reactive({
   isShowModal: false,
 });
+
+const token = useCookie('token');
+token.value =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudCI6InRlc3QiLCJpYXQiOjE2NjM2NjY2NDJ9.S-xC8tZijjBCEoaOCmotSBPlAzRYaspdd5KoEBjTamc';
 
 const { data } = await getNavgation();
 

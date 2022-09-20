@@ -3,11 +3,7 @@
     <!-- 列表 -->
     <ul>
       <li v-for="item in articleData.list" :key="item.id">
-        <NuxtLink
-          class="item"
-          target="_blank"
-          :to="{ path: `/article/${item.id}` }"
-        >
+        <NuxtLink class="item" target="_blank" :to="{ path: `/article/${item.id}` }">
           <!-- 文章缩略图 -->
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
@@ -39,12 +35,12 @@
 
               <div class="interact">
                 <span @click.stop="handleLikeClick(item)">
-                  <i class="iconfont icon-dianzan"></i>
+                  <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
                   {{ item.likeCount }}
                 </span>
                 <span>
-                  <i class="iconfont icon-huo"></i>
-                  {{ item.commentCount }}
+                  <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
+                  {{ item.reading }}
                 </span>
                 <!-- 文章发布时间 -->
                 <span>
@@ -153,11 +149,7 @@ const handleLikeClick = async (item) => {
         top: -100px;
         left: -70px;
         height: 200%;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        );
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
         transform: rotate(40deg);
         cursor: pointer;
       }
@@ -231,6 +223,13 @@ const handleLikeClick = async (item) => {
             margin: 0 14px;
             i {
               margin-right: 3px;
+              color: #ededed;
+              &.icon-dianzan.active {
+                color: var(--Yuexing-color);
+              }
+              &.icon-huo.active {
+                color: red;
+              }
             }
           }
         }

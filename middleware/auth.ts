@@ -1,29 +1,30 @@
 //用户登录操作权限控制中间件
-import { createDiscreteApi } from "naive-ui";
-import { getStorage } from "~~/utils/storage";
+import { createDiscreteApi } from 'naive-ui';
+import { useUserInfo } from '~~/composables/useAuth';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const token = getStorage("token");
-  const userInfo = useUserInfo();
+  const token = useCookie('token');
+  const user = useUserInfo();
+  const route = useRoute();
+
   //未登录
-  if (!token) {
+  if (!token.value) {
     if (process.client) {
-      const { message } = createDiscreteApi(["message"]);
-      message.error("请先登录");
+      const { message } = createDiscreteApi(['message']);
+      message.error('请先登录');
     }
-    console.log('login')
-    // return navigateTo("/login?from=" + route.fullPath);
+    return navigateTo('/login?from=' + route.fullPath);
   }
 
-  //未绑定手机号
+  // //未绑定手机号
   // const phone = user.value?.phone;
-  // if (!phone && route.name != "bindphone") {
-  //   const { message } = createDiscreteApi(["message"]);
+  // if (!phone && route.name != 'bindphone') {
+  //   const { message } = createDiscreteApi(['message']);
   //   //处于客户端
   //   if (process.client) {
-  //     message.error("请先绑定手机号");
+  //     message.error('请先绑定手机号');
   //   }
 
-  //   return navigateTo("/bindphone?from=" + route.fullPath);
+  //   return navigateTo('/bindphone?from=' + route.fullPath);
   // }
 });

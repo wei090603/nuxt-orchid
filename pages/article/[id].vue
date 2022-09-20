@@ -5,24 +5,16 @@
         <div class="content-top">
           <h2 class="title">{{ data.title }}</h2>
           <div class="author-block">
-            <nuxt-link
-              target="_blank"
-              :to="{ path: `/user/${data.author.id}` }"
-            >
+            <nuxt-link target="_blank" :to="{ path: `/user/${data.author.id}` }">
               <img class="avatar" :src="imgUrl + data.author.avatar" alt="" />
             </nuxt-link>
             <div class="author-info-box">
               <div class="nickname">
-                <nuxt-link
-                  target="_blank"
-                  :to="{ path: `/user/${data.author.id}` }"
-                >
+                <nuxt-link target="_blank" :to="{ path: `/user/${data.author.id}` }">
                   {{ data.author.nickName }}
                 </nuxt-link>
               </div>
-              <div class="date">
-                {{ data.createdAt }}· 阅读 {{ data.reading }}
-              </div>
+              <div class="date">{{ data.createdAt }}· 阅读 {{ data.reading }}</div>
             </div>
             <n-button type="tertiary">关注</n-button>
           </div>
@@ -35,13 +27,7 @@
             <div class="tag">
               <span>标签:</span>
               <n-space>
-                <n-button
-                  strong
-                  secondary
-                  type="primary"
-                  v-for="item in data.tag"
-                  :key="item.id"
-                >
+                <n-button strong secondary type="primary" v-for="item in data.tag" :key="item.id">
                   {{ item.name }}
                 </n-button>
               </n-space>
@@ -76,7 +62,7 @@
 <script lang="ts" setup>
 import { NButton, NSpace } from 'naive-ui';
 import { articleLike, articleLikeDel, getArticleDetail } from '@/api/article';
-import { getUserInfo } from '@/api/user';
+import { getOhterUserInfo } from '@/api/user';
 
 const route = useRoute();
 
@@ -90,7 +76,7 @@ const { data } = await getArticleDetail(id);
 
 useHead({ title: data.value.title || '' });
 
-const result = await getUserInfo(data.value.author.id);
+const result = await getOhterUserInfo(data.value.author.id);
 userInfo.value = result.data.value;
 
 // 文章点赞
@@ -101,12 +87,10 @@ const handleLikeClick = async () => {
       await articleLikeDel(id);
       data.value.isLike = false;
       data.value.likeCount -= 1;
-    } catch (_error) {
-      // data.articleList[index].likeCount = 0
-    }
+    } catch (_error) {}
   } else {
     try {
-      await articleLike({ articleId: Number(id) });
+      await articleLike({ articleId: '' });
       data.value.isLike = true;
       data.value.likeCount += 1;
     } catch (_error) {}
