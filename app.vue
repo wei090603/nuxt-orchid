@@ -1,11 +1,13 @@
 <template>
   <NConfigProvider inline-theme-disabled>
-    <NuxtLayout>
-      <NuxtPage></NuxtPage>
-    </NuxtLayout>
+    <n-message-provider>
+      <NuxtLayout>
+        <NuxtPage></NuxtPage>
+      </NuxtLayout>
+    </n-message-provider>
   </NConfigProvider>
 </template>
 
-<script setup>
-import { NConfigProvider } from 'naive-ui';
+<script setup lang="ts">
+import { NConfigProvider, NMessageProvider } from 'naive-ui';
 </script>

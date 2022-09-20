@@ -1,24 +1,14 @@
-import http from '~~/utils/http'
-/**
- * 获取标签
- */
-export const getTags = (params?: { size?: number, page?: number }) => {
-  return http.get('/app/v1/tags', params)
-}
+import http from '~~/utils/http';
 
+// 获取广告位
+export const getAdvertise = (params: { position: string }) =>
+  http.get('advertise', `/advertise`, {
+    lazy: true,
+    params,
+  });
 
-export const login = (body: { account: string, password: string }) => {
-  return http.post('/auth/login', body)
-}
-
-export const userInfo = () => http.get('/auth')
-
-
-export const advertise = (params: { position: string }) => {
-  return http.get('/advertise', params)
-}
-
-export const navgation = () => http.get('/navgation')
-
-
-
+// 获取右侧标签
+export const getHotTag = () =>
+  http.get('tag', `/tag/hot`, {
+    lazy: true,
+  });

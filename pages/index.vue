@@ -34,67 +34,7 @@
     <div class="main">
       <div class="container">
         <!-- 文章列表 -->
-        <div class="list home_list">
-          <!-- 列表 -->
-          <ul>
-            <li v-for="item in articleList" :key="item.id">
-              <NuxtLink
-                class="item"
-                target="_blank"
-                :to="{ path: `/article/${item.id}` }"
-              >
-                <!-- 文章缩略图 -->
-                <div class="left">
-                  <img :src="imgUrl + item.coverPicture" alt="" />
-                  <span class="tags_blue">{{ item.category.title }}</span>
-                </div>
-
-                <!-- 文章内容 -->
-                <div class="right">
-                  <!-- 文章标题 -->
-                  <h2>
-                    <!-- <span class="tags_purple">精品</span>
-                    <span class="tags_red">置顶</span>
-                    <span class="tags_yellow">推荐</span> -->
-                    {{ item.title }}
-                  </h2>
-
-                  <!-- 文章摘要 -->
-                  <p class="summary">
-                    {{ item.summary }}
-                  </p>
-
-                  <!-- 文章信息 -->
-                  <div class="meta">
-                    <!-- 作者头像 -->
-                    <div class="author">
-                      <img :src="imgUrl + item.author.avatar" alt="" />
-                      <span>{{ item.author.nickName }}</span>
-                    </div>
-
-                    <div class="interact">
-                      <!-- 文章点赞数 -->
-                      <a href="javascript:;">
-                        <i class="iconfont icon-dianzan"></i>
-                        {{ item.likes }}
-                      </a>
-                      <!-- 文章浏览量 -->
-                      <a href="javascript:;">
-                        <i class="iconfont icon-huo"></i>
-                        {{ item.comments }}
-                      </a>
-                      <!-- 文章发布时间 -->
-                      <a href="javascript:;">
-                        <i class="iconfont icon-shijian"></i>
-                        {{ item.createdAt }}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
+        <ArticleList />
 
         <!-- 功能模块 -->
         <div class="function">
@@ -132,22 +72,13 @@
 
             <div class="sign">签到</div>
 
-            <!-- 随机文章 -->
             <div class="containerA">
               <!-- 标题 -->
               <div class="title">
                 <h3>
                   <i class="iconfont icon-suijishushengcheng"></i>
-                  随机文章
+                  热门文章
                 </h3>
-                <!-- 小圆点 -->
-                <div class="dots">
-                  <ol>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ol>
-                </div>
               </div>
 
               <!-- 随机文章 -->
@@ -203,34 +134,18 @@
               <div class="title">
                 <h3>
                   <i class="iconfont icon-tuya_huabanfuben"></i>
-                  标签栏
+                  热门标签
                 </h3>
-                <!-- 小圆点 -->
-                <div class="dots">
-                  <ol>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                  </ol>
-                </div>
               </div>
-
               <!-- 标签 -->
               <div class="containerA_Tags">
-                <a href="javascript:;">HTML</a>
-                <a href="javascript:;">CSS</a>
-                <a href="javascript:;">Vue</a>
-                <a href="javascript:;">jQuery</a>
-                <a href="javascript:;">Vue</a>
-                <a href="javascript:;">React</a>
-                <a href="javascript:;">Angular</a>
-                <a href="javascript:;">less</a>
-                <a href="javascript:;">Node.js</a>
-                <a href="javascript:;">Bootstrap</a>
-                <a href="javascript:;">Element</a>
-                <a href="javascript:;">scss</a>
-                <a href="javascript:;">uni-app</a>
-                <a href="javascript:;">Foundation</a>
+                <nuxt-link
+                  :to="{ path: `/article`, query: { tag: item.id } }"
+                  v-for="item in tagHotList"
+                  :key="item.id"
+                >
+                  {{ item.name }}
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -243,8 +158,8 @@
 <script setup lang="ts">
 import { NIcon, NCarousel } from 'naive-ui';
 import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
-import { advertise } from '~~/api/home';
-import { getArticle } from '~~/api/article';
+import { getAdvertise, getHotTag } from '@/api/home';
+import { getArticle } from '@/api/article';
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
@@ -256,34 +171,19 @@ useHead({
 const state = reactive({
   page: 1,
   toatal: 0,
-  articleList: [],
   advertiseList: [],
+  tagHotList: [],
 });
 
-const getAdvertise = async () => {
-  const data = await advertise({ position: 'home' });
-  state.advertiseList = data.value;
-};
-
-const getArticleList = async () => {
-  try {
-    const data = await getArticle({ page: state.page, size: 10 });
-    console.log(data, 'data');
-    state.articleList = data.value.list;
-    state.toatal = data.value.total;
-    console.log(data.value.list, 'list');
-    console.log(state.articleList, 'articleList');
-  } catch (error) {
-    console.log(error, 'error');
-  }
-};
-
-onMounted(() => {
-  // getAdvertise();
-  getArticleList();
+await getAdvertise({ position: 'home' }).then(({ data }) => {
+  state.advertiseList = data;
 });
 
-const { articleList, advertiseList } = toRefs(state);
+await getHotTag().then(({ data }) => {
+  state.tagHotList = data;
+});
+
+const { advertiseList, tagHotList } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
@@ -362,161 +262,6 @@ const { articleList, advertiseList } = toRefs(state);
     justify-content: space-between;
     width: 1250px;
     margin: 0 auto;
-    .list {
-      overflow: hidden;
-      width: 1250px;
-      background-color: #fff;
-      border-radius: 3px;
-      box-shadow: 0 1px 3px rgba(26 26 26 / 20%);
-      transition: all 0.3s;
-      ul li {
-        position: relative;
-        width: 100%;
-        height: 160px;
-        padding: 0 15px;
-        background-color: #fff;
-        transition: all 0.3s;
-        &::after {
-          content: '';
-          position: absolute;
-          left: 0px;
-          width: 5px;
-          height: 0px;
-          border-radius: 3px;
-          background-color: var(--Yuexing-color);
-          transition: all 0.3s;
-          top: 20px;
-        }
-        &:hover::after {
-          height: 30px;
-        }
-        &:hover .left span {
-          right: 10px;
-        }
-        &:hover {
-          background-color: #fafafa;
-        }
-        .item {
-          position: relative;
-          display: flex;
-          width: 100%;
-          height: 100%;
-          padding: 15px 0;
-          border-bottom: 1px solid #ededed;
-        }
-        .left {
-          overflow: hidden;
-          position: relative;
-          width: 250px;
-          height: 100%;
-          border-radius: 3px;
-          cursor: pointer;
-          &::before {
-            content: '';
-            position: absolute;
-            width: 60px;
-            top: -100px;
-            left: -70px;
-            height: 200%;
-            background: linear-gradient(
-              to right,
-              rgba(255, 255, 255, 0.2),
-              transparent
-            );
-            transform: rotate(40deg);
-            cursor: pointer;
-          }
-          span {
-            position: absolute;
-            top: 10px;
-            right: -70px;
-            transition: all 0.4s;
-            font-size: 12px;
-          }
-          a {
-            display: block;
-            height: 100%;
-          }
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: fill;
-          }
-          .tags_blue {
-            background-color: var(--Yuexing-color);
-            padding: 4px;
-            color: #fff;
-            border-radius: 3px;
-            font-size: 14px;
-            font-family: '黑体';
-          }
-        }
-        .right {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          margin-left: 20px;
-          height: 100%;
-          h2 {
-            width: 100%;
-            font-size: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 3px;
-          }
-          p {
-            color: var(--Yuexing-a-vice) !important;
-            font-size: 14px;
-            transition: all 0.3s;
-            /* 多行文本溢出省略号显示 */
-            display: -webkit-box !important;
-            overflow: hidden;
-            word-break: break-all;
-            text-overflow: ellipsis;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 3;
-          }
-          .meta {
-            display: flex;
-            justify-content: space-between;
-            .author {
-              font-size: 14px;
-              img {
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                vertical-align: bottom;
-                margin-right: 5px;
-              }
-            }
-            .interact {
-              a {
-                margin: 0 14px;
-                i {
-                  margin-right: 3px;
-                }
-              }
-            }
-          }
-        }
-        &:last-child {
-          border: 0;
-        }
-      }
-    }
-  }
-}
-
-/* 鼠标经过图片动画 */
-@keyframes imgMove {
-  0% {
-    left: -70px;
-  }
-
-  100% {
-    left: 340px;
   }
 }
 
@@ -719,10 +464,6 @@ const { articleList, advertiseList } = toRefs(state);
 
 .function .containerA .title i {
   font-size: 20px;
-}
-
-.function .containerA .title .dots ol {
-  margin: 0;
 }
 
 /* 随机文章列表 */

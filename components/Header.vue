@@ -4,7 +4,7 @@
       <div class="header-left">
         <NuxtLink to="/" class="logo"></NuxtLink>
         <menu class="menu">
-          <span v-for="item in navgationList" :key="item.link">
+          <span v-for="item in data" :key="item.link" v-if="data.length">
             <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
           </span>
         </menu>
@@ -35,9 +35,7 @@
 
 <script lang="ts" setup>
 import { NInput, NButton, NInputGroup } from 'naive-ui';
-import { navgation } from '~~/api/home';
-
-const navgationList = await navgation();
+import { getNavgation } from '@/api/common';
 
 const isLogin = useIsLogin();
 const userInfo = useUserInfo();
@@ -45,6 +43,8 @@ const userInfo = useUserInfo();
 const state = reactive({
   isShowModal: false,
 });
+
+const { data } = await getNavgation();
 
 const handleLoginRegisterBtn = () => {
   state.isShowModal = true;

@@ -1,22 +1,27 @@
 <template>
-  <div>
-    <nav></nav>
-    文章中心
-
-    <NuxtLink to="/user/3">跳转</NuxtLink>
+  <div class="wrapper">
+    <span v-for="item in tagHotList" :key="item.id" v-if="tagHotList.length">
+      {{ item.id }}
+    </span>
   </div>
 </template>
 
+<script lang="ts" setup>
+import { getHotTag } from '@/api/home';
 
-<style scoped>
-.view-nav {
-    position: fixed;
-    top: 5rem;
-    width: 100%;
-    height: 3.833rem;
-    z-index: 100;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
-    transition: all .2s;
-    transform: translateZ(0);
+const tagHotList = ref([]);
+
+const getHotTagList = async () => {
+  const { data } = await getHotTag();
+  tagHotList.value = data;
+  console.log(tagHotList.value, 'tagHotList.value');
+};
+
+await getHotTagList();
+</script>
+
+<style lang="less" scoped>
+.wrapper {
+  padding: 150px;
 }
 </style>

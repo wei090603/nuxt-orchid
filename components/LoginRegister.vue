@@ -4,7 +4,7 @@
       <div class="header">
         <span class="title">注册登录</span>
         <span class="close"></span>
-      </div>      
+      </div>
       <div class="content-box">
         <div class="content">
           <h3 class="title">注册登录</h3>
@@ -14,24 +14,69 @@
           </div>
           <div class="email-way" v-if="loginWayActive === 1">
             <n-space vertical>
-              <n-input v-model:value="account" placeholder="请输入邮箱" size="large" />
-              <n-input  v-model:value="account" placeholder="请输入验证码" size="large" />
+              <n-input
+                v-model:value="account"
+                placeholder="请输入邮箱"
+                size="large"
+              />
+              <n-input
+                v-model:value="account"
+                placeholder="请输入验证码"
+                size="large"
+              />
               <div class="tip">新邮箱将自动注册</div>
             </n-space>
-            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">登录</n-button>
+            <n-button
+              color="#1abc9c"
+              type="info"
+              block
+              size="large"
+              @click="handleLoginBtn"
+            >
+              登录
+            </n-button>
           </div>
           <div class="account-way" v-if="loginWayActive === 2">
             <n-space vertical>
-              <n-input v-model:value="account" placeholder="用户名/手机号/邮箱" size="large" />
-              <n-input type="password" v-model:value="password" placeholder="请输入密码" size="large" />
+              <n-input
+                v-model:value="account"
+                placeholder="用户名/手机号/邮箱"
+                size="large"
+              />
+              <n-input
+                type="password"
+                v-model:value="password"
+                placeholder="请输入密码"
+                size="large"
+              />
               <div class="tip">忘记密码？</div>
             </n-space>
-            <n-button color="#1abc9c" type="info" block size="large" @click="handleLoginBtn">登录</n-button>
+            <n-button
+              color="#1abc9c"
+              type="info"
+              block
+              size="large"
+              @click="handleLoginBtn"
+            >
+              登录
+            </n-button>
           </div>
           <div class="select-way">
-            <span @click="handleLoginWay(index)" :class="{active: loginWayActive===index}" v-for="(item, index) in loginWayList" :key="index">{{item}}</span>
+            <span
+              @click="handleLoginWay(index)"
+              :class="{ active: loginWayActive === index }"
+              v-for="(item, index) in loginWayList"
+              :key="index"
+            >
+              {{ item }}
+            </span>
           </div>
-          <div class="service">继续即代表同意<span>《服务协议》</span>和<span>《隐私政策》</span></div>
+          <div class="service">
+            继续即代表同意
+            <span>《服务协议》</span>
+            和
+            <span>《隐私政策》</span>
+          </div>
         </div>
       </div>
     </div>
@@ -41,18 +86,17 @@
 <script lang="ts" setup>
 // import { useMessage } from 'naive-ui'
 import { NModal, NInput, NButton, NSpace } from 'naive-ui';
-import { login, userInfo } from '~~/api/home';
-import { setStorage } from '~~/utils/storage';
+import { login } from '@/api/user';
 
 type IProps = {
-  isShowModal: boolean
-}
+  isShowModal: boolean;
+};
 
-withDefaults(defineProps<IProps>(),{
-  isShowModal: false
-})
+withDefaults(defineProps<IProps>(), {
+  isShowModal: false,
+});
 
-const emit = defineEmits(['update:isShowModal'])
+const emit = defineEmits(['update:isShowModal']);
 
 const env = useRuntimeConfig();
 const baseUrl: string = env.public.VITE_API_URL;
@@ -62,33 +106,35 @@ const state = reactive({
   password: '',
   loginWayActive: 0, // 登录方式
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
-})
-
+});
 
 // const message = useMessage()
 
 const onNegativeClick = () => {
   // message.success('Cancel')
-  emit('update:isShowModal')
-}
+  emit('update:isShowModal');
+};
 
-const onPositiveClick  = () => {
+const onPositiveClick = () => {
   // message.success('Submit')
-  emit('update:isShowModal')
-}
+  emit('update:isShowModal');
+};
 
 const handleLoginWay = (index: number) => {
-  state.loginWayActive = index
-}
+  state.loginWayActive = index;
+};
 
 const handleLoginBtn = async () => {
-  const data = await login({account: state.account, password: state.password})
-  setStorage('token', data.value.token)
-}
+  const data = await login({
+    account: state.account,
+    password: state.password,
+  });
+  const token = useCookie('token');
+  token.value =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudCI6InRlc3QiLCJpYXQiOjE2NjM1NzUwMTl9.UZ1GIhdYRJne4AZycashQTNUJLKKd91-eNqDAZtQZ6Q';
+};
 
-
-
-const { account, password, loginWayList, loginWayActive } = toRefs(state)
+const { account, password, loginWayList, loginWayActive } = toRefs(state);
 </script>
 
 <style scoped>
@@ -154,13 +200,13 @@ const { account, password, loginWayList, loginWayActive } = toRefs(state)
   margin-bottom: 20px;
 }
 
-.email-way .tip{
+.email-way .tip {
   color: #6c757d;
   margin-bottom: 10px;
   font-size: 15px;
 }
 
-.account-way .tip{
+.account-way .tip {
   color: #1abc9c;
   margin-bottom: 10px;
   font-size: 15px;
@@ -180,8 +226,8 @@ const { account, password, loginWayList, loginWayActive } = toRefs(state)
   cursor: pointer;
 }
 .select-way span:nth-child(2) {
-  border-left: 1px solid #dee2e6!important;
-  border-right: 1px solid #dee2e6!important;
+  border-left: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .select-way span.active {
@@ -189,15 +235,15 @@ const { account, password, loginWayList, loginWayActive } = toRefs(state)
 }
 
 .select-way .two {
-  border-left: 1px solid #dee2e6!important;
-  border-right: 1px solid #dee2e6!important;
+  border-left: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .service {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  color: #6c757d!important;
+  color: #6c757d !important;
 }
 .service span {
   color: #1abc9c;

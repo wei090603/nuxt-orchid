@@ -1,60 +1,101 @@
-// 指定后端返回的基本数据类型
-export interface ResponseConfig {
-  code: number;
-  status: number;
-  data: any;
-  msg: string;
-}
-export interface ValueConfig {
-  value: any;
-  [x: string]: any;
-}
+import { Ref } from 'nuxt/dist/app/compat/capi';
 
-const fetch = (url: string, options?: any): Promise<any> => {
-  const { $config, $router } = useNuxtApp();
-  const reqUrl = $config.public.VITE_API_URL + url;
+import { c, createDiscreteApi } from 'naive-ui';
 
-  return new Promise((resolve, reject) => {
-    useFetch(reqUrl, { ...options })
-      .then(({ data, error }: any) => {
-        if (error.value) {
-          reject(error.value);
-          return;
-        }
-        const value = data.value;
-        const result = value && value.data;
-        console.log(result, 'result');
-        if (!result || value.code !== 200) {
-          // 这里处理错误回调
-          resolve(ref<any>(result));
-          $router.replace('/reject/' + value.status);
-        } else {
-          // resolve(ref<any>(options.method === 'get' ? result : value.data))
-          resolve(ref<any>(result));
-        }
-      })
-      .catch((err: any) => {
-        console.log(err);
-        reject(err);
-      });
-  });
+type AsyncData<DataT> = {
+  data: Ref<DataT>;
+  pending: Ref<boolean>;
+  refresh: () => Promise<void>;
+  execute?: () => Promise<void>;
+  error: Ref<Error | boolean>;
 };
 
+//http请求封装
+async function fetch(key: string, url: string, options: any) {
+  const { $config, $router } = useNuxtApp();
+
+  // 用户登录，默认传token
+  const token = useCookie('token');
+
+  const option = {
+    baseURL: $config.public.VITE_API_URL,
+    // server: true,
+    initialCache: false,
+    lazy: false,
+    key: key,
+    $: false,
+    headers: {
+      Authorization: `Bearer ${token.value} || ''`,
+    },
+    ...options,
+  };
+
+  // console.log(option, 'option' + url);
+
+  if (options.$) {
+    const data = ref(null);
+    const error = ref(null);
+    return await $fetch(url, option)
+      .then((res: { data: object }) => {
+        data.value = res.data;
+        return {
+          data,
+          error,
+        };
+      })
+      .catch((err) => {
+        const msg = err?.data?.data;
+        if (process.client) {
+          const { message } = createDiscreteApi(['message']);
+          message.error(msg || '服务端错误');
+        }
+        error.value = msg;
+        return {
+          data,
+          error,
+        };
+      });
+  }
+
+  const { data, pending, error, refresh }: AsyncData<any> = await useFetch(
+    url,
+    {
+      ...option,
+      // 相当于响应拦截器
+      transform: (res: { data: object }) => {
+        return res.data;
+      },
+    }
+  );
+
+  // 客户端错误处理
+  if (process.client && error.value) {
+    const msg = error.value?.data?.data;
+    if (!options.lazy) {
+      const { message } = createDiscreteApi(['message']);
+      message.error(msg || '服务端错误');
+      return;
+    }
+  }
+
+  return { data, pending, refresh };
+}
+
 class Http {
-  get(url: string, params?: any): Promise<any> {
-    return fetch(url, { method: 'get', params });
+  get(key: string, url: string, params?: object): Promise<any> {
+    return fetch(key, url, { method: 'get', ...params });
   }
 
-  post(url: string, body?: any): Promise<any> {
-    return fetch(url, { method: 'post', body });
+  post(key: string, url: string, body?: any): Promise<any> {
+    return fetch(key, url, { method: 'post', body });
   }
 
-  put(url: string, body?: any): Promise<any> {
-    return fetch(url, { method: 'put', body });
+  put(key: string, url: string, body?: any): Promise<any> {
+    return fetch(key, url, { method: 'put', body });
   }
 
-  delete(url: string, body?: any): Promise<any> {
-    return fetch(url, { method: 'delete', body });
+  delete(key: string, url: string): Promise<any> {
+    return fetch(key, url, { method: 'delete' });
   }
 }
 
