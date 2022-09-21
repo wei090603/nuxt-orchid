@@ -19,6 +19,25 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
+  app: {
+    head: {
+      titleTemplate: '%s - Nuxt3 | 大赵同学',
+      title: 'nuxt3-ssr | 大赵同学',
+      charset: 'utf-8',
+      htmlAttrs: {
+        lang: 'zh-CN',
+      },
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'keyword', conntent: '1111' },
+        { name: 'description', content: '描述' },
+      ],
+      link: [
+        { rel: 'shortcut icon', href: 'favicon.ico' },
+        { rel: 'apple-touch-icon', href: 'favicon.ico' },
+      ],
+    },
+  },
   build: {
     extractCSS: true,
     transpile:
@@ -36,23 +55,10 @@ export default defineNuxtConfig({
     },
   },
   publicRuntimeConfig: envData, // 把env放入这个里面，通过useRuntimeConfig获取
-  meta: {
-    meta: [
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'keyword', conntent: '1111' },
-      { name: 'description', content: '描述' },
-    ],
-  },
   css: ['@/styles/rest.css', '@/assets/font/iconfont.css'],
   components: {
     global: true,
     dirs: ['~/components'],
-  },
-  head: {
-    link: [
-      { rel: 'shortcut icon', href: 'favicon.ico' },
-      { rel: 'apple-touch-icon', href: 'favicon.ico' },
-    ],
   },
   server: {
     port: 8082,
