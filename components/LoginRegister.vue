@@ -60,22 +60,11 @@
 </template>
 
 <script lang="ts" setup>
-// import { useMessage } from 'naive-ui'
 import { NModal, NInput, NButton, NSpace } from 'naive-ui';
 import { login } from '@/api/user';
+import { useRefreshUserInfo } from '@/composables/useAuth';
 
-type IProps = {
-  isShowModal: boolean;
-};
-
-withDefaults(defineProps<IProps>(), {
-  isShowModal: false,
-});
-
-const emit = defineEmits(['update:isShowModal']);
-
-const env = useRuntimeConfig();
-const baseUrl: string = env.public.VITE_API_URL;
+const isShowModal = useIsShowModal();
 
 const state = reactive({
   account: '17802093443',
@@ -84,10 +73,8 @@ const state = reactive({
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
 });
 
-// const message = useMessage()
-
 const handleCloseClick = () => {
-  emit('update:isShowModal', false);
+  isShowModal.value = false;
 };
 
 const handleLoginWay = (index: number) => {
@@ -101,6 +88,8 @@ const handleLoginBtn = async () => {
   });
   const token = useCookie('token');
   token.value = data.value.token;
+  await useRefreshUserInfo();
+  handleCloseClick();
 };
 
 const { account, password, loginWayList, loginWayActive } = toRefs(state);

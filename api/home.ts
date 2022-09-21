@@ -12,3 +12,9 @@ export const getHotTag = () =>
   http.get('tag', `/tag/hot`, {
     lazy: true,
   });
+
+// 获取热门文章
+export const getArticleHot = () =>
+  http.get('tag', `article/hot`, {
+    lazy: true,
+  });

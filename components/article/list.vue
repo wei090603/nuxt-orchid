@@ -3,7 +3,7 @@
     <!-- 列表 -->
     <ul>
       <li v-for="item in articleData.list" :key="item.id">
-        <NuxtLink class="item" target="_blank" :to="{ path: `/article/${item.id}` }">
+        <div class="item" @click="handleToDetial(item.id)">
           <!-- 文章缩略图 -->
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
@@ -28,13 +28,13 @@
             <!-- 文章信息 -->
             <div class="meta">
               <!-- 作者头像 -->
-              <div class="author">
+              <nuxt-link class="author" :to="{ path: `/user/${item.author.id}` }" target="_blank">
                 <img :src="imgUrl + item.author.avatar" alt="" />
                 <span>{{ item.author.nickName }}</span>
-              </div>
+              </nuxt-link>
 
               <div class="interact">
-                <span @click.stop="handleLikeClick(item)">
+                <span @click.stop="handleLikeClick(item)" class="dianzan">
                   <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
                   {{ item.likeCount }}
                 </span>
@@ -50,9 +50,10 @@
               </div>
             </div>
           </div>
-        </NuxtLink>
+        </div>
       </li>
     </ul>
+    <div class="not-data" v-if="articleData.finished">{{ articleData.finishedText }}</div>
   </div>
 </template>
 
@@ -66,30 +67,66 @@ const articleData = reactive({
   list: [],
   total: 0,
   page: 1,
+  loading: false,
+  finished: false,
+  finishedText: '没有更多了',
 });
-const { data } = await getArticle({ page: articleData.page, size: 10 });
 
-articleData.total = data.value.total;
-articleData.list = data.value.list;
+const getArticleList = async () => {
+  articleData.loading = true;
+  if (!articleData.finished) {
+    const { data } = await getArticle({ page: articleData.page, size: 10 });
+    articleData.total = data.value.total;
+    articleData.list = articleData.list.concat(data.value.list);
+    articleData.page += 1;
+    articleData.loading = false;
+    if (articleData.list.length >= articleData.total) {
+      articleData.finished = true;
+    }
+  }
+};
+
+await getArticleList();
+
+const handleToDetial = (id: string) => {
+  window.open(`/article/${id}`, '_blank');
+};
 
 // 文章点赞
-const handleLikeClick = async (item) => {
+const handleLikeClick = async (item: { isLike: number; likeCount: number; id: string }) => {
   if (item.isLike) {
     try {
-      await articleLikeDel(data.value.id);
-      data.value.handed = false;
-      data.value.likeCount -= 1;
-    } catch (_error) {
-      // data.articleList[index].likeCount = 0
-    }
+      await articleLikeDel(item.id);
+      item.isLike = 0;
+      item.likeCount -= 1;
+    } catch (_error) {}
   } else {
     try {
-      await articleLike({ articleId: data.value.id });
-      data.value.like = true;
-      data.value.likeCount += 1;
+      await articleLike({ articleId: item.id });
+      item.isLike = 1;
+      item.likeCount += 1;
     } catch (_error) {}
   }
 };
+
+onMounted(() => {
+  window.onscroll = async function () {
+    //变量scrollTop是滚动条滚动时，距离顶部的距离
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    //变量windowHeight是可视区的高度
+    const windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    //变量scrollHeight是滚动条的总高度
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    //滚动条到底部的条件
+    if (scrollTop + windowHeight == scrollHeight) {
+      //写后台加载数据的函数
+      console.log(
+        '距顶部' + scrollTop + '可视区高度' + windowHeight + '滚动条总高度' + scrollHeight
+      );
+      await getArticleList();
+    }
+  };
+});
 </script>
 
 <style lang="less" scoped>
@@ -134,6 +171,7 @@ const handleLikeClick = async (item) => {
       height: 100%;
       padding: 15px 0;
       border-bottom: 1px solid #ededed;
+      cursor: pointer;
     }
     .left {
       overflow: hidden;
@@ -224,11 +262,21 @@ const handleLikeClick = async (item) => {
             i {
               margin-right: 3px;
               color: #ededed;
-              &.icon-dianzan.active {
-                color: var(--Yuexing-color);
+              &.icon-dianzan {
+                cursor: pointer;
+                &.active {
+                  color: var(--Yuexing-color);
+                }
               }
               &.icon-huo.active {
                 color: red;
+              }
+            }
+            &.dianzan {
+              &:hover {
+                .icon-dianzan {
+                  color: var(--Yuexing-color);
+                }
               }
             }
           }
@@ -238,6 +286,13 @@ const handleLikeClick = async (item) => {
     &:last-child {
       border: 0;
     }
+  }
+  .not-data {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    color: #ccc;
+    font-size: 16px;
   }
 }
 

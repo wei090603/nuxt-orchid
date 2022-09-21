@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       const { message } = createDiscreteApi(['message']);
       message.error('请先登录');
     }
-    return navigateTo('/login?from=' + route.fullPath);
+    return useShowModal();
   }
 
   // //未绑定手机号

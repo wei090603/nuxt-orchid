@@ -36,41 +36,38 @@
         <!-- 文章列表 -->
         <ArticleList />
 
-        <!-- 功能模块 -->
         <div class="function">
           <div class="sticky">
-            <!-- 作者详情 -->
-            <div class="author">
-              <!-- 背景图片 -->
+            <div class="author" v-if="!isLogin">
               <div class="author-bg">
-                <!-- 头像 -->
                 <div class="avatar">
                   <img src="@/assets/images/logo.png" alt="" />
                 </div>
               </div>
-
-              <!-- 作者信息 -->
               <div class="text">
                 <h4>
-                  <a href="javascript:;">悦兴</a>
+                  <a href="javascript:;">兰苑</a>
                   <div class="medal"></div>
                 </h4>
-                <p>也许，将会是最好用的博客管理系统</p>
+                <p>也许，这将是最大的兰花交流平台</p>
               </div>
 
-              <!-- 功能 -->
               <div class="fun">
-                <!-- 发布文章 -->
-                <div class="login"><a href="javascript:;">登录</a></div>
-
+                <div class="login" @click="handleLoginClick">登录</div>
                 <span></span>
-
-                <!-- 登录后台 -->
-                <div class="register"><a href="javascript:;">注册</a></div>
+                <div class="register">注册</div>
               </div>
             </div>
 
-            <div class="sign">签到</div>
+            <div class="containerA">
+              <div class="title">
+                <h3>
+                  <i class="iconfont icon-suijishushengcheng"></i>
+                  签到
+                </h3>
+              </div>
+              <div class="sign"></div>
+            </div>
 
             <div class="containerA">
               <!-- 标题 -->
@@ -81,48 +78,13 @@
                 </h3>
               </div>
 
-              <!-- 随机文章 -->
               <div class="random_Alist">
                 <ul>
-                  <li>
+                  <li v-for="item in articleHotList" :key="item.id">
                     <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">2022 年的 React 生态</a>
-                  </li>
-
-                  <li>
-                    <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">
-                      字节跳动自研高性能微服务框架 Kitex 的演进之旅
-                    </a>
-                  </li>
-
-                  <li>
-                    <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">
-                      两年前端，广州求职，要价
-                      14k，依我说，小伙子可以多要点，涉及组件建设、工程化以及丰富的项目经验
-                    </a>
-                  </li>
-
-                  <li>
-                    <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">
-                      解放双手！推荐一款阿里开源的低代码工具，YYDS！
-                    </a>
-                  </li>
-
-                  <li>
-                    <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">
-                      Web3.0来了，花呗借呗前端团队开源的Web图形引擎会成为元宇宙的技术支撑吗？
-                    </a>
-                  </li>
-
-                  <li>
-                    <i class="iconfont icon-xiangyoujiantou"></i>
-                    <a href="javascript:;">
-                      超越 Nginx！号称下一代 Web 服务器，用起来够优雅！
-                    </a>
+                    <nuxt-link target="_blank" :to="{ path: `/article/${item.id}` }">
+                      {{ item.title }}
+                    </nuxt-link>
                   </li>
                 </ul>
               </div>
@@ -158,7 +120,7 @@
 <script setup lang="ts">
 import { NIcon, NCarousel } from 'naive-ui';
 import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
-import { getAdvertise, getHotTag } from '@/api/home';
+import { getAdvertise, getArticleHot, getHotTag } from '@/api/home';
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
@@ -167,11 +129,13 @@ useHead({
   title: '兰花交流',
 });
 
+const isLogin = useIsLogin();
 const state = reactive({
   page: 1,
   toatal: 0,
   advertiseList: [],
   tagHotList: [],
+  articleHotList: [],
 });
 
 await getAdvertise({ position: 'home' }).then(({ data }) => {
@@ -182,7 +146,14 @@ await getHotTag().then(({ data }) => {
   state.tagHotList = data;
 });
 
-const { advertiseList, tagHotList } = toRefs(state);
+const res = await getArticleHot();
+state.articleHotList = res.data.value;
+
+const handleLoginClick = () => {
+  useShowModal();
+};
+
+const { advertiseList, tagHotList, articleHotList } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
@@ -273,59 +244,50 @@ const { advertiseList, tagHotList } = toRefs(state);
 .function .sticky {
   position: sticky;
   top: 70px;
-}
 
-/* 背景图片 */
-.function .author-bg {
-  position: relative;
-  width: 100%;
-  height: 150px;
-  background: url(@/assets/images/userBg.jpg) no-repeat;
-  background-size: 100% 100%;
-  transition: all 0.3s;
-}
+  .author-bg {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    background: url(@/assets/images/userBg.jpg) no-repeat;
+    background-size: 100% 100%;
+    transition: all 0.3s;
+  }
+  .author {
+    overflow: hidden;
+    padding-bottom: 20px;
+    box-shadow: 0 1px 3px rgb(26 26 26 / 20%);
+    background-color: var(--Yuexing-bg);
+    border-radius: 3px;
+    transition: all 0.3s;
+    margin-bottom: 20px;
 
-/* 作者详情 */
-.function .author {
-  overflow: hidden;
-  padding-bottom: 20px;
-  box-shadow: 0 1px 3px rgb(26 26 26 / 20%);
-  background-color: var(--Yuexing-bg);
-  border-radius: 3px;
-  transition: all 0.3s;
-}
-
-/* 作者头像 */
-.function .author-bg .avatar {
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
-  background-color: #fff;
-  border-radius: 50%;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-/* 头像 */
-.function .author-bg .avatar img {
-  width: 90%;
-  height: 90%;
-  border-radius: 50%;
-}
-
-/* 鼠标经过作者头像就让他旋转 */
-.function .author-bg .avatar:hover {
-  transform: translateX(-50%) rotate(180deg);
-}
-
-/* 作者信息 */
-.function .author .text {
-  text-align: center;
-  margin-top: 50px;
+    .author-bg .avatar {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      background-color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      transition: all 0.3s;
+      &:hover {
+        transform: translateX(-50%) rotate(180deg);
+      }
+      img {
+        width: 90%;
+        height: 90%;
+        border-radius: 50%;
+      }
+    }
+    .text {
+      text-align: center;
+      margin-top: 50px;
+    }
+  }
 }
 
 /* 勋章 */
@@ -338,6 +300,7 @@ const { advertiseList, tagHotList } = toRefs(state);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDkuNDIgNjAuMDEiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjI0LjcxIiB5MT0iMS44OSIgeDI9IjI0LjcxIiB5Mj0iMzguOTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZjc0MTgiLz48c3RvcCBvZmZzZXQ9Ii4xNyIgc3RvcC1jb2xvcj0iI2YxNTYxYSIvPjxzdG9wIG9mZnNldD0iLjQxIiBzdG9wLWNvbG9yPSIjZGYzMTFiIi8+PHN0b3Agb2Zmc2V0PSIuNjQiIHN0b3AtY29sb3I9IiNkMjE2MWQiLz48c3RvcCBvZmZzZXQ9Ii44NCIgc3RvcC1jb2xvcj0iI2NhMDYxZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2M3MDAxZSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iOS45IiB5MT0iMTkuNDQiIHgyPSI0Mi4yOSIgeTI9IjU0LjEyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZlMTE4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZiNTFlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgZGF0YS1uYW1lPSLlm77lsYIgMiIgc3R5bGU9Imlzb2xhdGlvbjppc29sYXRlIj48ZyBkYXRhLW5hbWU9IuWbvuWxgiAxIj48cGF0aCBkPSJNMzkuNjggNDBIOS43NGE1IDUgMCAwIDEtNS01VjVhNSA1IDAgMCAxIDUtNWgyOS45NGE1IDUgMCAwIDEgNSA1djMwYTUgNSAwIDAgMS01IDVaIiBzdHlsZT0iZmlsbDp1cmwoI2EpIi8+PHBhdGggZD0iTTQ5LjQyIDM1LjNhMjQuNzEgMjQuNzEgMCAxIDEtMjQuNzEtMjQuNzFBMjQuNzEgMjQuNzEgMCAwIDEgNDkuNDIgMzUuM1oiIHN0eWxlPSJmaWxsOnVybCgjYikiLz48cGF0aCBkPSJtNDIuMTggMTcuODItMzQuOTUgMzVhMjQuNzEgMjQuNzEgMCAxIDAgMzUtMzQuOTVaIiBzdHlsZT0ib3BhY2l0eTouMDMiLz48aW1hZ2Ugd2lkdGg9IjM3IiBoZWlnaHQ9IjM2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2LjEgMTcuNDgpIiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUNVQUFBQWtDQVlBQUFBT3d2T21BQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBRUYwbEVRVlJZUjdYWXkyNGNWUkRHOFYvYk0yT1RpeFZpRW00aEVZb0JFU2tTUW9CWXNHSEJFckZqaTU4QlA0ZmZ3US9CRmlKMlNJaUFGQzZDQ0NGaU84Z3hDVW1JN1hqR2RyT29jeklYOS9SNHhxR2swZkVrcDd2KzU2dnFxcG91eXJKMEhGdGFMSXIwWjRFU2xsZU9kOVBpT0ZCTGk4VVVHcGpGTlBheGk4N3lTbmxRZDIyZFRReVZGR3BoSHE5Z0R0dFl4eVoySmdXYkdyV2h4cVp3RWd2NENKL2lFN3lMODJqMmhIWXNhNHphVUdYSldSUFA0UXJlRjNEL0N2WHU0U0h1aTVDT1paTXFsVlc2aEtzQzZPWDAvUXBlRjJHZFNLMnhvWHBVbWhjd3J3bkZabkZhRi9TU0FCL2J4OWdYT0t4U2RqNnRIM2JCaEdxTkJWV2gwaFBIb2s0TkF4N0xUMjJpRHhSR1FvMVRoanV0Q3UwdGJDOHRGbTFSWEVjVzJDZDFxZ0lnTzJqcEt0SENpL2dBSCtNdG5CR3cyVXBSUUcvaEszeUJuL0VJQitpZ25kWU0xZ2RhbEdVNVdKa2I0dVJOVVJEUHA3V1ovdjhDM3NNN2VFbUFEdWJNUGg3Z1IzeU4zd1JVUjVTS08ybnRDTkE5UE1iZThrcDVVSHorV1ova0YzRVdNK256UEM2bmRTYnRPeU1lLzNONFJuVytsRUtOdTFoTmExc291SUhmMDdxYlB2ZUVzbmZSeVRrMUs0QSt4SnZpMFc0NXJGUldkS2JuZTVYMUZ0ZFRRb2tjdWw2bDJxTGcvb0pyMkpLZ0NwRVRjM2dWYndzVkdnN25sSXAxbU9VVWFPclBuV2RGWG5ZRTdLWUkzWGVDbzJpa2pmdWltVDVNRzJkMW42ckNhSUJoVm5XQUtYSFFBNkhNbnZDN0xUaktITDVkM01iM1F2SVowZmxQbUJ4b21PVzU2N0h3K1lQd2UxdHdtRXFQWVVmSWVGM0U5bHVSb052aVJFL1REc1I5VjRXZmE4THZwcGpEeWlsSWM4OE8xdExHTC8wL1lJTkEyYythbnZucnlkT3p2Rkx1QzdEQkM1NFdXQWFxT3ZoTzhvK0JSN29HYk0zeHdPcFNwQStJaWpwVEFYWk5KT0xmK2x2RHVMWXJSdVhyNG40NVpJZUd3TXJpMXdPMmpodWlYV3lJWWplSlphVWVpSHZlTVFTSStwRWk5NlRkdEU2cVVMWU10cXZiOHlwdDFKelRGTDN3UWxwYjlkdVBaQ01QVndkVmlGWnpXdlMvMCtuN2NZdnB5T3RIL1pxcG1xa0dyYmV2MWZYRm85d0xvOFBIOE42WGUyYnU5QS9TMms3LzNodW1ERFFueHFBNU5iTjduVkxEVGxicWppRmJZaGJhRUhYc2hIQjZWalQwM3ZHbUpkTGdjbHIva25yZG9GVkNwUlBrZkRvblpxSnAzU2R5U3d4a3QzQVR2NG9mbm1md2hwak5MNHJCTWNNMTlNOW5PVDhQSlg2ZFVpM2QyZWVFVU9hZjlNa3dOOUs2SmtCUDRpY0JkVlUvM0t6RFlhMjBPcWhTcUhJZmY0cFI0eEgrRU1YMHB1NEl1eVVjVG90V2txRXozQUplU05ldmkvd2JXdnZxb05waXh2bEdWT0I1b2RLcWZwZ09EcFpYeW5KcHNkalR6YlhlOEM2SXFiWWo1cWQxUS9JSncxOEZwVjg0VFJHU09SSENIVEVsOXNGVVhGdm9qc01uUmVMUEMyVTJqSGhWVlB0K3F1Zm0wN292eGZZTmdSbTBudXNidXQyZ2JjUkx0U08vTkZ0YUxJcWpnRlRaWUQwYWRaLy9BQXpCb3NuTU94bUxBQUFBQUVsRlRrU3VRbUNDIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6bXVsdGlwbHk7b3BhY2l0eTouMiIvPjxwYXRoIGQ9Im0zOC44NSAzMS05LjA2LTEuMzEtNC4wNS04LjE5YTEuMyAxLjMgMCAwIDAtLjUyLS41MiAxLjE1IDEuMTUgMCAwIDAtMS41My41MmwtNC4wNSA4LjIyTDEwLjU3IDMxYTEuMTkgMS4xOSAwIDAgMC0uNjUuMzMgMS4xNSAxLjE1IDAgMCAwIDAgMS42Mmw2LjU2IDYuMzlMMTUgNDguNGExLjEzIDEuMTMgMCAwIDAgMS42NSAxLjJsOC4xMS00LjI2IDguMTEgNC4yNmExLjEzIDEuMTMgMCAwIDAgMS42NS0xLjJsLTEuNTUtOSA2LjUxLTYuNGExLjA3IDEuMDcgMCAwIDAgLjMzLS42NSAxLjE0IDEuMTQgMCAwIDAtMS0xLjNaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9nPjwvZz48L3N2Zz4=);
 }
 
 /* 作者名称 */
@@ -393,7 +356,7 @@ const { advertiseList, tagHotList } = toRefs(state);
 /* 注册 */
 .function .author .register {
   flex: 1;
-  background-color: #5fb878;
+  background-color: #18a058;
   transition: all 0.3s;
 }
 
@@ -403,7 +366,7 @@ const { advertiseList, tagHotList } = toRefs(state);
 }
 
 .function .author .register:hover {
-  background-color: #81c694;
+  background-color: var(--Yuexing-color);
 }
 
 .function .author .fun a {
@@ -428,19 +391,12 @@ const { advertiseList, tagHotList } = toRefs(state);
 
 /* 签到 */
 .sign {
-  width: 280px;
-  margin-top: 20px;
-  padding: 0 10px 20px;
-  background-color: var(--Yuexing-bg);
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgb(26 26 26 / 20%);
-  transition: all 0.3s;
 }
 
 /* 随机文章 */
 .containerA {
   width: 280px;
-  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 0 10px 20px;
   background-color: var(--Yuexing-bg);
   border-radius: 3px;

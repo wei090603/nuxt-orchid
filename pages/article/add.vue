@@ -22,6 +22,7 @@
 </template>
 
 <script lang="ts" setup>
+import { NButton } from 'naive-ui';
 definePageMeta({
   layout: false,
 });

@@ -4,6 +4,7 @@
       <NuxtLayout>
         <NuxtPage></NuxtPage>
       </NuxtLayout>
+      <LoginRegister />
     </n-message-provider>
   </NConfigProvider>
 </template>

@@ -87,10 +87,12 @@ const handleLikeClick = async () => {
       await articleLikeDel(id);
       data.value.isLike = false;
       data.value.likeCount -= 1;
-    } catch (_error) {}
+    } catch (_error) {
+      console.log(_error, 'error');
+    }
   } else {
     try {
-      await articleLike({ articleId: '' });
+      await articleLike({ articleId: Number(id) });
       data.value.isLike = true;
       data.value.likeCount += 1;
     } catch (_error) {}
@@ -151,6 +153,9 @@ const handleLikeClick = async () => {
       white-space: nowrap;
       background-color: #c2c8d1;
       color: #fff;
+    }
+    &.with-badge.active::after {
+      background-color: var(--Yuexing-color);
     }
   }
 }

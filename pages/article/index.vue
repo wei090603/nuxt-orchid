@@ -14,7 +14,6 @@ const tagHotList = ref([]);
 const getHotTagList = async () => {
   const { data } = await getHotTag();
   tagHotList.value = data;
-  console.log(tagHotList.value, 'tagHotList.value');
 };
 
 await getHotTagList();

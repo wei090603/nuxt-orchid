@@ -1,23 +1,24 @@
 //用户状态信息模块
 import { createDiscreteApi } from 'naive-ui';
 import { getMeUserInfo } from '~~/api/user';
-export const useUserInfo = () => useState('user', () => null);
+export const useUserInfo = () => useState('userInfo', () => null);
 
 export const useIsLogin = () => useState('isLogin', () => false);
 
 // 更新用户信息
-export async function useRefreshUserInfo() {
+export const useRefreshUserInfo = async () => {
   const token = useCookie('token');
-  const user = useUserInfo();
+  const userInfo = useUserInfo();
+  const isLogin = useIsLogin();
   // 用户已登录，直接获取用户信息
   if (token.value) {
     let { data, error } = await getMeUserInfo();
-
     if (data.value) {
-      user.value = data.value;
+      userInfo.value = data.value.userInfo;
+      isLogin.value = true;
     }
   }
-}
+};
 
 //退出登录
 export async function useLogout() {

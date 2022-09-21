@@ -1,18 +1,18 @@
-import { defineNuxtConfig } from 'nuxt'
-import { loadEnv } from 'vite'
+import { defineNuxtConfig } from 'nuxt';
+import { loadEnv } from 'vite';
 
 interface VITE_ENV_CONFIG {
-  VITE_API_HOST: string
-  VITE_API_PREFFIX: string
-  VITE_PACK_ENV: string
-  VITE_PACK_URL: string
+  VITE_API_HOST: string;
+  VITE_API_PREFFIX: string;
+  VITE_PACK_ENV: string;
+  VITE_PACK_URL: string;
 }
 
-const envScript = process.env.npm_lifecycle_script.split(' ')
-const envName = envScript[envScript.length - 1] // 通过启动命令区分环境
-const envData = loadEnv(envName, 'env') as unknown as VITE_ENV_CONFIG
+const envScript = process.env.npm_lifecycle_script.split(' ');
+const envName = envScript[envScript.length - 1]; // 通过启动命令区分环境
+const envData = loadEnv(envName, 'env') as unknown as VITE_ENV_CONFIG;
 
-console.log('当前环境：', envData)
+console.log('当前环境：', envData);
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -23,12 +23,7 @@ export default defineNuxtConfig({
     extractCSS: true,
     transpile:
       process.env.NODE_ENV === 'production'
-        ? [
-            'naive-ui',
-            'vueuc',
-            '@css-render/vue3-ssr',
-            '@juggle/resize-observer',
-          ]
+        ? ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
         : ['@juggle/resize-observer'],
   },
   vite: {
@@ -55,11 +50,11 @@ export default defineNuxtConfig({
   },
   head: {
     link: [
-      { rel: 'shortcut icon', href: 'favicon.svg' },
-      { rel: 'apple-touch-icon', href: 'favicon.svg' },
+      { rel: 'shortcut icon', href: 'favicon.ico' },
+      { rel: 'apple-touch-icon', href: 'favicon.ico' },
     ],
   },
   server: {
     port: 8082,
   },
-})
+});

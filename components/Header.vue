@@ -2,10 +2,10 @@
   <header>
     <div class="container">
       <div class="header-left">
-        <NuxtLink to="/" class="logo"></NuxtLink>
+        <nuxt-link to="/" class="logo"></nuxt-link>
         <menu class="menu">
           <span v-for="item in data" :key="item.link" v-if="data.length">
-            <NuxtLink :to="item.link">{{ item.title }}</NuxtLink>
+            <nuxt-link :to="item.link">{{ item.title }}</nuxt-link>
           </span>
         </menu>
       </div>
@@ -19,33 +19,44 @@
         <div class="release-btn">
           <n-button type="primary" @click="handleToAdd">发表文章</n-button>
         </div>
-        <div class="login-btn" @click="handleLoginRegisterBtn" v-if="!isLogin">登录/注册</div>
-        <div class="" v-else>{{ userInfo.account }}</div>
+        <client-only>
+          <div class="center" v-if="isLogin">
+            <n-dropdown :options="userOptions" @select="handleSelect">
+              <n-avatar round size="large" :src="imgUrl + userInfo.avatar" />
+            </n-dropdown>
+          </div>
+          <div class="login-btn" @click="handleLoginRegisterBtn" v-else>登录/注册</div>
+        </client-only>
       </div>
     </div>
   </header>
-  <login-register v-model:isShowModal="isShowModal" />
 </template>
 
 <script lang="ts" setup>
-import { NInput, NButton, NInputGroup } from 'naive-ui';
+import { NInput, NButton, NInputGroup, NAvatar, NDropdown, createDiscreteApi } from 'naive-ui';
 import { getNavgation } from '@/api/common';
+
+const env = useRuntimeConfig();
+const imgUrl: string = env.public.VITE_FILE_URL;
+
+const userOptions = [
+  {
+    label: '个人中心',
+    key: 'center',
+  },
+  {
+    label: '退出',
+    key: 'logout',
+  },
+];
 
 const isLogin = useIsLogin();
 const userInfo = useUserInfo();
 
-const state = reactive({
-  isShowModal: false,
-});
-
-const token = useCookie('token');
-token.value =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiYWNjb3VudCI6InRlc3QiLCJpYXQiOjE2NjM2NjY2NDJ9.S-xC8tZijjBCEoaOCmotSBPlAzRYaspdd5KoEBjTamc';
-
 const { data } = await getNavgation();
 
 const handleLoginRegisterBtn = () => {
-  state.isShowModal = true;
+  useShowModal();
 };
 
 const handleToAdd = () => {
@@ -54,7 +65,26 @@ const handleToAdd = () => {
   });
 };
 
-const { isShowModal } = toRefs(state);
+const handleSelect = (k) => {
+  switch (k) {
+    case 'logout':
+      const { dialog } = createDiscreteApi(['dialog']);
+      dialog.warning({
+        content: '是否要退出登录？',
+        positiveText: '退出',
+        negativeText: '取消',
+        onPositiveClick: async () => {
+          await useLogout();
+        },
+      });
+      break;
+    case 'center':
+      navigateTo({
+        path: '/user',
+      });
+      break;
+  }
+};
 </script>
 
 <style lang="less" scoped>

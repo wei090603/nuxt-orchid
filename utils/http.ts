@@ -1,6 +1,6 @@
 import { Ref } from 'nuxt/dist/app/compat/capi';
 
-import { c, createDiscreteApi } from 'naive-ui';
+import { createDiscreteApi } from 'naive-ui';
 
 type AsyncData<DataT> = {
   data: Ref<DataT>;
@@ -61,12 +61,11 @@ async function fetch(key: string, url: string, options: any) {
     ...option,
     // 相当于响应拦截器
     transform: (res: { data: object; code: number; message: string }) => {
-      console.log(res, 'res');
-      if (res?.code !== 200) {
-        const { message } = createDiscreteApi(['message']);
-        message.error(res.message || '服务端错误');
-        return;
-      }
+      // if (res?.code !== 200) {
+      //   const { message } = createDiscreteApi(['message']);
+      //   message.error(res.message);
+      //   return;
+      // }
       return res.data;
     },
   });
