@@ -2,12 +2,17 @@ import { Ref } from 'nuxt/dist/app/compat/capi';
 
 import { createDiscreteApi } from 'naive-ui';
 
+function responseVerify(msg: string) {
+  const { message } = createDiscreteApi(['message']);
+  message.error(msg);
+}
+
 type AsyncData<DataT> = {
   data: Ref<DataT>;
   pending: Ref<boolean>;
   refresh: () => Promise<void>;
   execute?: () => Promise<void>;
-  error: Ref<Error | boolean>;
+  error: Ref<Error | boolean | any>;
 };
 
 //http请求封装
@@ -57,34 +62,34 @@ async function fetch(key: string, url: string, options: any) {
       });
   }
 
-  const { data, pending, error, refresh }: AsyncData<any> = await useFetch(url, {
-    ...option,
-    // 相当于响应拦截器
-    transform: (res: { data: object; code: number; message: string }) => {
-      // if (res?.code !== 200) {
-      //   const { message } = createDiscreteApi(['message']);
-      //   message.error(res.message);
-      //   return;
-      // }
-      return res.data;
-    },
-  });
+  return new Promise(async (resolve, reject) => {
+    const res: AsyncData<any> = await useFetch(url, {
+      ...option,
+      // 相当于响应拦截器
+      transform: (res: { data: object; code: number; message: string }) => {
+        if (res?.code !== 200) {
+          responseVerify(res.message);
+          reject({ code: res.code, message: res.message });
+        }
+        return res.data;
+      },
+    });
 
-  // 客户端错误处理
-  if (process.client && error.value) {
-    const msg = error.value?.data?.message;
-    if (!options.lazy) {
-      if (error.value?.data.code === 401) {
-        // $router.replace('/login');
-        return;
+    // 客户端错误处理
+    if (process.client && res.error.value) {
+      const msg = res.error.value?.data?.message;
+      if (!options.lazy) {
+        if (res.error.value?.data.code === 401) {
+          responseVerify('登录失效，请重新登录');
+          return;
+        }
+        responseVerify(msg || '服务端错误');
+        reject(res.error.value);
       }
-      const { message } = createDiscreteApi(['message']);
-      message.error(msg || '服务端错误');
-      return;
     }
-  }
 
-  return { data, pending, refresh, error };
+    resolve(res);
+  });
 }
 
 class Http {
