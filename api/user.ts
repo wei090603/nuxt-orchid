@@ -12,5 +12,12 @@ export const getOhterUserInfo = (id: number) =>
     lazy: true,
   });
 
+// 登录
 export const login = (body: { account: string; password: string }) =>
   http.post('login', '/auth/login', body);
+
+// 退出登录
+export const loginOut = () =>
+  http.get('loginOut', `/auth/loginOut`, {
+    lazy: true,
+  });

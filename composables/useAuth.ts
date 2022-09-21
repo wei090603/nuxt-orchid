@@ -1,6 +1,6 @@
 //用户状态信息模块
 import { createDiscreteApi } from 'naive-ui';
-import { getMeUserInfo } from '~~/api/user';
+import { getMeUserInfo, loginOut } from '~~/api/user';
 export const useUserInfo = () => useState('userInfo', () => null);
 
 export const useIsLogin = () => useState('isLogin', () => false);
@@ -22,9 +22,11 @@ export const useRefreshUserInfo = async () => {
 
 //退出登录
 export async function useLogout() {
-  await useLogoutApi();
-  const user = useUser();
+  await loginOut();
+  const user = useUserInfo();
+  const isLogin = useIsLogin();
   user.value = null;
+  isLogin.value = false;
 
   const token = useCookie('token');
   if (token.value) {
