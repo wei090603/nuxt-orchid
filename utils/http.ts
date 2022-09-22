@@ -26,41 +26,12 @@ async function fetch(key: string, url: string, options: any) {
     baseURL: $config.public.VITE_API_URL,
     // server: true,
     initialCache: false,
-    lazy: false,
     key: key,
-    $: false,
     headers: {
       Authorization: `Bearer ${token.value} || ''`,
     },
     ...options,
   };
-
-  // console.log(option, 'option' + url);
-
-  if (options.$) {
-    const data = ref(null);
-    const error = ref(null);
-    return await $fetch(url, option)
-      .then((res: { data: object }) => {
-        data.value = res.data;
-        return {
-          data,
-          error,
-        };
-      })
-      .catch((err) => {
-        const msg = err?.data?.data;
-        if (process.client) {
-          const { message } = createDiscreteApi(['message']);
-          message.error(msg || '服务端错误');
-        }
-        error.value = msg;
-        return {
-          data,
-          error,
-        };
-      });
-  }
 
   return new Promise(async (resolve, reject) => {
     const res: AsyncData<any> = await useFetch(url, {
@@ -78,14 +49,14 @@ async function fetch(key: string, url: string, options: any) {
     // 客户端错误处理
     if (process.client && res.error.value) {
       const msg = res.error.value?.data?.message;
-      if (!options.lazy) {
-        if (res.error.value?.data.code === 401) {
-          responseVerify('登录失效，请重新登录');
-          return;
-        }
-        responseVerify(msg || '服务端错误');
-        reject(res.error.value);
+      // if (!options.lazy) {
+      if (res.error.value?.data.code === 401) {
+        responseVerify('登录失效，请重新登录');
+        reject('error');
       }
+      responseVerify(msg || '服务端错误');
+      reject(res.error.value);
+      // }
     }
 
     resolve(res);
@@ -94,7 +65,7 @@ async function fetch(key: string, url: string, options: any) {
 
 class Http {
   get(key: string, url: string, params?: object): Promise<any> {
-    return fetch(key, url, { method: 'get', ...params });
+    return fetch(key, url, { method: 'get', params });
   }
 
   post(key: string, url: string, body?: any): Promise<any> {

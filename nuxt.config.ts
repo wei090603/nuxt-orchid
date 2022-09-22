@@ -21,16 +21,24 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      titleTemplate: '%s - Nuxt3 | 大赵同学',
-      title: 'nuxt3-ssr | 大赵同学',
+      titleTemplate: '',
+      title: '兰花交流网 － 兰花问题,兰草交易,兰花图片,了解中国兰花尽在本兰花网',
       charset: 'utf-8',
       htmlAttrs: {
         lang: 'zh-CN',
       },
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'keyword', conntent: '1111' },
-        { name: 'description', content: '描述' },
+        {
+          name: 'keyword',
+          conntent:
+            '兰花,兰草,兰花草,兰花网,兰花拍卖,兰花图片,兰花网站,中国兰花,兰花价格,兰花交易网,兰花拍卖网,中交网,三千兰花,爱兰,爱兰网站,兰花市场,兰花批发市场,兰花交易,兰花价格行情,兰花百科,兰花学院,兰友博客,兰花新闻,兰花店铺,兰友社区',
+        },
+        {
+          name: 'description',
+          content:
+            '兰花交流网 - 国内领先的兰花交流平台,提供中国兰花拍卖,兰花交易,兰花图片,兰花价格,兰友社区,兰友博客,兰花百科,兰花学院,兰园店铺,国兰文化,兰市动态等一体化的兰花网！',
+        },
       ],
       link: [
         { rel: 'shortcut icon', href: 'favicon.ico' },

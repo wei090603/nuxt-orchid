@@ -34,21 +34,19 @@
         <div class="action-box" v-if="isLogin">
           <div class="emoji-container emoji-btn">表情包</div>
           <div class="submit">
-            <n-button type="primary" @click="handleCreateComment">
-              发表评论
-            </n-button>
+            <n-button type="primary" @click="handleCreateComment">发表评论</n-button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="comment-list-wrapper">
-      <div class="title">全部评论 {{ commentData.total }}</div>
+      <div class="title">全部评论 {{ data.total }}</div>
       <div class="comment-list">
         <div
           class="comment-item"
-          v-if="commentData.list.length > 0"
-          v-for="item in commentData.list"
+          v-if="data.list.length > 0"
+          v-for="item in data.list"
           :key="item.id"
         >
           <div class="avatar">
@@ -85,20 +83,14 @@
                 <div class="action-box">
                   <div class="emoji-container emoji-btn">表情包</div>
                   <div class="submit">
-                    <n-button type="primary" @click="handleCreateComment">
-                      发表评论
-                    </n-button>
+                    <n-button type="primary" @click="handleCreateComment">发表评论</n-button>
                   </div>
                 </div>
               </div>
             </div>
 
             <div class="sub-comment-wrapper" v-if="item.children.length">
-              <div
-                class="sub-comment-item"
-                v-for="children in item.children"
-                :key="children.id"
-              >
+              <div class="sub-comment-item" v-for="children in item.children" :key="children.id">
                 <div class="avatar">
                   <img :src="imgUrl + item.user.avatar" />
                 </div>
@@ -118,9 +110,7 @@
                     </div>
                     <div class="content">{{ children.content }}</div>
                     <div class="action-box">
-                      <div class="item dig-item">
-                        赞：{{ children.likeCount }}
-                      </div>
+                      <div class="item dig-item">赞：{{ children.likeCount }}</div>
                       <div class="item">回复</div>
                     </div>
                   </div>
@@ -140,26 +130,18 @@ import { getCommentList, createComment } from '@/api/article';
 
 const route = useRoute();
 const message = useMessage();
+const isLogin = useIsLogin();
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
-const isLogin = true;
-
 const id = route.params.id as string;
-
-const commentData = reactive({
-  total: 0,
-  list: [],
-});
 
 const content = ref('');
 const placeholder = ref(true);
 const focused = ref(false);
 
 const { data, refresh } = await getCommentList(id);
-commentData.total = data.value.total;
-commentData.list = data.value.list;
 
 const handleCreateComment = async () => {
   try {

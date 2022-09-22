@@ -80,7 +80,6 @@ const result = await getOhterUserInfo(data.value.author.id);
 userInfo.value = result.data.value;
 
 // 文章点赞
-// 文章点赞
 const handleLikeClick = async () => {
   if (data.value.isLike) {
     try {

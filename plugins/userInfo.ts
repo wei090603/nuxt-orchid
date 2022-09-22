@@ -5,9 +5,7 @@ export default defineNuxtPlugin(() => {
     'userInfo',
     async () => {
       if (token.value && !isLogin.value) {
-        if (process.client) {
-          await useRefreshUserInfo();
-        }
+        await useRefreshUserInfo();
       }
     },
     { global: true }

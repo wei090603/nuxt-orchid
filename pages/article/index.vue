@@ -1,23 +1,10 @@
 <template>
   <div class="wrapper">
-    <span v-for="item in tagHotList" :key="item.id" v-if="tagHotList.length">
-      {{ item.id }}
-    </span>
+    <ArticleList />
   </div>
 </template>
 
-<script lang="ts" setup>
-import { getHotTag } from '@/api/home';
-
-const tagHotList = ref([]);
-
-const getHotTagList = async () => {
-  const { data } = await getHotTag();
-  tagHotList.value = data;
-};
-
-await getHotTagList();
-</script>
+<script lang="ts" setup></script>
 
 <style lang="less" scoped>
 .wrapper {

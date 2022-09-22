@@ -65,7 +65,7 @@ const handleToAdd = () => {
   });
 };
 
-const handleSelect = (k) => {
+const handleSelect = (k: any) => {
   switch (k) {
     case 'logout':
       const { dialog } = createDiscreteApi(['dialog']);
