@@ -125,11 +125,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useMessage, NButton } from 'naive-ui';
+import { createDiscreteApi, NButton } from 'naive-ui';
 import { getCommentList, createComment } from '@/api/article';
 
+const { message } = createDiscreteApi(['message']);
+
 const route = useRoute();
-const message = useMessage();
 const isLogin = useIsLogin();
 
 const env = useRuntimeConfig();

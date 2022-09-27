@@ -17,7 +17,7 @@
           </n-input-group>
         </div>
         <div class="release-btn">
-          <n-button type="primary" @click="handleToAdd">发表文章</n-button>
+          <n-button type="primary" @click="handleToAdd">写文章</n-button>
         </div>
         <client-only>
           <div class="center" v-if="isLogin">
@@ -80,7 +80,7 @@ const handleSelect = (k: any) => {
       break;
     case 'center':
       navigateTo({
-        path: '/user',
+        path: `/user/${userInfo.value.id}/posts`,
       });
       break;
   }

@@ -4,7 +4,7 @@ import http from '~~/utils/http';
 export const getMeUserInfo = () => http.get('meUser', `/auth`);
 
 // 获取别人用户信息
-export const getOhterUserInfo = (id: number) => http.get('otherUser', `/user/${id}`);
+export const getOhterUserInfo = (id: string) => http.get('otherUser', `/user/${id}`);
 
 // 登录
 export const login = (body: { account: string; password: string }) =>
@@ -12,3 +12,6 @@ export const login = (body: { account: string; password: string }) =>
 
 // 退出登录
 export const loginOut = () => http.get('loginOut', `/auth/loginOut`);
+
+// 获取用户文章
+export const getUserArticle = (id: string) => http.get('userArticle', `/user/article/${id}`);

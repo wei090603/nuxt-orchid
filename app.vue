@@ -1,11 +1,9 @@
 <template>
   <NConfigProvider inline-theme-disabled>
-    <n-message-provider>
-      <NuxtLayout>
-        <NuxtPage></NuxtPage>
-      </NuxtLayout>
-      <LoginRegister />
-    </n-message-provider>
+    <NuxtLayout>
+      <NuxtPage></NuxtPage>
+    </NuxtLayout>
+    <LoginRegister />
   </NConfigProvider>
 </template>
 
