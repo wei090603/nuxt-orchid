@@ -10,11 +10,12 @@ export const useRefreshUserInfo = async () => {
   const token = useCookie('token');
   const userInfo = useUserInfo();
   const isLogin = useIsLogin();
+
   // 用户已登录，直接获取用户信息
   if (token.value) {
     let { data, error } = await getMeUserInfo();
-    if (data.value) {
-      userInfo.value = data.value.userInfo;
+    if (data) {
+      userInfo.value = data.userInfo;
       isLogin.value = true;
     }
   }
@@ -29,9 +30,7 @@ export async function useLogout() {
   isLogin.value = false;
 
   const token = useCookie('token');
-  if (token.value) {
-    token.value = null;
-  }
+  token.value = null;
 
   const { message } = createDiscreteApi(['message']);
   message.success('退出登录成功');

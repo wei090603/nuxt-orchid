@@ -62,7 +62,6 @@
 <script lang="ts" setup>
 import { NModal, NInput, NButton, NSpace } from 'naive-ui';
 import { login } from '@/api/user';
-import { useRefreshUserInfo } from '@/composables/useAuth';
 
 const isShowModal = useIsShowModal();
 
@@ -72,6 +71,8 @@ const state = reactive({
   loginWayActive: 0, // 登录方式
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
 });
+
+const route = useRoute();
 
 const handleCloseClick = () => {
   isShowModal.value = false;
@@ -88,8 +89,7 @@ const handleLoginBtn = async () => {
   });
   const token = useCookie('token');
   token.value = data.value.token;
-  await useRefreshUserInfo();
-  handleCloseClick();
+  location.reload();
 };
 
 const { account, password, loginWayList, loginWayActive } = toRefs(state);
