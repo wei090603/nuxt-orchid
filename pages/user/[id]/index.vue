@@ -118,7 +118,7 @@ const navigate = (item: { title: string; name: string }) => {
   display: flex;
   justify-content: space-between;
   position: relative;
-  width: 1000px;
+  width: 1250px;
   padding: 16px;
   margin: 0 auto;
   background-color: #fff;
@@ -147,13 +147,13 @@ const navigate = (item: { title: string; name: string }) => {
 
 .profile-main {
   display: flex;
-  width: 1000px;
+  width: 1250px;
   min-height: 100vh;
   margin: 10px auto;
   justify-content: space-between;
   align-items: flex-start;
   .profile-main-column {
-    width: 694px;
+    flex: 1;
     overflow: hidden;
     background-color: #fff;
     .profile-main-header {

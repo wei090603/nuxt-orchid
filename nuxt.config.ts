@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from 'nuxt';
+import { defineNuxtConfig } from 'nuxt/config';
 import { loadEnv } from 'vite';
 
 interface VITE_ENV_CONFIG {

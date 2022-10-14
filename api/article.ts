@@ -18,3 +18,6 @@ export const articleLike = (body: object) => http.post('articleLike', '/article/
 
 // 文章取消点赞
 export const articleLikeDel = (id: string) => http.delete('articleLikeDel', `/article/like/${id}`);
+
+// 获取文章分类
+export const getCategory = () => http.get('getCategory', `/category/top`);

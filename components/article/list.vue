@@ -129,7 +129,6 @@ onMounted(() => {
 <style lang="less" scoped>
 .list {
   overflow: hidden;
-  width: 1250px;
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(26 26 26 / 20%);

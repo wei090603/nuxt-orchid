@@ -66,7 +66,7 @@
                 <div class="item">评论：{{ item.children.length }}</div>
               </div>
               <div class="comment-form focused reply">
-                <div data-v-48a7e3c5="" class="form-box">
+                <div class="form-box">
                   <div class="input-box">
                     <div
                       contenteditable="true"
@@ -128,8 +128,6 @@
 import { createDiscreteApi, NButton } from 'naive-ui';
 import { getCommentList, createComment } from '@/api/article';
 
-const { message } = createDiscreteApi(['message']);
-
 const route = useRoute();
 const isLogin = useIsLogin();
 
@@ -145,6 +143,7 @@ const focused = ref(false);
 const { data, refresh } = await getCommentList(id);
 
 const handleCreateComment = async () => {
+  const { message } = createDiscreteApi(['message']);
   try {
     await createComment({ articleId: id, content: content.value });
     refresh();

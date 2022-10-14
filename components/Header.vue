@@ -5,7 +5,9 @@
         <nuxt-link to="/" class="logo"></nuxt-link>
         <menu class="menu">
           <span v-for="item in data" :key="item.link" v-if="data.length">
-            <nuxt-link :to="item.link">{{ item.title }}</nuxt-link>
+            <nuxt-link :to="item.link" :class="{ active: active === item.link }">
+              {{ item.title }}
+            </nuxt-link>
           </span>
         </menu>
       </div>
@@ -38,6 +40,7 @@ import { getNavgation } from '@/api/common';
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
+const route = useRoute();
 
 const userOptions = [
   {
@@ -59,10 +62,23 @@ const handleLoginRegisterBtn = () => {
   useShowModal();
 };
 
+const active = ref(route.path as string);
+
+watch(
+  () => route.path,
+  (newVal) => {
+    active.value = newVal;
+  }
+);
+
 const handleToAdd = () => {
-  navigateTo({
-    path: '/article/add',
-  });
+  if (isLogin.value) {
+    navigateTo({
+      path: '/article/add',
+    });
+  } else {
+    useShowModal();
+  }
 };
 
 const handleSelect = (k: any) => {
