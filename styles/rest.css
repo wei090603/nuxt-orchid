@@ -15,7 +15,7 @@
 
 :root {
   /* 白天 */
-  --Yuexing-color: #1abc9c;
+  --Yuexing-color: #4c8b7f;
   --Yuexing-body-bg: #f9f9f9;
   --Yuexing-bg: #fff;
   --Yuexing-a: #333;
@@ -114,7 +114,6 @@ input::-ms-clear, input::-ms-reveal {
 input[type=password], input[type=text], textarea {
   resize: none;
   outline: 0;
-  -webkit-appearance: none;
   white-space: pre-wrap;
   word-wrap: break-word;
   background: #fff

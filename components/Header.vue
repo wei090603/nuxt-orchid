@@ -18,14 +18,12 @@
             <n-button type="primary" ghost>搜索</n-button>
           </n-input-group>
         </div>
-        <div class="release-btn">
+        <div class="write-btn">
           <n-button type="primary" @click="handleToAdd">写文章</n-button>
         </div>
         <client-only>
           <div class="center" v-if="isLogin">
-            <n-dropdown :options="userOptions" @select="handleSelect">
-              <n-avatar round size="large" :src="imgUrl + userInfo.avatar" />
-            </n-dropdown>
+            <Avatar />
           </div>
           <div class="login-btn" @click="handleLoginRegisterBtn" v-else>登录/注册</div>
         </client-only>
@@ -38,23 +36,8 @@
 import { NInput, NButton, NInputGroup, NAvatar, NDropdown, createDiscreteApi } from 'naive-ui';
 import { getNavgation } from '@/api/common';
 
-const env = useRuntimeConfig();
-const imgUrl: string = env.public.VITE_FILE_URL;
 const route = useRoute();
-
-const userOptions = [
-  {
-    label: '个人中心',
-    key: 'center',
-  },
-  {
-    label: '退出',
-    key: 'logout',
-  },
-];
-
 const isLogin = useIsLogin();
-const userInfo = useUserInfo();
 
 const { data } = await getNavgation();
 
@@ -78,27 +61,6 @@ const handleToAdd = () => {
     });
   } else {
     useShowModal();
-  }
-};
-
-const handleSelect = (k: any) => {
-  switch (k) {
-    case 'logout':
-      const { dialog } = createDiscreteApi(['dialog']);
-      dialog.warning({
-        content: '是否要退出登录？',
-        positiveText: '退出',
-        negativeText: '取消',
-        onPositiveClick: async () => {
-          await useLogout();
-        },
-      });
-      break;
-    case 'center':
-      navigateTo({
-        path: `/user/${userInfo.value.id}/posts`,
-      });
-      break;
   }
 };
 </script>
@@ -131,7 +93,7 @@ header {
     .search {
       width: 300px;
     }
-    .release-btn {
+    .write-btn {
       margin-right: 10px;
     }
     .login-btn {
@@ -146,6 +108,10 @@ header {
       transition: background-color 0.3s, color 0.3s;
       cursor: pointer;
       padding: 0 14px;
+    }
+    .center {
+      display: flex;
+      align-items: center;
     }
   }
 }

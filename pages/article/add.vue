@@ -7,15 +7,29 @@
           <i></i>
           <div class="page-title">写文章</div>
         </div>
-        <div class="right">
-          <div class=""><n-button type="primary">发布</n-button></div>
-          <div class="avatar"></div>
-        </div>
+        <div class="right"><Avatar /></div>
       </div>
     </div>
     <div class="main">
       <div class="title">
         <input type="text" placeholder="请输入标题(最多 100 个字)" />
+      </div>
+      <client-only>
+        <Editor />
+      </client-only>
+
+      <div class="content-setting">发布设置</div>
+    </div>
+
+    <div class="release-setting">
+      <div class="content">
+        <div class="left">
+          <span>发布设置</span>
+        </div>
+        <div class="right">
+          <n-button strong secondary class="preview">预览</n-button>
+          <n-button type="primary">发布</n-button>
+        </div>
       </div>
     </div>
   </div>
@@ -23,6 +37,7 @@
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
+
 definePageMeta({
   layout: false,
 });
@@ -64,13 +79,16 @@ definePageMeta({
         font-size: 16px;
       }
     }
+    .right {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 
 .main {
   width: 1250px;
-  height: 500px;
-  margin: 20px auto 0;
+  margin: 20px auto 70px;
   padding: 0 15px;
   background: #fff;
   .title {
@@ -85,6 +103,40 @@ definePageMeta({
         font-weight: 600;
         font-size: 32px;
         letter-spacing: 2px;
+      }
+    }
+  }
+  .content-setting {
+    color: #444444;
+    line-height: 61px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+}
+
+.release-setting {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52px;
+  border-top: 1px solid #ebebeb;
+  background: #fff;
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1250px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    .left {
+      line-height: 52px;
+      color: #8590a6;
+    }
+    .right {
+      .preview {
+        margin-right: 15px;
       }
     }
   }

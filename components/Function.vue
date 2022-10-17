@@ -181,7 +181,7 @@ const handleLoginClick = () => {
 const handleGoSign = () => {
   if (isLogin.value) {
     navigateTo({
-      path: '/user/sign',
+      path: '/my/sign',
     });
   } else {
     useShowModal();

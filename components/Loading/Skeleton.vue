@@ -1,6 +1,6 @@
 <!-- 骨架屏加载组件 -->
 <template>
-  <n-grid :x-gap="20" :y-gap="5" :cols="4">
+  <n-grid :x-gap="20" :y-gap="5" :cols="1">
     <n-grid-item v-for="i in 8" :key="i">
       <n-card class="mb-5">
         <template #cover>
