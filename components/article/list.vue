@@ -28,10 +28,10 @@
             <!-- 文章信息 -->
             <div class="meta">
               <!-- 作者头像 -->
-              <nuxt-link class="author" :to="{ path: `/user/${item.author.id}` }" target="_blank">
+              <div class="author" @click.stop="handleGoUserDetail(item.author.id)">
                 <img :src="imgUrl + item.author.avatar" alt="" />
                 <span>{{ item.author.nickName }}</span>
-              </nuxt-link>
+              </div>
 
               <div class="interact">
                 <span @click.stop="handleLikeClick(item)" class="dianzan">
@@ -90,6 +90,10 @@ await getArticleList();
 
 const handleToDetial = (id: string) => {
   window.open(`/article/${id}`, '_blank');
+};
+
+const handleGoUserDetail = (id: string) => {
+  window.open(`/user/${id}`, '_blank');
 };
 
 // 文章点赞
@@ -244,6 +248,9 @@ onMounted(() => {
         justify-content: space-between;
         .author {
           font-size: 14px;
+          &:hover {
+            color: #1abc9c;
+          }
           img {
             width: 24px;
             height: 24px;

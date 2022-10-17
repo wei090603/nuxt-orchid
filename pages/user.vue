@@ -50,11 +50,11 @@
           </div>
           <div class="line-list">
             <a class="line-item" href="/people/wo-jiu-kan-kan-66-23/following/topics">
-              <span class="item-name">关注的话题</span>
+              <span class="item-name">收藏集</span>
               <span class="item-value">8</span>
             </a>
             <a class="line-item" href="/people/wo-jiu-kan-kan-66-23/following/topics">
-              <span class="item-name">关注的话题</span>
+              <span class="item-name">关注标签</span>
               <span class="item-value">8</span>
             </a>
             <a class="line-item" href="javascript:;">
@@ -79,8 +79,6 @@ const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
 const { pending, data: userInfo, error } = await getOhterUserInfo(id);
-
-console.log(userInfo.value, 'userInfo');
 
 const activeName = computed(() => route.name);
 
