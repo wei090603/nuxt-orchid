@@ -11,7 +11,10 @@
       <div class="right">
         <div class="jifen">100</div>
         <div class="btn">
-          <n-button type="primary" ghost @click="handleGoEdit">编辑个人资料</n-button>
+          <n-button v-if="id === userInfo.id" type="primary" ghost @click="handleGoEdit">
+            编辑个人资料
+          </n-button>
+          <n-button v-else type="primary" ghost @click="handleGoEdit">+关注</n-button>
         </div>
       </div>
     </div>
@@ -126,6 +129,7 @@ const handleGoEdit = () => {
 <style lang="less" scoped>
 .wrapper {
   padding-top: 70px;
+  background: #f4f5f5;
 }
 
 .head {
@@ -169,7 +173,6 @@ const handleGoEdit = () => {
   .profile-main-column {
     flex: 1;
     overflow: hidden;
-    background-color: #fff;
     .profile-main-header {
       position: relative;
       margin: 0;
@@ -178,7 +181,6 @@ const handleGoEdit = () => {
       background-color: #fff;
       border-radius: 0.2rem 0.2rem 0 0;
       border-bottom: 1px solid #e4e6eb;
-      z-index: 100;
       ul {
         display: flex;
         align-items: center;
@@ -198,6 +200,7 @@ const handleGoEdit = () => {
           font-size: 16px;
           font-weight: 400;
           color: #515767;
+          cursor: pointer;
           &.active {
             color: #252933;
             font-weight: 500;

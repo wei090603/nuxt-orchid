@@ -3,7 +3,7 @@
     <!-- 列表 -->
     <ul>
       <li v-for="item in articleData.list" :key="item.id">
-        <div class="item" @click="handleToDetial(item.id)">
+        <div class="item" @click="handleToDetail(item.id)">
           <!-- 文章缩略图 -->
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
@@ -88,7 +88,7 @@ const getArticleList = async () => {
 
 await getArticleList();
 
-const handleToDetial = (id: string) => {
+const handleToDetail = (id: string) => {
   window.open(`/article/${id}`, '_blank');
 };
 

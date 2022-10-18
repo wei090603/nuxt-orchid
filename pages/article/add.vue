@@ -19,6 +19,14 @@
       </client-only>
 
       <div class="content-setting">发布设置</div>
+
+      <n-form-item label="分类" :rule="rule" label-placement="left">
+        <n-input v-model:value="valueRef" />
+      </n-form-item>
+
+      <n-form-item label="标签" :rule="rule" label-placement="left">
+        <n-input v-model:value="valueRef" />
+      </n-form-item>
     </div>
 
     <div class="release-setting">
@@ -36,11 +44,22 @@
 </template>
 
 <script lang="ts" setup>
-import { NButton } from 'naive-ui';
+import { NButton, NInput, NFormItem } from 'naive-ui';
 
 definePageMeta({
   layout: false,
 });
+
+const valueRef = ref('');
+const rule = {
+  required: true,
+  trigger: ['input', 'blur'],
+  validator() {
+    if (valueRef.value !== '') {
+      return new Error('error');
+    }
+  },
+};
 </script>
 
 <style lang="less" scoped>

@@ -74,7 +74,7 @@ header {
   width: 100%;
   border-bottom: 1px solid #f1f1f1;
   background: #fff;
-  z-index: 9;
+  z-index: 99;
   .container {
     display: flex;
     justify-content: space-between;
