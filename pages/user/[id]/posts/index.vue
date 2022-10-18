@@ -12,7 +12,19 @@
               <div class="title">{{ item.title }}</div>
               <div class="abstract">{{ item.summary }}</div>
               <div class="bottom">
-                查看{{ item.reading }} 点赞{{ item.likeCount }} 评论{{ item.commentCount }}
+                <span>
+                  <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
+                  {{ item.reading }}
+                </span>
+                <span class="dianzan">
+                  <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
+                  {{ item.likeCount }}
+                </span>
+                <!-- 文章发布时间 -->
+                <span>
+                  <i class="iconfont icon-shijian"></i>
+                  {{ item.commentCount }}
+                </span>
               </div>
             </div>
             <img class="thumb" :src="imgUrl + item.coverPicture" alt="" />
