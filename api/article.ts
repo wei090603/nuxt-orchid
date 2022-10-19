@@ -21,3 +21,11 @@ export const articleLikeDel = (id: string) => http.delete('articleLikeDel', `/ar
 
 // 获取文章分类
 export const getCategory = () => http.get('getCategory', `/category/top`);
+
+// 文章收藏
+export const articleCollect = (body: object) =>
+  http.post('articleCollect', '/collect/addArticle', body);
+
+// 文章取消收藏
+export const articleCollectDel = (id: string) =>
+  http.delete('articleCollectDel', `/collect/delArticle/${id}`);

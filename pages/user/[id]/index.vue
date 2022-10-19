@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <LoadingGroup :pending="pending" :error="error" :isEmpty="false">
+    <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
       <div class="dynamic-container">
         <div class="dynamic-item">
           <div class="source-header">沉默王二 赞了这篇文章</div>

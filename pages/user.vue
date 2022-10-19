@@ -11,10 +11,15 @@
       <div class="right">
         <div class="jifen">100</div>
         <div class="btn">
-          <n-button v-if="id === userInfo.id" type="primary" ghost @click="handleGoEdit">
+          <n-button v-if="Number(id) === myInfo.id" type="primary" ghost @click="handleGoEdit">
             编辑个人资料
           </n-button>
-          <n-button v-else type="primary" ghost @click="handleGoEdit">+关注</n-button>
+          <template v-else>
+            <n-button type="primary" ghost @click="handleFollowClick">+关注</n-button>
+            <n-button strong secondary type="tertiary" @click="handleFollowDelClick">
+              已关注
+            </n-button>
+          </template>
         </div>
       </div>
     </div>
@@ -72,14 +77,17 @@
 </template>
 
 <script lang="ts" setup>
-import { getOhterUserInfo } from '~~/api/user';
+import { getOhterUserInfo, postFollow, deleteFollow } from '~~/api/user';
 import { NButton } from 'naive-ui';
 
 const route = useRoute();
+const isLogin = useIsLogin();
 const id = route.params.id as string;
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
+
+const myInfo = useUserInfo();
 
 const { pending, data: userInfo, error } = await getOhterUserInfo(id);
 
@@ -124,11 +132,29 @@ const handleGoEdit = () => {
     path: '/my/profile',
   });
 };
+
+// 关注
+const handleFollowClick = async () => {
+  if (isLogin.value) {
+    await postFollow({ followId: +id });
+  } else {
+    useShowModal();
+  }
+};
+
+const handleFollowDelClick = async () => {
+  if (isLogin.value) {
+    await deleteFollow(id);
+  } else {
+    useShowModal();
+  }
+};
 </script>
 
 <style lang="less" scoped>
 .wrapper {
   padding-top: 70px;
+  min-height: 100vh;
   background: #f4f5f5;
 }
 
@@ -166,7 +192,6 @@ const handleGoEdit = () => {
 .profile-main {
   display: flex;
   width: 1250px;
-  min-height: 100vh;
   margin: 10px auto;
   justify-content: space-between;
   align-items: flex-start;

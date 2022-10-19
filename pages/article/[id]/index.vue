@@ -51,8 +51,9 @@
         <div class="panel-btn with-badge" :badge="data.commentCount">
           <span class="icon">评论</span>
         </div>
-        <div class="panel-btn" :badge="10">
-          <span class="icon">收藏</span>
+        <div class="panel-btn" @click="handleCollectClick">
+          <span class="icon" v-if="data.isCollect">已收藏</span>
+          <span class="icon" v-else>收藏</span>
         </div>
       </div>
     </div>
@@ -61,7 +62,13 @@
 
 <script lang="ts" setup>
 import { NButton, NSpace } from 'naive-ui';
-import { articleLike, articleLikeDel, getArticleDetail } from '@/api/article';
+import {
+  articleLike,
+  articleLikeDel,
+  getArticleDetail,
+  articleCollect,
+  articleCollectDel,
+} from '@/api/article';
 import { getOhterUserInfo } from '@/api/user';
 
 const route = useRoute();
@@ -84,7 +91,7 @@ const handleLikeClick = async () => {
   if (data.value.isLike) {
     try {
       await articleLikeDel(id);
-      data.value.isLike = false;
+      data.value.isLike = 0;
       data.value.likeCount -= 1;
     } catch (_error) {
       console.log(_error, 'error');
@@ -92,8 +99,22 @@ const handleLikeClick = async () => {
   } else {
     try {
       await articleLike({ articleId: Number(id) });
-      data.value.isLike = true;
+      data.value.isLike = 1;
       data.value.likeCount += 1;
+    } catch (_error) {}
+  }
+};
+
+const handleCollectClick = async () => {
+  if (data.value.isCollect) {
+    try {
+      await articleCollectDel(id);
+      data.value.isCollect = false;
+    } catch (_error) {}
+  } else {
+    try {
+      await articleCollect({ articleId: Number(id) });
+      data.value.isCollect = true;
     } catch (_error) {}
   }
 };

@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import { NEmpty } from 'naive-ui';
 type IProps = {
-  desc: string;
+  desc?: string;
 };
 withDefaults(defineProps<IProps>(), {
   desc: '暂无数据',

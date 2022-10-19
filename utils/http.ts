@@ -5,7 +5,7 @@ import { createDiscreteApi } from 'naive-ui';
 function responseVerify(code: number) {
   const { message } = createDiscreteApi(['message']);
   switch (code) {
-    case 400:
+    case 10400:
       message.error('请求失败！请您稍后重试');
       break;
     case 401:
@@ -15,7 +15,7 @@ function responseVerify(code: number) {
     case 403:
       message.error('当前账号无权限访问！');
       break;
-    case 404:
+    case 10404:
       message.error('你所访问的资源不存在！');
       break;
     case 405:

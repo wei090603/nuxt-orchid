@@ -43,7 +43,6 @@ const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
 const id = route.params.id as string;
-console.log(id, 'id');
 
 const { pending, data, error } = await getUserArticle(id);
 

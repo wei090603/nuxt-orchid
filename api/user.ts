@@ -15,3 +15,18 @@ export const loginOut = () => http.get('loginOut', `/auth/loginOut`);
 
 // 获取用户文章
 export const getUserArticle = (id: string) => http.get('userArticle', `/user/article/${id}`);
+
+// 获取用户收藏
+export const getUserCollect = (id: string) => http.get('userCollect', `/user/collect/${id}`);
+
+// 获取用户点赞
+export const getUserLike = (id: string) => http.get('userLike', `/user/like/${id}`);
+
+// 获取用户关注
+export const getUserFollow = (id: string) => http.get('userFollow', `/user/follow/${id}`);
+
+// 关注用户
+export const postFollow = (body: object) => http.post('postFollow', '/follow', body);
+
+// 取消关注用户
+export const deleteFollow = (id: string) => http.delete('deleteFollow', `/follow/${id}`);
