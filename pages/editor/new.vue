@@ -3,7 +3,7 @@
     <div class="header">
       <div class="container">
         <div class="left">
-          <NuxtLink to="/" class="logo"></NuxtLink>
+          <span class="logo" @click="handleGoHome"></span>
           <i></i>
           <div class="page-title">写文章</div>
         </div>
@@ -14,11 +14,16 @@
       <div class="title">
         <input type="text" placeholder="请输入标题(最多 100 个字)" />
       </div>
-      <client-only>
+      <clientOnly>
         <Editor />
-      </client-only>
+      </clientOnly>
 
       <div class="content-setting">发布设置</div>
+
+      <n-form-item label="上传文件" :rule="rule" label-placement="left">
+        <n-input v-model:value="valueRef" />
+        图片上传格式支持 JPEG、JPG、PNG
+      </n-form-item>
 
       <n-form-item label="分类" :rule="rule" label-placement="left">
         <n-input v-model:value="valueRef" />
@@ -45,10 +50,16 @@
 
 <script lang="ts" setup>
 import { NButton, NInput, NFormItem } from 'naive-ui';
+import { getCategory } from '@/api/article';
 
 definePageMeta({
   layout: false,
+  middleware: ['auth'], // 用户登录验证
 });
+
+const { data } = await getCategory();
+
+console.log(data.value, 'data');
 
 const valueRef = ref('');
 const rule = {
@@ -59,6 +70,10 @@ const rule = {
       return new Error('error');
     }
   },
+};
+
+const handleGoHome = () => {
+  navigateTo('/');
 };
 </script>
 
@@ -83,6 +98,7 @@ const rule = {
         display: block;
         width: 50px;
         height: 50px;
+        cursor: pointer;
         background: url(@/assets/images/logo.png) no-repeat center;
         background-size: 100%;
       }

@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NInput, NButton, NInputGroup, NAvatar, NDropdown, createDiscreteApi } from 'naive-ui';
+import { NInput, NButton, NInputGroup } from 'naive-ui';
 import { getNavgation } from '@/api/common';
 
 const route = useRoute();
@@ -57,7 +57,7 @@ watch(
 const handleToAdd = () => {
   if (isLogin.value) {
     navigateTo({
-      path: '/article/add',
+      path: '/editor/new',
     });
   } else {
     useShowModal();

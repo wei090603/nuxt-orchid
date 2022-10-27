@@ -19,8 +19,11 @@ export const articleLike = (body: object) => http.post('articleLike', '/article/
 // 文章取消点赞
 export const articleLikeDel = (id: string) => http.delete('articleLikeDel', `/article/like/${id}`);
 
-// 获取文章分类
-export const getCategory = () => http.get('getCategory', `/category/top`);
+// 获取文章一级分类
+export const getCategoryTop = () => http.get('getCategoryTop', `/category/top`);
+
+// 获取文章树形分类
+export const getCategory = () => http.get('getCategory', `/category`);
 
 // 文章收藏
 export const articleCollect = (body: object) =>

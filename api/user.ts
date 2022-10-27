@@ -23,7 +23,8 @@ export const getUserCollect = (id: string) => http.get('userCollect', `/user/col
 export const getUserLike = (id: string) => http.get('userLike', `/user/like/${id}`);
 
 // 获取用户关注
-export const getUserFollow = (id: string) => http.get('userFollow', `/user/follow/${id}`);
+export const getUserFollow = (id: string, params: object) =>
+  http.get('userFollow', `/user/follow/${id}`, params);
 
 // 关注用户
 export const postFollow = (body: object) => http.post('postFollow', '/follow', body);

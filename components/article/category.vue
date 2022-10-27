@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-import { getCategory } from '@/api/article';
+import { getCategoryTop } from '@/api/article';
 
-const { data } = await getCategory();
+const { data } = await getCategoryTop();
 </script>
 
 <style lang="less" scoped>

@@ -13,31 +13,52 @@
         </span>
       </div>
     </div>
-    <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
-      <div class="link">
+    <LoadingGroup :isEmpty="followList.length === 0">
+      <div
+        class="link"
+        v-for="item in followList"
+        :key="item.id"
+        @click="handleGoDetail(item.follow.id)"
+      >
         <img
-          src="https://p3-passport.byteimg.com/img/user-avatar/fd2e197538e10388982140ac8096344e~100x100.awebp"
-          alt="百年孤独html的头像"
+          :src="imgUrl + item.follow.avatar"
+          :alt="item.follow.nickName + '的头像'"
           class="lazy avatar avatar"
           loading="lazy"
         />
         <div class="info-box">
-          <a href="/user/1679709498507783" target="_blank" rel="" class="username">
-            <span class="name" style="max-width: 128px">百年孤独html</span>
-          </a>
-          <div class="detail">前端工程师</div>
+          <NuxtLink :to="`/user/${item.follow.id}`" target="_blank" class="username">
+            <span class="name" style="max-width: 128px">{{ item.follow.nickName }}</span>
+          </NuxtLink>
+          <div class="detail">{{ item.follow.sign }}</div>
         </div>
-        <button class="follow-btn active">已关注</button>
+        <template v-if="item.follow.id !== myInfo?.id">
+          <n-button
+            strong
+            secondary
+            type="primary"
+            v-if="item.status"
+            @click="handleFollowDelClick(item)"
+          >
+            已关注
+          </n-button>
+          <n-button type="primary" ghost v-else @click="handleFollowClick(item)">关注</n-button>
+        </template>
       </div>
     </LoadingGroup>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { value } from 'dom7';
-import { getUserFollow } from '~~/api/user';
+import { NButton } from 'naive-ui';
+import { getUserFollow, postFollow, deleteFollow } from '~~/api/user';
 
 const route = useRoute();
+const isLogin = useIsLogin();
+const myInfo = useUserInfo();
+
+const env = useRuntimeConfig();
+const imgUrl: string = env.public.VITE_FILE_URL;
 
 const tabList = [
   {
@@ -51,14 +72,48 @@ const tabList = [
 ];
 
 const id = route.params.id as string;
-console.log(id, 'id');
+
+const isMe = computed(() => isLogin.value && +id === myInfo.value?.id);
 
 const active = ref(1);
+const followList = ref([]);
 
-const { pending, data, error } = await getUserFollow(id);
+const getFollowList = async () => {
+  const { pending, data } = await getUserFollow(id, { type: active.value });
+  followList.value = data.value.map((item) => ({
+    follow: { ...item.follow, ...item.user },
+    status: isMe.value && active.value === 1,
+  }));
+};
+
+await getFollowList();
 
 const handleTabClick = (value: number) => {
   active.value = value;
+  getFollowList();
+};
+
+// 关注
+const handleFollowClick = async (item) => {
+  if (isLogin.value) {
+    await postFollow({ followId: item.follow.id });
+    item.status = true;
+  } else {
+    useShowModal();
+  }
+};
+
+const handleFollowDelClick = async (item) => {
+  if (isLogin.value) {
+    await deleteFollow(item.follow.id);
+    item.status = false;
+  } else {
+    useShowModal();
+  }
+};
+
+const handleGoDetail = (id: number) => {
+  window.open(`/user/${id}`, '_blank');
 };
 </script>
 
@@ -131,22 +186,6 @@ const handleTabClick = (value: number) => {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-  }
-  .follow-btn {
-    flex: 0 0 auto;
-    margin: 0 0 0 1rem;
-    padding: 0;
-    width: 7.5rem;
-    height: 2.5rem;
-    font-size: 1rem;
-    color: #92c452;
-    background-color: #fff;
-    border: 1px solid #92c452;
-    border-radius: 2px;
-    &.active {
-      color: #fff;
-      background-color: #92c452;
     }
   }
 }

@@ -11,14 +11,20 @@
       <div class="right">
         <div class="jifen">100</div>
         <div class="btn">
-          <n-button v-if="Number(id) === myInfo.id" type="primary" ghost @click="handleGoEdit">
+          <n-button v-if="Number(id) === myInfo?.id" type="primary" ghost @click="handleGoEdit">
             编辑个人资料
           </n-button>
           <template v-else>
-            <n-button type="primary" ghost @click="handleFollowClick">+关注</n-button>
-            <n-button strong secondary type="tertiary" @click="handleFollowDelClick">
+            <n-button
+              strong
+              secondary
+              type="tertiary"
+              @click="handleFollowDelClick"
+              v-if="userInfo.isFollow"
+            >
               已关注
             </n-button>
+            <n-button type="primary" ghost @click="handleFollowClick" v-else>+关注</n-button>
           </template>
         </div>
       </div>
@@ -82,6 +88,7 @@ import { NButton } from 'naive-ui';
 
 const route = useRoute();
 const isLogin = useIsLogin();
+
 const id = route.params.id as string;
 
 const env = useRuntimeConfig();
@@ -90,6 +97,10 @@ const imgUrl: string = env.public.VITE_FILE_URL;
 const myInfo = useUserInfo();
 
 const { pending, data: userInfo, error } = await getOhterUserInfo(id);
+
+useHead({
+  title: userInfo.value.nickName + ' 的个人主页 - 兰苑',
+});
 
 const activeName = computed(() => route.name);
 
@@ -137,6 +148,7 @@ const handleGoEdit = () => {
 const handleFollowClick = async () => {
   if (isLogin.value) {
     await postFollow({ followId: +id });
+    userInfo.value.isFollow = 1;
   } else {
     useShowModal();
   }

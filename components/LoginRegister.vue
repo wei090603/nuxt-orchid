@@ -66,7 +66,7 @@ import { login } from '@/api/user';
 const isShowModal = useIsShowModal();
 
 const state = reactive({
-  account: '17802093443',
+  account: '17323110317',
   password: '123456',
   loginWayActive: 0, // 登录方式
   loginWayList: ['微信登录', '免密码登录', '密码登录'],
