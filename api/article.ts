@@ -2,7 +2,7 @@ import http from '~~/utils/http';
 
 // 获取文章列表
 export const getArticle = (params: { size: number; page: number }) =>
-  http.get('getArticle', `/article`, params);
+  http.get('getArticle', `/article`, { ...params, initialcache: false });
 
 // 获取文章详情
 export const getArticleDetail = (id: string) => http.get('getArticleDetail', `/article/${id}`);

@@ -31,7 +31,7 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'keyword',
-          conntent:
+          content:
             '兰花,兰草,兰花草,兰花网,兰花拍卖,兰花图片,兰花网站,中国兰花,兰花价格,兰花交易网,兰花拍卖网,中交网,三千兰花,爱兰,爱兰网站,兰花市场,兰花批发市场,兰花交易,兰花价格行情,兰花百科,兰花学院,兰友博客,兰花新闻,兰花店铺,兰友社区',
         },
         {
@@ -41,7 +41,7 @@ export default defineNuxtConfig({
         },
       ],
       link: [
-        { rel: 'shortcut icon', href: 'favicon.ico' },
+        { rel: 'shortcut icon', type: 'image/x-icon', href: 'favicon.ico' },
         { rel: 'apple-touch-icon', href: 'favicon.ico' },
       ],
     },

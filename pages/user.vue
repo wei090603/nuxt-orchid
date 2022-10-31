@@ -44,7 +44,7 @@
                 </li>
               </ul>
             </div>
-            <NuxtPage></NuxtPage>
+            <NuxtPage />
           </div>
         </div>
         <div class="profile-side-column">
@@ -63,17 +63,19 @@
             </a>
           </div>
           <div class="line-list">
-            <a class="line-item" href="/people/wo-jiu-kan-kan-66-23/following/topics">
+            <NuxtLink class="line-item" :to="{ path: `/user/${id}/collections` }">
               <span class="item-name">收藏集</span>
               <span class="item-value">8</span>
-            </a>
-            <a class="line-item" href="/people/wo-jiu-kan-kan-66-23/following/topics">
-              <span class="item-name">关注标签</span>
+            </NuxtLink>
+            <NuxtLink class="line-item" :to="{ path: `/user/${id}/following` }">
+              <span class="item-name">关注</span>
               <span class="item-value">8</span>
-            </a>
+            </NuxtLink>
             <a class="line-item" href="javascript:;">
               <span class="item-name">加入于</span>
-              <span class="item-value">{{ userInfo.createdAt }}</span>
+              <span class="item-value">
+                {{ dayjs(userInfo.createdAt).format('YYYY-MM-DD') }}
+              </span>
             </a>
           </div>
         </div>
@@ -85,6 +87,10 @@
 <script lang="ts" setup>
 import { getOhterUserInfo, postFollow, deleteFollow } from '~~/api/user';
 import { NButton } from 'naive-ui';
+
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 导入本地化语言
+dayjs.locale('zh-cn'); // 使用本地化语言
 
 const route = useRoute();
 const isLogin = useIsLogin();
