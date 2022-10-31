@@ -14,35 +14,32 @@
       </div>
     </div>
     <LoadingGroup :isEmpty="followList.length === 0">
-      <div
-        class="link"
-        v-for="item in followList"
-        :key="item.id"
-        @click="handleGoDetail(item.follow.id)"
-      >
+      <div class="link" v-for="item in followList" :key="item.id" @click="handleGoDetail(item.id)">
         <img
-          :src="imgUrl + item.follow.avatar"
-          :alt="item.follow.nickName + '的头像'"
+          :src="imgUrl + item.avatar"
+          :alt="item.nickName + '的头像'"
           class="lazy avatar avatar"
           loading="lazy"
         />
         <div class="info-box">
-          <NuxtLink :to="`/user/${item.follow.id}`" target="_blank" class="username">
-            <span class="name" style="max-width: 128px">{{ item.follow.nickName }}</span>
+          <NuxtLink :to="`/user/${item.id}`" target="_blank" class="username">
+            <span class="name" style="max-width: 128px">{{ item.nickName }}</span>
           </NuxtLink>
-          <div class="detail">{{ item.follow.sign }}</div>
+          <div class="detail">{{ item.sign }}</div>
         </div>
-        <template v-if="item.follow.id !== myInfo?.id">
+        <template v-if="item.id !== myInfo?.id">
           <n-button
             strong
             secondary
             type="primary"
             v-if="item.status"
-            @click="handleFollowDelClick(item)"
+            @click.stop="handleFollowDelClick(item)"
           >
             已关注
           </n-button>
-          <n-button type="primary" ghost v-else @click="handleFollowClick(item)">关注</n-button>
+          <n-button type="primary" ghost v-else @click.stop="handleFollowClick(item)">
+            关注
+          </n-button>
         </template>
       </div>
     </LoadingGroup>
@@ -81,9 +78,11 @@ const followList = ref([]);
 const getFollowList = async () => {
   const { pending, data } = await getUserFollow(id, { type: active.value });
   followList.value = data.value.map((item) => ({
-    follow: { ...item.follow, ...item.user },
+    ...item,
     status: isMe.value && active.value === 1,
   }));
+
+  console.log(followList.value, 'followList.value');
 };
 
 await getFollowList();
@@ -96,7 +95,7 @@ const handleTabClick = (value: number) => {
 // 关注
 const handleFollowClick = async (item) => {
   if (isLogin.value) {
-    await postFollow({ followId: item.follow.id });
+    await postFollow({ followId: item.id });
     item.status = true;
   } else {
     useShowModal();
@@ -105,7 +104,7 @@ const handleFollowClick = async (item) => {
 
 const handleFollowDelClick = async (item) => {
   if (isLogin.value) {
-    await deleteFollow(item.follow.id);
+    await deleteFollow(item.id);
     item.status = false;
   } else {
     useShowModal();
