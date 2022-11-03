@@ -32,7 +32,7 @@
             strong
             secondary
             type="primary"
-            v-if="item.status"
+            v-if="item.isFollow"
             @click.stop="handleFollowDelClick(item)"
           >
             已关注
@@ -77,12 +77,7 @@ const followList = ref([]);
 
 const getFollowList = async () => {
   const { pending, data } = await getUserFollow(id, { type: active.value });
-  followList.value = data.value.map((item) => ({
-    ...item,
-    status: isMe.value && active.value === 1,
-  }));
-
-  console.log(followList.value, 'followList.value');
+  followList.value = data.value;
 };
 
 await getFollowList();
@@ -96,7 +91,7 @@ const handleTabClick = (value: number) => {
 const handleFollowClick = async (item) => {
   if (isLogin.value) {
     await postFollow({ followId: item.id });
-    item.status = true;
+    item.isFollow = true;
   } else {
     useShowModal();
   }
