@@ -76,6 +76,7 @@ const getArticleList = async () => {
   articleData.loading = true;
   if (!articleData.finished) {
     const { data } = await getArticle({ page: articleData.page, size: 10 });
+    console.log('data',data)
     articleData.total = data.value.total;
     articleData.list = articleData.list.concat(data.value.list);
     articleData.page += 1;
