@@ -1,83 +1,107 @@
 <template>
   <div class="wrapper">
-    <div class="head">
-      <div class="left">
-        <div class="avatar"><img :src="imgUrl + userInfo.avatar" alt="头像" /></div>
-        <div class="nick-name">
-          <h1>{{ userInfo.nickName }}</h1>
-          <div class="sign">{{ userInfo.sign }}</div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="jifen">100</div>
-        <div class="btn">
-          <n-button v-if="Number(id) === myInfo?.id" type="primary" ghost @click="handleGoEdit">
-            编辑个人资料
-          </n-button>
-          <template v-else>
-            <n-button
-              strong
-              secondary
-              type="tertiary"
-              @click="handleFollowDelClick"
-              v-if="userInfo.isFollow"
-            >
-              已关注
-            </n-button>
-            <n-button type="primary" ghost @click="handleFollowClick" v-else>+关注</n-button>
-          </template>
-        </div>
-      </div>
-    </div>
     <div class="container">
-      <div class="profile-main">
-        <div class="profile-main-column">
-          <div class="card">
-            <div class="profile-main-header">
-              <ul>
-                <li
-                  v-for="item in list"
-                  :class="{ active: activeName === item.key }"
-                  @click="navigate(item)"
-                >
-                  {{ item.title }}
-                </li>
-              </ul>
+      <div class="left-container">
+        <div class="head">
+          <div class="left">
+            <div class="avatar"><img :src="imgUrl + userInfo.avatar" alt="头像" /></div>
+            <div class="nick-name">
+              <h1>{{ userInfo.nickName }}</h1>
+              <div class="sign">{{ userInfo.sign }}</div>
             </div>
-            <NuxtPage />
+          </div>
+          <div class="right">
+            <div class="jifen">100</div>
+            <div class="btn">
+              <n-button v-if="Number(id) === myInfo?.id" type="primary" ghost @click="handleGoEdit">
+                编辑个人资料
+              </n-button>
+              <template v-else>
+                <n-button
+                  strong
+                  secondary
+                  type="tertiary"
+                  @click="handleFollowDelClick"
+                  v-if="userInfo.isFollow"
+                >
+                  已关注
+                </n-button>
+                <n-button type="primary" ghost @click="handleFollowClick" v-else>+关注</n-button>
+              </template>
+            </div>
           </div>
         </div>
-        <div class="profile-side-column">
-          <div class="followship-card">
-            <a type="button" class="button">
-              <div class="number-board">
-                <div class="name">关注了</div>
-                <b class="value" title="1">1</b>
-              </div>
-            </a>
-            <a type="button" class="button">
-              <div class="number-board">
-                <div class="name">关注者</div>
-                <b class="value" title="1">1</b>
-              </div>
-            </a>
+        <div class="profile-main-column">
+          <div class="profile-main-header">
+            <ul>
+              <li
+                v-for="item in list"
+                :class="{ active: activeName === item.key }"
+                @click="navigate(item)"
+              >
+                {{ item.title }}
+              </li>
+            </ul>
           </div>
-          <div class="line-list">
-            <NuxtLink class="line-item" :to="{ path: `/user/${id}/collections` }">
-              <span class="item-name">收藏集</span>
-              <span class="item-value">8</span>
-            </NuxtLink>
-            <NuxtLink class="line-item" :to="{ path: `/user/${id}/following` }">
-              <span class="item-name">关注</span>
-              <span class="item-value">8</span>
-            </NuxtLink>
-            <a class="line-item" href="javascript:;">
-              <span class="item-name">加入于</span>
-              <span class="item-value">
-                {{ dayjs(userInfo.createdAt).format('YYYY-MM-DD') }}
+          <NuxtPage />
+        </div>
+      </div>
+
+      <div class="profile-side-column">
+        <div class="stat-block block shadow">
+          <div class="block-title">个人成就</div>
+          <div class="block-body">
+            <div class="stat-item">
+              <span class="content">
+                文章被阅读
+                <span class="count">14</span>
+              </span>
+            </div>
+            <a
+              data-v-6cb0ed44=""
+              href="https://juejin.cn/book/6844733795329900551/section/6844733795371843597"
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              class="stat-item"
+            >
+              <span class="content">
+                掘力值
+                <span class="count">10</span>
               </span>
             </a>
+            <!---->
           </div>
+        </div>
+
+        <div class="followship-card">
+          <a type="button" class="button">
+            <div class="number-board">
+              <div class="name">关注了</div>
+              <b class="value" :title="userInfo.followNum">{{ userInfo.followNum }}</b>
+            </div>
+          </a>
+          <a type="button" class="button">
+            <div class="number-board">
+              <div class="name">关注者</div>
+              <b class="value" :title="userInfo.followedNum">{{ userInfo.followedNum }}</b>
+            </div>
+          </a>
+        </div>
+        <div class="line-list">
+          <NuxtLink class="line-item" :to="{ path: `/user/${id}/collections` }">
+            <span class="item-name">收藏集</span>
+            <span class="item-value">{{ userInfo.collectNum }}</span>
+          </NuxtLink>
+          <NuxtLink class="line-item" :to="{ path: `/user/${id}/likes` }">
+            <span class="item-name">点赞集</span>
+            <span class="item-value">{{ userInfo.likeNum }}</span>
+          </NuxtLink>
+          <a class="line-item" href="javascript:;">
+            <span class="item-name">加入于</span>
+            <span class="item-value">
+              {{ dayjs(userInfo.createdAt).format('YYYY-MM-DD') }}
+            </span>
+          </a>
         </div>
       </div>
     </div>
@@ -103,6 +127,8 @@ const imgUrl: string = env.public.VITE_FILE_URL;
 const myInfo = useUserInfo();
 
 const { pending, data: userInfo, error } = await getOhterUserInfo(id);
+
+console.log(userInfo.value, 'userInfo');
 
 useHead({
   title: userInfo.value.nickName + ' 的个人主页 - 兰苑',
@@ -154,7 +180,7 @@ const handleGoEdit = () => {
 const handleFollowClick = async () => {
   if (isLogin.value) {
     await postFollow({ followId: +id });
-    userInfo.value.isFollow = 1;
+    userInfo.value.isFollow = true;
   } else {
     useShowModal();
   }
@@ -176,85 +202,87 @@ const handleFollowDelClick = async () => {
   background: #f4f5f5;
 }
 
-.head {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  width: 1250px;
-  padding: 16px;
-  margin: 0 auto;
-  background-color: #fff;
-  .left {
-    display: flex;
-    .avatar {
-      flex: 0 0 auto;
-      margin-right: 20px;
-      width: 90px;
-      height: 90px;
-      background-color: #f9f9f9;
-      border-radius: 50%;
-      img {
-        display: block;
-        width: 100%;
-      }
-    }
-  }
-  .right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-}
-
-.profile-main {
+.container {
   display: flex;
   width: 1250px;
   margin: 10px auto;
-  justify-content: space-between;
-  align-items: flex-start;
-  .profile-main-column {
+  .left-container {
     flex: 1;
-    overflow: hidden;
-    .profile-main-header {
+    .head {
+      display: flex;
+      justify-content: space-between;
       position: relative;
-      margin: 0;
-      padding: 0;
-      height: 40px;
+      padding: 16px;
+      margin: 0 auto;
       background-color: #fff;
-      border-radius: 0.2rem 0.2rem 0 0;
-      border-bottom: 1px solid #e4e6eb;
-      ul {
+      .left {
         display: flex;
         align-items: center;
-        height: 100%;
-        max-width: 960px;
-        white-space: nowrap;
-        position: relative;
-        margin: 0 auto;
-        li {
+        .avatar {
           flex: 0 0 auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          width: 80px;
-          height: 100%;
-          font-size: 16px;
-          font-weight: 400;
-          color: #515767;
-          cursor: pointer;
-          &.active {
-            color: #252933;
-            font-weight: 500;
-            &::before {
-              content: '';
-              position: absolute;
-              bottom: 0;
-              width: 20px;
-              height: 3px;
-              background-color: var(--Yuexing-color);
-            }
+          margin-right: 20px;
+          width: 90px;
+          height: 90px;
+          background-color: #f9f9f9;
+          border-radius: 50%;
+          img {
+            display: block;
+            width: 100%;
+          }
+        }
+      }
+      .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+    }
+  }
+}
+
+.profile-main-column {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 10px;
+  .profile-main-header {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 0.2rem 0.2rem 0 0;
+    border-bottom: 1px solid #e4e6eb;
+    ul {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      max-width: 960px;
+      white-space: nowrap;
+      position: relative;
+      margin: 0 auto;
+      li {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 80px;
+        height: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        color: #515767;
+        cursor: pointer;
+        &.active {
+          color: #252933;
+          font-weight: 500;
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 20px;
+            height: 3px;
+            background-color: var(--Yuexing-color);
           }
         }
       }
@@ -267,6 +295,31 @@ const handleFollowDelClick = async () => {
   width: 296px;
   color: #646464;
   max-width: 296px;
+
+  .stat-block {
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 2px;
+    .block-title {
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #31445b;
+      border-bottom: 1px solid rgba(230, 230, 231, 0.5);
+    }
+    .block-body {
+      padding: 10px;
+      .stat-item {
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        color: #000;
+      }
+      .stat-item:not(:last-child) {
+        margin-bottom: 0.8rem;
+      }
+    }
+  }
   .followship-card {
     display: flex;
     position: relative;

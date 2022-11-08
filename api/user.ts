@@ -31,3 +31,9 @@ export const postFollow = (body: object) => http.post('postFollow', '/follow', b
 
 // 取消关注用户
 export const deleteFollow = (id: string) => http.delete('deleteFollow', `/follow/${id}`);
+
+// 签到
+export const sign = () => http.get('sign', `/sign`);
+
+// 签到记录
+export const signRecord = () => http.get('signRecord', `/sign/record`);

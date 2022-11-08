@@ -20,7 +20,6 @@
                   <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
                   {{ item.likeCount }}
                 </span>
-                <!-- 文章发布时间 -->
                 <span>
                   <i class="iconfont icon-shijian"></i>
                   {{ item.commentCount }}

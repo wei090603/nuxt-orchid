@@ -1,5 +1,5 @@
 <template>
-  <NConfigProvider inline-theme-disabled>
+  <NConfigProvider inline-theme-disabled :locale="zhCN">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -9,4 +9,5 @@
 
 <script setup lang="ts">
 import { NConfigProvider } from 'naive-ui';
+import { zhCN } from 'naive-ui';
 </script>
