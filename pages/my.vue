@@ -104,22 +104,21 @@ definePageMeta({
   .center-menu {
     li {
       cursor: pointer;
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      padding-left: 1.25rem;
-      padding-right: 1.25rem;
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
+      font-size: 14px;
+      line-height: 40px;
+      margin: 0 8px;
+      border-radius: 4px;
+      padding-left: 20px;
       &.active {
         color: #18a058;
-        background-color: #dcffec;
+        background-color: #e2f3ea;
       }
     }
   }
 }
 
 .content {
-  height: 626px;
+  min-height: 626px;
   background-color: #fff;
 }
 </style>
