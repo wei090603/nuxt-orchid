@@ -1,6 +1,5 @@
-import { Ref } from 'nuxt/dist/app/compat/capi';
-
 import { createDiscreteApi } from 'naive-ui';
+import { Ref } from 'nuxt/dist/app/compat/capi';
 
 function responseVerify(code: number) {
   const { message } = createDiscreteApi(['message']);
