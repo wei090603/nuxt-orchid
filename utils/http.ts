@@ -57,7 +57,7 @@ async function fetch(key: string, url: string, options: any) {
   const token = useCookie('token');
 
   const option = {
-    baseURL: 'http://127.0.0.1:4000',
+    baseURL: 'http://10.222.27.120:4000',
     // server: true,
     initialCache: false,
     key: key,
