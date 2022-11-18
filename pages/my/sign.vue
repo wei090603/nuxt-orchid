@@ -9,20 +9,20 @@
       <div class="content-left">
         <div class="figures">
           <div class="figure-card mini-card">
-            <span class="figure active">{{ userInfo.signInCount }}</span>
+            <span class="figure active">{{ signContinuousCount }}</span>
             <div class="attention">
               <span class="text">连续签到天数</span>
             </div>
           </div>
           <div class="figure-card mid-card web-only">
-            <span class="figure">{{ userInfo.signInCount }}</span>
+            <span class="figure">{{ signCount }}</span>
             <div class="attention">
               <span class="text">累计签到天数</span>
             </div>
           </div>
           <div class="divide web-only"></div>
           <div class="figure-card large-card">
-            <span class="figure">{{ userInfo.favs }}</span>
+            <span class="figure">{{ totalPoint }}</span>
             <div class="attention">
               <span class="text">当前积分数</span>
               <span class="tooltip web-only">
@@ -55,22 +55,23 @@
                 class="calendar-day day"
                 v-if="item.value > 0"
                 :class="{ 'today-miss': item.isCurrentDate, 'pre-signed': item.status === 2 }"
+                @click="handleSignClick(item.value)"
               >
                 <span class="dot" v-if="item.status === 2">✔</span>
                 <div class="future-day universal">
                   <span class="figure bold" :class="{ 'back-blue': item.isCurrentDate }">
                     {{ item.value }}
                   </span>
-                  <span class="add-mine-stone gray" v-if="item.status === 2 && !item.isCurrentDate">
-                    +{{ item.favs }}
-                  </span>
+                  <span class="add-mine-stone gray" v-if="item.status === 2">+{{ item.favs }}</span>
                   <span
                     class="plain-text clickable"
                     v-if="item.status === 3 && !item.isCurrentDate"
                   >
                     未签到
                   </span>
-                  <span class="plain-text" v-if="item.isCurrentDate">今日</span>
+                  <span class="plain-text" v-if="item.isCurrentDate && item.status !== 2">
+                    今日
+                  </span>
                   <!-- <span class="add-mine-stone gray">+512</span> -->
                 </div>
               </div>
@@ -81,10 +82,10 @@
       </div>
       <div class="content-right">
         <div class="sign-btn">
-          <n-button class="btn" type="primary" v-if="userInfo.isSign" block size="large">
+          <n-button class="btn" type="primary" v-if="isSign" block size="large" color="#8fc1a7">
             今日已签到
           </n-button>
-          <n-button class="btn" type="primary" v-else block size="large" @click="handleSignClick">
+          <n-button class="btn" type="primary" v-else block size="large" @click="handleSignClick()">
             立即签到
           </n-button>
         </div>
@@ -101,11 +102,17 @@
 
 <script lang="ts" setup>
 import { NTooltip, NButton, NTabs, NTabPane } from 'naive-ui';
-import { sign, signRecord } from '@/api/user';
+import { sign, getSignRecord, getSignInfo } from '@/api/user';
 
 const userInfo = useUserInfo();
 
 const isSign = ref(userInfo.value.isSign);
+
+const totalPoint = ref(userInfo.value.favs);
+// 连续签到天数
+const signContinuousCount = ref(0);
+// 签到总数
+const signCount = ref(0);
 
 const date = new Date();
 
@@ -121,15 +128,24 @@ const fixedDate = new Date().toLocaleDateString().replace(/\//g, '-');
 
 console.log(userInfo.value, currentMonth.value, 'userInfo');
 
-const { pending, data: signList, error } = await signRecord({ month: currentMonth.value });
+// const { pending, data: signList, error, refresh } = await signRecord();
+
+const [signRecord, signInfo] = await Promise.all([
+  getSignRecord({ month: currentMonth.value }),
+  getSignInfo(),
+]);
 
 const dataCount = ref([]);
 
 const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
-const handleSignClick = async () => {
-  await sign();
-  isSign.value = true;
+const handleSignClick = async (value?: number) => {
+  if (!value || isCurrentDate(value)) {
+    await sign();
+    isSign.value = true;
+    await signRecord.refresh();
+    getDateCount();
+  }
 };
 
 const getDateCount = () => {
@@ -170,14 +186,14 @@ const handleSwitchMonthClick = (type: string) => {
 
 // 日期是否签到
 const isSignList = (date: string) => {
-  return signList.value.some((item) => item.createdAt === date);
+  return signRecord.data.value.some((item) => item.createdAt === date);
 };
 
 // 获取签到积分
 const changeSignFav = (date: number) => {
   const day = date < 10 ? `0${date}` : date;
   return (
-    signList.value.find(
+    signRecord.data.value.find(
       (item) => item.createdAt === `${currentYear.value}-${currentMonth.value}-${day}`
     )?.favs || 0
   );
@@ -205,6 +221,9 @@ const dateListStatus = (date: number) => {
 
 onMounted(() => {
   getDateCount();
+
+  signContinuousCount.value = signInfo.data.value.continuousCount;
+  signCount.value = signInfo.data.value.signCount;
 });
 </script>
 
@@ -318,7 +337,7 @@ onMounted(() => {
           }
           &.back-blue {
             color: #fff;
-            background-color: #1e80ff;
+            background-color: #1abc9c;
             border-radius: 50px;
             width: 28px;
             height: 28px;

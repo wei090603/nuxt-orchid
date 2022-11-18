@@ -36,4 +36,7 @@ export const deleteFollow = (id: string) => http.delete('deleteFollow', `/follow
 export const sign = () => http.get('sign', `/sign`);
 
 // 签到记录
-export const signRecord = (params: object) => http.get('signRecord', `/sign/record`, params);
+export const getSignRecord = (params: object) => http.get('signRecord', `/sign/record`, params);
+
+// 签到信息
+export const getSignInfo = () => http.get('signInfo', `/sign/signInfo`);

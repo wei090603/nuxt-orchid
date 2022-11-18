@@ -21,7 +21,7 @@
       <div class="content-setting">发布设置</div>
       <n-form ref="formRef" :model="model" :rules="rules">
         <n-form-item label="上传文件" path="age" label-placement="left" class="width100">
-          <P class="img-tips">图片上传格式支持 JPEG、JPG、PNG</P>
+          <p class="img-tips">图片上传格式支持 JPEG、JPG、PNG</p>
           <!-- <n-input v-model:value="valueRef" />
           图片上传格式支持 JPEG、JPG、PNG -->
           <n-upload
