@@ -32,3 +32,8 @@ export const articleCollect = (body: object) =>
 // 文章取消收藏
 export const articleCollectDel = (id: string) =>
   http.delete('articleCollectDel', `/collect/delArticle/${id}`);
+
+  // 获取标签
+export const getTag = (name:string) => http.get('getTag', `/tag/?name=${name}`);
+
+export const addArticle = (body: object) => http.post('article', '/article', body);
