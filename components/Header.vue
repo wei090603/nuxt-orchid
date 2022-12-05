@@ -35,7 +35,6 @@
 <script lang="ts" setup>
 import { NInput, NButton, NInputGroup } from 'naive-ui';
 import { getNavgation } from '@/api/common';
-const runtimeConfig = useRuntimeConfig();
 
 const route = useRoute();
 const isLogin = useIsLogin();

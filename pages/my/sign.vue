@@ -177,9 +177,19 @@ const isCurrentDate = (date: number) => {
 // 切换月份
 const handleSwitchMonthClick = (type: string) => {
   if (type === 'prev') {
-    currentMonth.value--;
+    if (currentMonth.value === 1) {
+      currentYear.value = currentYear.value - 1;
+      currentMonth.value = 12;
+    } else {
+      currentMonth.value--;
+    }
   } else {
-    currentMonth.value++;
+    if (currentMonth.value === 12) {
+      currentYear.value = currentYear.value + 1;
+      currentMonth.value = 1;
+    } else {
+      currentMonth.value++;
+    }
   }
   getDateCount();
 };
