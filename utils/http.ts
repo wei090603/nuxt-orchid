@@ -56,7 +56,7 @@ async function fetch(key: string, url: string, options: any) {
   const token = useCookie('token');
 
   const option = {
-    baseURL: 'http://10.222.27.120:4000',
+    baseURL: 'http://127.0.0.1:4000',
     // server: true,
     initialCache: false,
     key: key,
@@ -68,7 +68,7 @@ async function fetch(key: string, url: string, options: any) {
 
   if (options?.params?.$) {
     return await $fetch(url, option)
-      .then((res: { data: object; code: number; message: string }) => {
+      .then((res) => {
         if (res?.code !== 200) {
           responseVerify(res.code);
         }

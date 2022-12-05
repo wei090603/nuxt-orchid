@@ -1,21 +1,12 @@
 import { defineNuxtConfig } from 'nuxt/config';
-import { loadEnv } from 'vite';
-
-interface VITE_ENV_CONFIG {
-  VITE_API_HOST: string;
-  VITE_API_PREFFIX: string;
-  VITE_PACK_ENV: string;
-  VITE_PACK_URL: string;
-}
-
-const envScript = process.env.npm_lifecycle_script.split(' ');
-const envName = envScript[envScript.length - 1]; // 通过启动命令区分环境
-const envData = loadEnv(envName, 'env') as unknown as VITE_ENV_CONFIG;
-
-console.log('当前环境：', envData);
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      VITE_FILE_URL: 'http://127.0.0.1:4000/uploads/',
+    },
+  },
   typescript: {
     shim: false,
   },
@@ -47,7 +38,7 @@ export default defineNuxtConfig({
     },
   },
   build: {
-    extractCSS: true,
+    // extractCSS: true,
     transpile:
       process.env.NODE_ENV === 'production'
         ? ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
@@ -62,13 +53,12 @@ export default defineNuxtConfig({
           : [],
     },
   },
-  publicRuntimeConfig: envData, // 把env放入这个里面，通过useRuntimeConfig获取
   css: ['@/styles/rest.css', '@/assets/font/iconfont.css'],
   components: {
     global: true,
     dirs: ['~/components'],
   },
-  server: {
+  devServer: {
     port: 8082,
   },
 });
