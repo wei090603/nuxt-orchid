@@ -11,15 +11,19 @@
       </div>
     </div>
     <div class="main">
-      <div class="title">
-        <input type="text" placeholder="请输入标题(最多 100 个字)" />
-      </div>
-      <!-- <clientOnly>
-        <Editor />
-      </clientOnly> -->
-
-      <div class="content-setting">发布设置</div>
+      
       <n-form ref="formRef" :model="model" :rules="rules">
+        
+        <n-form-item label="" class="width100" path="title" label-placement="left">
+          <div class="title">
+            <n-input type="textarea" v-model:value="model.title" placeholder="请输入标题(最多 100 个字)" />
+          </div>
+        </n-form-item>
+        <!-- <clientOnly>
+          <Editor />
+        </clientOnly> -->
+        <div class="content-setting">发布设置</div>
+
         <n-form-item label="上传文件" path="age" label-placement="left" class="width100">
           <p class="img-tips">图片上传格式支持 JPEG、JPG、PNG</p>
           <!-- <n-input v-model:value="valueRef" />
@@ -33,18 +37,19 @@
           </n-upload>
         </n-form-item>
 
-        <n-form-item label="分类" path="age" label-placement="left">
+        <n-form-item label="分类" path="categoryId" label-placement="left">
           <n-cascader
-            v-model:value="model.age"
+            v-model="model.categoryId"
             placeholder="请选择分类"
             :options="selectOptions"
-            :show-path="true"
+            check-strategy = "all"
+            @update:value="handleUpdateValue"
           />
         </n-form-item>
 
-        <n-form-item label="标签" path="articleList" label-placement="left" class="width100 tag">
-          <n-tag v-for="(item,index) in model.articleList" :key="item.id" closable size="large" @close="handleClose(index)">
-            {{item.title}}
+        <n-form-item label="标签" path="tag" label-placement="left" class="width100 tag">
+          <n-tag v-for="(item,index) in articleList" :key="item.id" closable size="large" @close="handleClose(index)">
+            {{item.name}}
           </n-tag>
           <n-tooltip v-if="isShowAdd" :style="{ minWidth: '200px',backgroundColor: '#fff',color:'#333' }" :show-arrow="false" :show="topicList.length > 0" trigger="click">
             <template #trigger>
@@ -55,10 +60,10 @@
               </n-input>
             </template>
             <div>
-              <p class="topic-item-p" v-for="(item,index) in topicList" :key="index" @click="selTopicClick(item)">{{item}}</p>
+              <p class="topic-item-p" v-for="(item,index) in topicList" :key="index" @click="selTopicClick(item)">{{item.name}}</p>
             </div>
           </n-tooltip>
-          <n-button v-if="model.articleList.length < 5" @click="addArticleClick">+ 添加话题</n-button>
+          <n-button v-if="articleList.length < 5" @click="addArticleClick">+ 添加话题</n-button>
         </n-form-item> 
       </n-form>
     </div>
@@ -70,7 +75,7 @@
         </div>
         <div class="right">
           <n-button strong secondary class="preview">预览</n-button>
-          <n-button type="primary">发布</n-button>
+          <n-button type="primary" @click="publishClick">发布</n-button>
         </div>
       </div>
     </div>
@@ -79,50 +84,60 @@
 </template>
 
 <script lang="ts" setup>
-import { UploadFileInfo,FormRules,FormItemRule,NButton, NInput, NFormItem,NUpload,NForm,NCascader,NTag,CascaderOption,NTooltip,NIcon  } from 'naive-ui';
-// import { getCategory } from '@/api/article';
+import { UploadFileInfo,FormRules,NButton, NInput, NFormItem,NUpload,NForm,NCascader,NTag,CascaderOption,NTooltip,NIcon  } from 'naive-ui';
+import { getCategory,getTag,addArticle } from '@/api/article';
 import { Search } from '@vicons/ionicons5'
 import { Ref } from 'vue';
+import { val } from 'dom7';
 
-interface IArticleItem{
-  title:string;
+interface ITagItem{
   id:number
+  name:string
 }
-interface IModelType{
-  age: string | null;
-  articleList:IArticleItem[]
+interface IArticleForm {
+  title:string;
+  content:string;
+  image: string[],
+  categoryId: string | null,
+  status: number,
+  type: number,
+  tag: string[]
 }
 definePageMeta({
   layout: false,
   middleware: ['auth'], // 用户登录验证
 });
 
-const model = ref<IModelType>({
-      age: null,
-      articleList:[]
-    })
+const model = ref<IArticleForm>({
+    title:'',
+    content:'',
+    image: [],
+    categoryId: null,
+    status: 1,
+    type: 1,
+    tag: []
+  })
 const rules:FormRules = {
-  age: [
+  title:[{
+    required: true,
+    trigger: ['blur'],
+    message: '请输入标题',
+  }],
+  categoryId: [
     {
       required: true,
-      validator (rule: FormItemRule, value: string) {
-        if (!value) {
-          return new Error('需要年龄')
-        } else if (!/^\d*$/.test(value)) {
-          return new Error('年龄应该为整数')
-        }
-        return true
-      },
-      trigger: ['blur']
+      trigger: ['blur'],
+      message: '请选择分类',
     }
   ],
-  articleList:[{
+  tag:[{
     required: true,
     trigger: ['blur'],
     message: '请输入表签',
     type:'array',
   }]
 };
+const articleList = ref<ITagItem[]>([])
 const fileList = ref<UploadFileInfo[]>([
   {
     id: 'c',
@@ -132,70 +147,92 @@ const fileList = ref<UploadFileInfo[]>([
 }])
 const isShowAdd = ref(false);
 const title = ref('');
-const selectOptions:CascaderOption[]  = [
-  {
-    label: '虚拟创作',
-    value: '1',
-    children:[{
-      label: '虚拟创作1-1',
-      value: '1-1',
-      },{
-        label: '虚拟创作1-2',
-      value: '1-1',
-      }]
-  },
-  {
-    label: '包含理财',
-    value: '2',
-    children:[]
-  },
-  {
-    label: '包含剧透',
-    value: '3',
-    children:[]
-  }
-]
-const topicAllList:Ref = ref(['虚拟创作1-1虚拟创作1-1虚拟创作1-1虚拟创作1-1虚拟创作1-1','双十一','电车好还是油车好','一','充电小贴士一','充电小贴士hhhhh','快乐肥仔','快乐宅家','快乐宅家快乐宅家快乐宅家快乐宅家快乐宅家快乐宅家快乐宅家快乐宅家快乐宅家']);
+const selectOptions:Ref<CascaderOption[]>  = ref([])
+
 const topicList:Ref = ref([])
 const handleGoHome = () => {
   navigateTo('/');
 };
 // 话题输入框内容变化
-const handleInput = (val) => {
+const handleInput = async (val:string) => {
   if(!val){
     topicList.value = [];
     return;
   }
-  topicList.value = topicAllList.value.filter((item)=>{
-    return item.indexOf(val) >= 0;
-  })
+  const {data} = await getTag(val);
+  topicList.value = data.value;
 }
 
 // 弹窗选中话题
-const selTopicClick = (val) => {
-  title.value = val;
-  const index = model.value.articleList.findIndex(item => item.title === title.value);
+const selTopicClick = (val:ITagItem) => {
+  title.value = val.name;
+  const index = articleList.value.findIndex(item => item.name === title.value);
   if(index >= 0){
     // message.error('此标题已存在，请重新输入')
     throw new Error('此标题已存在，请重新输入');
   }
   isShowAdd.value = false;
-  model.value.articleList.push({
-    title:title.value,
+ articleList.value.push({
+    name:title.value,
     id:Date.now()
   });
+  model.value.tag.push(val.name)
   title.value = '';
   topicList.value = [];
+  console.log(' model.value', model.value)
 }
 // 话题标签删除
 const handleClose = (index:number):void=>{
-  model.value.articleList.splice(index,1)
+  articleList.value.splice(index,1);
+  model.value.tag.splice(index,1);
 }
 // 点击添加话题按钮
 const addArticleClick = () => {
   isShowAdd.value = true;
 }
 
+const getTreeData = (data:any) => {
+  const arr = []
+  data.forEach((item:any) => {
+    const {title,id,children,...other} = item;
+    const obj = {
+      value:id,
+      label:title,
+      children:children && children.length > 0 ? getTreeData(children) : undefined,
+      ...other
+    }
+     arr.push(obj);
+  });
+  return arr;
+}
+const reqGetCategory= async ()=>{
+  const {data} = await getCategory();
+  selectOptions.value = getTreeData(data.value);
+}
+const handleUpdateValue = (value: string, option: CascaderOption) =>{
+  console.log(value, option)
+  model.value.categoryId = value;
+}
+const formRef = ref();
+// 发布
+const publishClick = async () => {
+  console.log('mode',model.value)
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      // message.success('验证成功')
+      await addArticle(model.value)
+    } else {
+      console.log(errors)
+      // message.error('验证失败')
+    }
+  })
+  
+}
+
+onMounted(()=>{
+  console.log('onMounted')
+  reqGetCategory()
+})
 </script>
 
 <style lang="less" scoped>
