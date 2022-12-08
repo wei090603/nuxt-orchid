@@ -1,7 +1,7 @@
 import http from '~~/utils/http';
 
 // 获取我的用户信息
-export const getMeUserInfo = () => http.get('meUser', `/auth`, { $: true });
+export const getMeUserInfo = () => http.get('', `/auth`);
 
 // 获取别人用户信息
 export const getOhterUserInfo = (id: string) => http.get('otherUser', `/user/${id}`);

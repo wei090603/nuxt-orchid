@@ -61,31 +61,10 @@ async function fetch(key: string, url: string, options: any) {
     initialCache: false,
     key: key,
     headers: {
-      Authorization: `Bearer ${token.value} || ''`,
+      Authorization: `Bearer ${token.value || ''}`,
     },
     ...options,
   };
-
-  if (options?.params?.$) {
-    return await $fetch(url, option)
-      .then((res) => {
-        if (res?.code !== 200) {
-          responseVerify(res.code);
-        }
-        return res;
-      })
-      .catch((err) => {
-        const data = err.value?.data;
-        if (process.client) {
-          if (data?.code === 401) {
-            token.value = '';
-            responseVerify(401);
-            return;
-          }
-          responseVerify(500);
-        }
-      });
-  }
 
   return new Promise(async (resolve, reject) => {
     const res: AsyncData<any> = await useFetch(url, {

@@ -45,6 +45,7 @@ const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
 const { data } = await getAdvertise({ position: props.type });
+
 </script>
 
 <style lang="less" scoped>

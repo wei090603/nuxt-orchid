@@ -32,81 +32,14 @@
         <div class="sign">
           <div class="first-line">
             <div class="icon-text">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon"
-                data-v-68373e0a=""
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M8 2C8 1.72386 7.77614 1.5 7.5 1.5H6.5C6.22386 1.5 6 1.72386 6 2L5.9995 3H3C2.44772 3 2 3.47259 2 4.05556V7H22V4.05556C22 3.47259 21.5523 3 21 3H18V2C18 1.72386 17.7761 1.5 17.5 1.5H16.5C16.2239 1.5 16 1.72386 16 2V3H8V2ZM22 8.5H2V20.9444C2 21.5274 2.44772 22 3 22H21C21.5523 22 22 21.5274 22 20.9444V8.5Z"
-                  fill="#FFCF8B"
-                  data-v-68373e0a=""
-                ></path>
-                <rect
-                  x="5"
-                  y="12"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-                <rect
-                  x="10.5"
-                  y="12"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-                <rect
-                  x="5"
-                  y="16"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-                <rect
-                  x="10.5"
-                  y="16"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-                <rect
-                  x="16"
-                  y="12"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-                <rect
-                  x="16"
-                  y="16"
-                  width="3"
-                  height="2"
-                  rx="1"
-                  fill="#FF7D00"
-                  data-v-68373e0a=""
-                ></rect>
-              </svg>
               <span class="hello" data-v-68373e0a="">下午好！</span>
             </div>
-            <button class="btn signin-btn">
-              <span class="btn-text" @click="handleGoSign">去签到</span>
+            <button
+              class="btn sign-btn"
+              :class="{ 'is-sign': userInfo?.isSign }"
+              @click="handleGoSign"
+            >
+              {{ userInfo?.isSign ? '已' : '去' }}签到
             </button>
           </div>
           <div class="second-line">点亮你在社区的每一天</div>
@@ -161,6 +94,9 @@
 <script lang="ts" setup>
 import { getArticleHot, getHotTag } from '@/api/home';
 const isLogin = useIsLogin();
+const userInfo = useUserInfo();
+
+console.log(userInfo, 'userInfo');
 
 const state = reactive({
   tagHotList: [],
@@ -257,7 +193,6 @@ const { tagHotList, articleHotList } = toRefs(state);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDkuNDIgNjAuMDEiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjI0LjcxIiB5MT0iMS44OSIgeDI9IjI0LjcxIiB5Mj0iMzguOTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZjc0MTgiLz48c3RvcCBvZmZzZXQ9Ii4xNyIgc3RvcC1jb2xvcj0iI2YxNTYxYSIvPjxzdG9wIG9mZnNldD0iLjQxIiBzdG9wLWNvbG9yPSIjZGYzMTFiIi8+PHN0b3Agb2Zmc2V0PSIuNjQiIHN0b3AtY29sb3I9IiNkMjE2MWQiLz48c3RvcCBvZmZzZXQ9Ii44NCIgc3RvcC1jb2xvcj0iI2NhMDYxZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2M3MDAxZSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iOS45IiB5MT0iMTkuNDQiIHgyPSI0Mi4yOSIgeTI9IjU0LjEyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZlMTE4Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZiNTFlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgZGF0YS1uYW1lPSLlm77lsYIgMiIgc3R5bGU9Imlzb2xhdGlvbjppc29sYXRlIj48ZyBkYXRhLW5hbWU9IuWbvuWxgiAxIj48cGF0aCBkPSJNMzkuNjggNDBIOS43NGE1IDUgMCAwIDEtNS01VjVhNSA1IDAgMCAxIDUtNWgyOS45NGE1IDUgMCAwIDEgNSA1djMwYTUgNSAwIDAgMS01IDVaIiBzdHlsZT0iZmlsbDp1cmwoI2EpIi8+PHBhdGggZD0iTTQ5LjQyIDM1LjNhMjQuNzEgMjQuNzEgMCAxIDEtMjQuNzEtMjQuNzFBMjQuNzEgMjQuNzEgMCAwIDEgNDkuNDIgMzUuM1oiIHN0eWxlPSJmaWxsOnVybCgjYikiLz48cGF0aCBkPSJtNDIuMTggMTcuODItMzQuOTUgMzVhMjQuNzEgMjQuNzEgMCAxIDAgMzUtMzQuOTVaIiBzdHlsZT0ib3BhY2l0eTouMDMiLz48aW1hZ2Ugd2lkdGg9IjM3IiBoZWlnaHQ9IjM2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2LjEgMTcuNDgpIiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUNVQUFBQWtDQVlBQUFBT3d2T21BQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBRUYwbEVRVlJZUjdYWXkyNGNWUkRHOFYvYk0yT1RpeFZpRW00aEVZb0JFU2tTUW9CWXNHSEJFckZqaTU4QlA0ZmZ3US9CRmlKMlNJaUFGQzZDQ0NGaU84Z3hDVW1JN1hqR2RyT29jeklYOS9SNHhxR2swZkVrcDd2KzU2dnFxcG91eXJKMEhGdGFMSXIwWjRFU2xsZU9kOVBpT0ZCTGk4VVVHcGpGTlBheGk4N3lTbmxRZDIyZFRReVZGR3BoSHE5Z0R0dFl4eVoySmdXYkdyV2h4cVp3RWd2NENKL2lFN3lMODJqMmhIWXNhNHphVUdYSldSUFA0UXJlRjNEL0N2WHU0U0h1aTVDT1paTXFsVlc2aEtzQzZPWDAvUXBlRjJHZFNLMnhvWHBVbWhjd3J3bkZabkZhRi9TU0FCL2J4OWdYT0t4U2RqNnRIM2JCaEdxTkJWV2gwaFBIb2s0TkF4N0xUMjJpRHhSR1FvMVRoanV0Q3UwdGJDOHRGbTFSWEVjVzJDZDFxZ0lnTzJqcEt0SENpL2dBSCtNdG5CR3cyVXBSUUcvaEszeUJuL0VJQitpZ25kWU0xZ2RhbEdVNVdKa2I0dVJOVVJEUHA3V1ovdjhDM3NNN2VFbUFEdWJNUGg3Z1IzeU4zd1JVUjVTS08ybnRDTkE5UE1iZThrcDVVSHorV1ova0YzRVdNK256UEM2bmRTYnRPeU1lLzNONFJuVytsRUtOdTFoTmExc291SUhmMDdxYlB2ZUVzbmZSeVRrMUs0QSt4SnZpMFc0NXJGUldkS2JuZTVYMUZ0ZFRRb2tjdWw2bDJxTGcvb0pyMkpLZ0NwRVRjM2dWYndzVkdnN25sSXAxbU9VVWFPclBuV2RGWG5ZRTdLWUkzWGVDbzJpa2pmdWltVDVNRzJkMW42ckNhSUJoVm5XQUtYSFFBNkhNbnZDN0xUaktITDVkM01iM1F2SVowZmxQbUJ4b21PVzU2N0h3K1lQd2UxdHdtRXFQWVVmSWVGM0U5bHVSb052aVJFL1REc1I5VjRXZmE4THZwcGpEeWlsSWM4OE8xdExHTC8wL1lJTkEyYythbnZucnlkT3p2Rkx1QzdEQkM1NFdXQWFxT3ZoTzhvK0JSN29HYk0zeHdPcFNwQStJaWpwVEFYWk5KT0xmK2x2RHVMWXJSdVhyNG40NVpJZUd3TXJpMXdPMmpodWlYV3lJWWplSlphVWVpSHZlTVFTSStwRWk5NlRkdEU2cVVMWU10cXZiOHlwdDFKelRGTDN3UWxwYjlkdVBaQ01QVndkVmlGWnpXdlMvMCtuN2NZdnB5T3RIL1pxcG1xa0dyYmV2MWZYRm85d0xvOFBIOE42WGUyYnU5QS9TMms3LzNodW1ERFFueHFBNU5iTjduVkxEVGxicWppRmJZaGJhRUhYc2hIQjZWalQwM3ZHbUpkTGdjbHIva25yZG9GVkNwUlBrZkRvblpxSnAzU2R5U3d4a3QzQVR2NG9mbm1md2hwak5MNHJCTWNNMTlNOW5PVDhQSlg2ZFVpM2QyZWVFVU9hZjlNa3dOOUs2SmtCUDRpY0JkVlUvM0t6RFlhMjBPcWhTcUhJZmY0cFI0eEgrRU1YMHB1NEl1eVVjVG90V2txRXozQUplU05ldmkvd2JXdnZxb05waXh2bEdWT0I1b2RLcWZwZ09EcFpYeW5KcHNkalR6YlhlOEM2SXFiWWo1cWQxUS9JSncxOEZwVjg0VFJHU09SSENIVEVsOXNGVVhGdm9qc01uUmVMUEMyVTJqSGhWVlB0K3F1Zm0wN292eGZZTmdSbTBudXNidXQyZ2JjUkx0U08vTkZ0YUxJcWpnRlRaWUQwYWRaLy9BQXpCb3NuTU94bUxBQUFBQUVsRlRrU3VRbUNDIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6bXVsdGlwbHk7b3BhY2l0eTouMiIvPjxwYXRoIGQ9Im0zOC44NSAzMS05LjA2LTEuMzEtNC4wNS04LjE5YTEuMyAxLjMgMCAwIDAtLjUyLS41MiAxLjE1IDEuMTUgMCAwIDAtMS41My41MmwtNC4wNSA4LjIyTDEwLjU3IDMxYTEuMTkgMS4xOSAwIDAgMC0uNjUuMzMgMS4xNSAxLjE1IDAgMCAwIDAgMS42Mmw2LjU2IDYuMzlMMTUgNDguNGExLjEzIDEuMTMgMCAwIDAgMS42NSAxLjJsOC4xMS00LjI2IDguMTEgNC4yNmExLjEzIDEuMTMgMCAwIDAgMS42NS0xLjJsLTEuNTUtOSA2LjUxLTYuNGExLjA3IDEuMDcgMCAwIDAgLjMzLS42NSAxLjE0IDEuMTQgMCAwIDAtMS0xLjNaIiBzdHlsZT0iZmlsbDojZmZmIi8+PC9nPjwvZz48L3N2Zz4=);
 }
 
 /* 作者名称 */
@@ -365,23 +300,24 @@ const { tagHotList, articleHotList } = toRefs(state);
         font-weight: 500;
       }
     }
-    .signin-btn {
-      border: 1px solid var(--Yuexing-color);
-      background-color: #fff;
+    .sign-btn {
+      border-radius: 50px;
+      height: 32px;
+      width: 72px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-    }
-    .btn {
-      border-radius: 50px;
-      height: 32px;
-      width: 72px;
-      .btn-text {
+      background: var(--Yuexing-color);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 400;
+      white-space: nowrap;
+      border: none;
+      &.is-sign {
         color: var(--Yuexing-color);
-        font-size: 14px;
-        font-weight: 400;
-        white-space: nowrap;
+        border: 1px solid var(--Yuexing-color);
+        background-color: rgba(30, 128, 255, 0.05);
       }
     }
   }

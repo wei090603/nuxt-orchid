@@ -15,7 +15,7 @@ export const useRefreshUserInfo = async () => {
   if (token.value) {
     let { data, error } = await getMeUserInfo();
     if (data) {
-      userInfo.value = data.userInfo;
+      userInfo.value = data.value.userInfo;
       isLogin.value = true;
     }
   }
