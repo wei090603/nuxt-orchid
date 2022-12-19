@@ -96,8 +96,6 @@ import { getArticleHot, getHotTag } from '@/api/home';
 const isLogin = useIsLogin();
 const userInfo = useUserInfo();
 
-console.log(userInfo, 'userInfo');
-
 const state = reactive({
   tagHotList: [],
   articleHotList: [],

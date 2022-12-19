@@ -1,38 +1,35 @@
 <template>
   <div class="editor-box">
-    <Toolbar
-      style="border-bottom: 1px solid #f1f1f1"
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      :mode="mode"
-    />
-    <Editor
-      style="height: 400px; overflow-y: hidden"
-      v-model="valueHtml"
-      :defaultConfig="editorConfig"
-      :mode="mode"
-      @onCreated="handleCreated"
-    />
+    <client-only>
+      <Toolbar
+        style="border-bottom: 1px solid #ccc"
+        :editor="editorRef"
+        :defaultConfig="toolbarConfig"
+        :mode="mode"
+      />
+      <Editor
+        style="height: 400px; overflow-y: hidden"
+        v-model="valueHtml"
+        :defaultConfig="editorConfig"
+        :mode="mode"
+        @onCreated="handleCreated"
+      />
+    </client-only>
   </div>
 </template>
 
 <script lang="ts" setup>
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
-
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
+
+const emits = defineEmits(['update:contentValue']);
+
+const props = withDefaults(defineProps<{ contentValue: string }>(), {});
+
+const valueHtml = ref<string>(props.contentValue);
 
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
-
-// 内容 HTML
-const valueHtml = ref('<p>hello</p>');
-
-// 模拟 ajax 异步获取内容
-onMounted(() => {
-  setTimeout(() => {
-    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>';
-  }, 1500);
-});
 
 const toolbarConfig = {};
 const editorConfig = { placeholder: '请输入内容...' };
@@ -43,6 +40,13 @@ onBeforeUnmount(() => {
   if (editor == null) return;
   editor.destroy();
 });
+
+watch(
+  () => valueHtml.value,
+  (newVal) => {
+    emits('update:contentValue', newVal);
+  }
+);
 
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！

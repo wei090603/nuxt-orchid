@@ -49,7 +49,7 @@ type AsyncData<DataT> = {
 };
 
 //http请求封装
-async function fetch(key: string, url: string, options: any) {
+const fetch = (key: string, url: string, options: any): Promise<any> => {
   // const { $config, $router } = useNuxtApp();
 
   // 用户登录，默认传token
@@ -95,7 +95,7 @@ async function fetch(key: string, url: string, options: any) {
 
     resolve(res);
   });
-}
+};
 
 class Http {
   get(key: string, url: string, params?: object): Promise<any> {

@@ -4,8 +4,8 @@
       <n-grid-item :span="5">
         <div class="menu-container">
           <div class="user-info">
-            <n-avatar style="cursor: pointer" round :size="75" :src="imgUrl + userInfo.avatar" />
-            <div class="name">{{ userInfo.nickName }}</div>
+            <n-avatar style="cursor: pointer" round :size="75" :src="imgUrl + userInfo?.avatar" />
+            <div class="name">{{ userInfo?.nickName }}</div>
           </div>
           <ul class="center-menu">
             <li

@@ -17,9 +17,9 @@ import { sign, getSignRecord, getSignInfo } from '@/api/user';
 
 const userInfo = useUserInfo();
 
-const isSign = ref(userInfo.value.isSign);
+const isSign = ref(userInfo.value?.isSign);
 
-const totalPoint = ref(userInfo.value.favs);
+const totalPoint = ref(userInfo.value?.favs);
 // 连续签到天数
 const signContinuousCount = ref(0);
 // 签到总数

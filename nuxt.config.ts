@@ -1,10 +1,14 @@
 import { defineNuxtConfig } from 'nuxt/config';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       VITE_FILE_URL: 'http://127.0.0.1:4000/uploads/',
+      VITE_FILE_ACTION_URL: 'http://127.0.0.1:4000/upload/file',
     },
   },
   typescript: {
@@ -52,6 +56,19 @@ export default defineNuxtConfig({
           ? ['naive-ui', 'vueuc', 'date-fns-tz/esm/formatInTimeZone']
           : [],
     },
+    plugins: [
+      AutoImport({
+        imports: [
+          'vue',
+          {
+            'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar'],
+          },
+        ],
+      }),
+      Components({
+        resolvers: [NaiveUiResolver()],
+      }),
+    ],
   },
   css: ['@/styles/rest.css', '@/assets/font/iconfont.css'],
   components: {

@@ -2,6 +2,7 @@
   <n-carousel show-arrow autoplay>
     <img
       v-for="(item, index) in data"
+      v-if="data.length > 0"
       :key="index"
       class="carousel-img"
       :src="imgUrl + item.picture"
@@ -45,7 +46,6 @@ const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
 const { data } = await getAdvertise({ position: props.type });
-
 </script>
 
 <style lang="less" scoped>

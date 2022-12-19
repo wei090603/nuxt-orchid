@@ -38,7 +38,7 @@ const handleSelect = (k: any) => {
       break;
     case 'center':
       navigateTo({
-        path: `/user/${userInfo.value.id}`,
+        path: `/user/${userInfo.value?.id}`,
       });
       break;
   }
