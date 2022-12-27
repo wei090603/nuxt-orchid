@@ -194,6 +194,7 @@ const rules: FormRules = {
     },
   ],
 };
+
 const fileList = ref<UploadFileInfo[]>([]);
 
 const showModal = ref(false);

@@ -4,12 +4,7 @@
 
     <!-- 主体内容 -->
     <div class="main">
-      <div class="container">
-        <!-- 文章列表 -->
-        <ArticleList />
-
-        <Function />
-      </div>
+      <div class="container"></div>
     </div>
   </div>
 </template>

@@ -1,53 +1,20 @@
 <template>
   <div class="wrapper">
-    <LoadingGroup :pending="pending" :error="error">
-      <div class="article-container">
-        <div class="article-item" v-for="item in data" @click="handleGoDetail(item.id)">
-          <div class="top">
-            {{ item.author.nickName }} | {{ item.createdAt }} | {{ item.category?.title }}
-          </div>
-
-          <div class="content-wrapper">
-            <div class="content-main">
-              <div class="title">{{ item.title }}</div>
-              <div class="abstract">{{ item.summary }}</div>
-              <div class="bottom">
-                <span>
-                  <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
-                  {{ item.reading }}
-                </span>
-                <span class="dianzan">
-                  <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
-                  {{ item.likeCount }}
-                </span>
-                <span>
-                  <i class="iconfont icon-shijian"></i>
-                  {{ item.commentCount }}
-                </span>
-              </div>
-            </div>
-            <img class="thumb" :src="imgUrl + item.coverPicture" alt="" />
-          </div>
-        </div>
-      </div>
+    <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
+      <UserArticle v-for="(item, index) in data" :key="index" :item="item" />
     </LoadingGroup>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { getUserArticle } from '~~/api/user';
+import { getUserArticle } from '@/api/user';
+import UserArticle from '../components/userArticle.vue';
 
 const route = useRoute();
-const env = useRuntimeConfig();
-const imgUrl: string = env.public.VITE_FILE_URL;
 
 const id = route.params.id as string;
 
 const { pending, data, error } = await getUserArticle(id);
-
-const handleGoDetail = (id: string) => {
-  window.open(`/article/${id}`, '_blank');
-};
 </script>
 
 <style lang="less" scoped>
