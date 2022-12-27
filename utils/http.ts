@@ -1,5 +1,6 @@
 import { createDiscreteApi } from 'naive-ui';
 import { Ref } from 'nuxt/dist/app/compat/capi';
+import { hash } from 'ohash';
 
 function responseVerify(code: number) {
   const { message } = createDiscreteApi(['message']);
@@ -48,70 +49,86 @@ type AsyncData<DataT> = {
   error: Ref<Error | boolean | any>;
 };
 
-//http请求封装
-const fetch = (key: string, url: string, options: any): Promise<any> => {
-  // const { $config, $router } = useNuxtApp();
+// 后端返回的数据类型
+export interface ResOptions<T> {
+  data?: T;
+  code: number;
+  message: string;
+}
 
+const fetch = (url: string, options?: any): Promise<any> => {
   // 用户登录，默认传token
   const token = useCookie('token');
+  const {
+    public: { VITE_API_URL },
+  } = useRuntimeConfig(); // 3.0正式版环境变量要从useRuntimeConfig里的public拿
+
+  // 不设置key，始终拿到的都是第一个请求的值，参数一样则不会进行第二次请求
+  const key = hash(JSON.stringify(options) + url);
 
   const option = {
-    baseURL: 'http://127.0.0.1:4000',
-    // server: true,
-    initialCache: false,
-    key: key,
+    // baseURL: VITE_API_URL,
     headers: {
       Authorization: `Bearer ${token.value || ''}`,
     },
     ...options,
   };
 
-  return new Promise(async (resolve, reject) => {
-    const res: AsyncData<any> = await useFetch(url, {
+  return new Promise((resolve, reject) => {
+    useFetch(VITE_API_URL + url, {
       ...option,
-      // 相当于响应拦截器
-      transform: (res: { data: object; code: number; message: string }) => {
+      key,
+      transform: (res: ResOptions<any>) => {
         if (res?.code !== 200) {
           responseVerify(res.code);
           reject({ code: res.code, message: res.message });
         }
         return res.data;
       },
-    });
-
-    // 客户端错误处理
-    if (process.client && res.error.value) {
-      const data = res.error.value?.data;
-      // if (!options.lazy) {
-      if (data?.code === 401) {
-        token.value = '';
-        responseVerify(401);
-        reject('error');
-      }
-      responseVerify(500);
-      reject(res.error.value);
-      // }
-    }
-
-    resolve(res);
+    })
+      .then((res: AsyncData<any>) => {
+        if (res.error.value) {
+          const data = res.error.value?.data;
+          if (data?.code === 401) {
+            token.value = '';
+            responseVerify(401);
+            reject(res.error.value);
+          }
+          return;
+        }
+        // console.log(data.value, 'data');
+        // // console.log('useFetchResData: ', value);
+        // if (value.code !== 200) {
+        //   responseVerify(value.code);
+        //   return;
+        // } else {
+        //   console.log(value, 'data');
+        //   resolve(value.data);
+        // }
+        resolve(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        reject(err);
+      });
   });
 };
 
 class Http {
-  get(key: string, url: string, params?: object): Promise<any> {
-    return fetch(key, url, { method: 'get', params });
+  get(url: string, params?: object): Promise<any> {
+    return fetch(url, { method: 'get', params });
   }
 
-  post(key: string, url: string, body?: any): Promise<any> {
-    return fetch(key, url, { method: 'post', body });
+  post(url: string, body?: any): Promise<any> {
+    return fetch(url, { method: 'post', body });
   }
 
-  put(key: string, url: string, body?: any): Promise<any> {
-    return fetch(key, url, { method: 'put', body });
+  put(url: string, body?: any): Promise<any> {
+    return fetch(url, { method: 'put', body });
   }
 
-  delete(key: string, url: string): Promise<any> {
-    return fetch(key, url, { method: 'delete' });
+  delete(url: string): Promise<any> {
+    return fetch(url, { method: 'delete' });
   }
 }
 

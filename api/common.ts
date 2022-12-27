@@ -1,4 +1,4 @@
-import http from '~~/utils/http';
+import http from '@/utils/http';
 
 // 获取导航栏列表
-export const getNavgation = () => http.get('navgation', `/navgation`);
+export const getNavgation = () => http.get(`/navgation`);

@@ -11,45 +11,53 @@
       </div>
     </div>
     <div class="main">
-      <n-form ref="formRef" :model="model" :rules="rules" label-width="100px">
-        <n-form-item label="" class="width100" path="title" label-placement="left">
-          <div class="title">
-            <n-input
-              type="text"
-              v-model:value="model.title"
-              placeholder="请输入标题(最多 100 个字)"
-            />
-          </div>
-        </n-form-item>
-        <Editor v-model:contentValue="model.content" />
-        <div class="content-setting">发布设置</div>
-        <n-form-item label="上传封面图" path="age" label-placement="left" class="width100">
-          <p class="img-tips">图片上传格式支持 JPEG、JPG、PNG</p>
-          <!-- <n-input v-model:value="valueRef" />
-          图片上传格式支持 JPEG、JPG、PNG -->
-          <n-upload
-            :action="actionUrl"
-            :default-file-list="fileList"
-            list-type="image-card"
-            @preview="handlePreview"
-            :on-finish="onFinish"
-            :headers="{}"
+      <n-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+        <n-form-item label="" path="title" label-placement="left">
+          <n-input
+            class="title"
+            type="text"
+            v-model:value="form.title"
+            placeholder="请输入标题(最多 100 个字)"
           />
+        </n-form-item>
+
+        <n-form-item label="" path="content" label-placement="left">
+          <Editor v-model:contentValue="form.content" />
+        </n-form-item>
+
+        <div class="content-setting">发布设置</div>
+        <n-form-item label="上传封面图" path="coverPicture" label-placement="left">
+          <div>
+            <ClientOnly>
+              <n-upload
+                class="upload"
+                :action="actionUrl"
+                :default-file-list="fileList"
+                list-type="image-card"
+                @preview="handlePreview"
+                :on-finish="onFinish"
+                :headers="{}"
+                :max="1"
+              ></n-upload>
+            </ClientOnly>
+            <div class="img-tips">图片上传格式支持 JPEG、JPG、PNG</div>
+          </div>
         </n-form-item>
 
         <n-form-item label="分类" path="categoryId" label-placement="left">
           <n-cascader
-            v-model="model.categoryId"
+            v-model:value="form.categoryId"
             placeholder="请选择分类"
             :options="selectOptions"
-            check-strategy="all"
-            @update:value="handleUpdateValue"
+            label-field="title"
+            value-field="id"
+            check-strategy="child"
           />
         </n-form-item>
 
-        <n-form-item label="标签" path="tag" label-placement="left" class="width100 tag">
+        <n-form-item label="标签" path="tag" label-placement="left" class="tag">
           <n-tag
-            v-for="(item, index) in articleList"
+            v-for="(item, index) in form.tag"
             :key="item.id"
             closable
             size="large"
@@ -65,7 +73,7 @@
             trigger="click"
           >
             <template #trigger>
-              <n-input v-model:value="title" placeholder="搜索话题" @input="handleInput">
+              <n-input placeholder="搜索话题" @input="handleInput">
                 <template #prefix>
                   <n-icon :component="Search" />
                 </template>
@@ -82,12 +90,12 @@
               </p>
             </div>
           </n-tooltip>
-          <n-button v-if="articleList.length < 5" @click="addArticleClick">+ 添加话题</n-button>
+          <n-button v-if="form.tag.length < 5" @click="addArticleClick">+ 添加话题</n-button>
         </n-form-item>
       </n-form>
     </div>
 
-    <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="一张很酷的图片">
+    <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="图片查看">
       <img :src="previewImageUrl" style="width: 100%" />
     </n-modal>
 
@@ -95,6 +103,7 @@
       <div class="content">
         <div class="left">
           <span>发布设置</span>
+          <span class="content-length" v-show="contentLength > 0">字数：{{ contentLength }}</span>
         </div>
         <div class="right">
           <n-button strong secondary class="preview">预览</n-button>
@@ -106,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UploadFileInfo, FormRules, createDiscreteApi } from 'naive-ui';
+import { UploadFileInfo, FormRules, CascaderOption, FormInst, useMessage } from 'naive-ui';
 import { getCategory, getTag, addArticle } from '@/api/article';
 import { Search } from '@vicons/ionicons5';
 
@@ -114,30 +123,32 @@ interface ITagItem {
   id: number;
   name: string;
 }
+
 interface IArticleForm {
   title: string;
   content: string;
-  image: string[];
+  coverPicture: string;
   categoryId: string | null;
   status: number;
   type: number;
-  tag: string[];
+  tag: ITagItem[];
 }
 
 definePageMeta({
   layout: false,
   middleware: ['auth'], // 用户登录验证
 });
-
+const router = useRouter();
 const env = useRuntimeConfig();
 const actionUrl: string = env.public.VITE_FILE_ACTION_URL;
+const fileUrl: string = env.public.VITE_FILE_URL;
 
 const token = useCookie<string>('token');
 
-const model = ref<IArticleForm>({
+const form = ref<IArticleForm>({
   title: '',
   content: '',
-  image: [],
+  coverPicture: '',
   categoryId: null,
   status: 1,
   type: 1,
@@ -148,47 +159,63 @@ const rules: FormRules = {
   title: [
     {
       required: true,
-      trigger: ['blur'],
+      trigger: ['blur', 'input'],
       message: '请输入标题',
+    },
+  ],
+  content: [
+    {
+      required: true,
+      trigger: ['blur'],
+      message: '请输入内容',
+    },
+  ],
+  coverPicture: [
+    {
+      required: true,
+      trigger: ['blur', 'change'],
+      message: '请添加文章封面图',
     },
   ],
   categoryId: [
     {
       required: true,
-      trigger: ['blur'],
+      trigger: ['blur', 'change'],
       message: '请选择分类',
+      type: 'number',
     },
   ],
   tag: [
     {
       required: true,
       trigger: ['blur'],
-      message: '请输入表签',
+      message: '请添加话题',
       type: 'array',
     },
   ],
 };
-const articleList = ref<ITagItem[]>([]);
-const fileList = ref<UploadFileInfo[]>([
-  {
-    id: 'vue',
-    name: '我是vue.png',
-    status: 'finished',
-    url: 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg',
-  },
-]);
+const fileList = ref<UploadFileInfo[]>([]);
+
 const showModal = ref(false);
+
 const previewImageUrl = ref('');
 
 const isShowAdd = ref(false);
-const title = ref('');
 const selectOptions = ref<CascaderOption[]>([]);
 
-const topicList = ref([]);
+const topicList = ref<{ id: number; name: string }[]>([]);
+
+const contentLength = computed(() => {
+  const re1 = new RegExp('<.+?>', 'g'); //匹配html标签的正则表达式，"g"是搜索匹配多个符合的内容
+  const msg = form.value.content.replace(re1, ''); //执行替换成空字符
+  return msg.length;
+});
+
 const handleGoHome = () => {
   navigateTo('/');
 };
-// 话题输入框内容变化
+
+// 话题输入框内容变化 匹配标签
 const handleInput = async (val: string) => {
   if (!val) {
     topicList.value = [];
@@ -199,96 +226,67 @@ const handleInput = async (val: string) => {
 };
 
 // 弹窗选中话题
-const selTopicClick = (val: ITagItem) => {
-  title.value = val.name;
-  const index = articleList.value.findIndex((item) => item.name === title.value);
+const selTopicClick = (row: ITagItem) => {
+  const index = form.value.tag.findIndex((item) => item.name === row.name);
   if (index >= 0) {
-    // message.error('此标题已存在，请重新输入')
-    throw new Error('此标题已存在，请重新输入');
+    message.error('该话题已存在，请重新添加');
+    return false;
   }
   isShowAdd.value = false;
-  articleList.value.push({
-    name: title.value,
-    id: Date.now(),
-  });
-  model.value.tag.push(val.name);
-  title.value = '';
+  form.value.tag.push(row);
   topicList.value = [];
-  console.log(' model.value', model.value);
 };
+
 // 话题标签删除
 const handleClose = (index: number): void => {
-  articleList.value.splice(index, 1);
-  model.value.tag.splice(index, 1);
+  form.value.tag.splice(index, 1);
 };
+
 // 点击添加话题按钮
 const addArticleClick = () => {
   isShowAdd.value = true;
 };
 
-const getTreeData = (data: any) => {
-  const arr: any[] = [];
-  data?.forEach((item: any) => {
-    const { title, id, children, ...other } = item;
-    const obj = {
-      value: id,
-      label: title,
-      children: children && children.length > 0 ? getTreeData(children) : undefined,
-      ...other,
-    };
-    arr.push(obj);
-  });
-  return arr;
-};
+// 分类列表
+const { data: categoryList } = await getCategory();
+selectOptions.value = categoryList.value;
 
-const reqGetCategory = async () => {
-  const { data } = await getCategory();
-  selectOptions.value = getTreeData(data.value);
-};
+const formRef = ref<FormInst | null>(null);
 
-const handleUpdateValue = (value: string, option: CascaderOption) => {
-  console.log(value, option);
-  model.value.categoryId = value;
-};
+const message = useMessage();
 
-const formRef = ref();
 // 发布
 const publishClick = async () => {
-  const { message } = createDiscreteApi(['message']);
-  console.log('mode', model.value);
   formRef.value?.validate(async (errors: any) => {
     if (!errors) {
-      // message.success('验证成功')
-      await addArticle(model.value);
+      await addArticle(form.value);
+      message.success('发布成功');
+      router.back();
     } else {
-      console.log(errors);
       message.error('验证失败，请填写完整信息');
     }
   });
 };
 
 const onFinish = (options: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  console.log(options, 'UploadFileInfo');
-  fileList.value.push(options.file);
-
-  // fileList.value.push({
-  //   id: options.file.id,
-  //   name: options.file.id,
-  //   status: 'finished',
-  //   url: options.file.url,
-  // });
+  const res = JSON.parse(options.event?.target?.response);
+  if (res?.code === 200) {
+    const time = Date.now() + '';
+    fileList.value.push({
+      id: time,
+      name: time,
+      status: 'finished',
+      url: fileUrl + res.data.url,
+      type: 'image/*',
+    });
+    form.value.coverPicture = res.data.url;
+  }
 };
 
-const handlePreview = (file: UploadFileInfo) => {
-  const { url } = file;
-  previewImageUrl.value = url as string;
+const handlePreview = () => {
+  previewImageUrl.value = fileUrl + form.value.coverPicture;
   showModal.value = true;
 };
-
-onMounted(() => {
-  console.log('onMounted');
-  reqGetCategory();
-});
 </script>
 
 <style lang="less" scoped>
@@ -343,34 +341,17 @@ onMounted(() => {
   .title {
     width: 100%;
     height: 78px;
+    font-size: 32px;
+    border: none;
     border-bottom: 1px solid #f1f1f1;
-    :deep(.n-input) {
+    :deep(.n-input__input-el) {
       width: 100%;
       height: 100%;
-      border: none;
+    }
+    &::placeholder {
+      font-weight: 600;
       font-size: 32px;
-      .n-input.n-input--error-status:not(.n-input--disabled):focus {
-        border: none;
-      }
-      .n-input--focus {
-        border: none;
-      }
-      .n-input__border {
-        border: none;
-      }
-      .n-input__state-border {
-        border: none;
-      }
-      .n-input__input-el {
-        width: 100%;
-        height: 100%;
-
-        &::placeholder {
-          font-weight: 600;
-          font-size: 32px;
-          letter-spacing: 2px;
-        }
-      }
+      letter-spacing: 2px;
     }
   }
   .content-setting {
@@ -379,28 +360,35 @@ onMounted(() => {
     font-size: 17px;
     font-weight: 500;
   }
-  :deep(.n-form-item-blank) {
-    flex-wrap: wrap;
+  .upload {
+    width: 152px;
+    height: 102px;
+    :deep(.n-upload-trigger.n-upload-trigger--image-card) {
+      width: 152px;
+      height: 102px;
+    }
+    :deep(.n-upload-file-list .n-upload-file.n-upload-file--image-card-type) {
+      width: 152px;
+      height: 102px;
+    }
   }
   .img-tips {
     width: 100%;
     margin-bottom: 10px;
     margin-top: 5px;
+    color: #999999;
+    font-size: 12px;
   }
-}
-:deep(.n-form-item-blank) {
-  width: 400px;
 }
 
-.width100 {
-  :deep(.n-form-item-blank) {
-    width: 100%;
-  }
-}
 .n-form {
   width: 100%;
   min-width: 600px;
+  .n-cascader {
+    width: 300px;
+  }
 }
+
 .tag {
   :deep(.n-input) {
     width: 200px;
@@ -415,9 +403,15 @@ onMounted(() => {
     margin-bottom: 10px;
   }
 }
+
 .topic-item-p {
   margin: 5px 0;
+  cursor: pointer;
+  &:hover {
+    color: #1abc9c;
+  }
 }
+
 .release-setting {
   position: fixed;
   bottom: 0;
@@ -437,6 +431,9 @@ onMounted(() => {
     .left {
       line-height: 52px;
       color: #8590a6;
+      .content-length {
+        margin-left: 15px;
+      }
     }
     .right {
       .preview {

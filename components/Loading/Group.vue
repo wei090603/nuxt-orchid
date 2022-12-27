@@ -57,6 +57,7 @@ const stop = watchEffect(() => {
     }, 300);
   }
 });
+
 onBeforeUnmount(() => {
   stop();
 });

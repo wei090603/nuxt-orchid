@@ -116,7 +116,6 @@ import { getUserArticle } from '~~/api/user';
 const route = useRoute();
 
 const id = route.params.id as string;
-console.log(id, 'id');
 
 const { pending, data, error } = await getUserArticle(id);
 </script>

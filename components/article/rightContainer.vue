@@ -2,27 +2,28 @@
   <div class="right-container">
     <div class="sticky">
       <div class="sidebar-block author-block pure">
-        <nuxt-link
-          class="user-item"
-          target="_blank"
-          :to="{ path: `/user/${userInfo.id}` }"
-        >
+        <nuxt-link class="user-item" target="_blank" :to="{ path: `/user/${userId}` }">
           <img :src="imgUrl + userInfo.avatar" alt="" />
           <div class="info-box">
             <div class="nickname">{{ userInfo.nickName }}</div>
-            <div class="sign">fwefw</div>
+            <div class="sign">{{ userInfo.signText || '个性一签，一见难忘' }}</div>
           </div>
         </nuxt-link>
-        <div class="stat-item item">文章获得点赞</div>
-        <div class="stat-item item">文章被阅读</div>
+        <div class="operate-btn">
+          <n-button type="primary" :disabled="userInfo.isFollow">
+            {{ userInfo.isFollow ? '已' : '' }}关注
+          </n-button>
+          <span></span>
+          <n-button type="primary" ghost>私信</n-button>
+        </div>
+        <div class="stat-item item">文章获得点赞量 {{ userInfo.likeTotal || 0 }}</div>
+        <div class="stat-item item">文章被阅读量 {{ userInfo.readTotal || 0 }}</div>
       </div>
       <div class="sidebar-block related-entry shadow">
         <div class="block-title">相关文章</div>
         <div class="list">
           <nuxt-link :to="{ path: '/artile/16' }" target="_blank" class="item">
-            <div class="entry-title">
-              正则什么的，你让我写，我会难受，你让我用，真香！
-            </div>
+            <div class="entry-title">正则什么的，你让我写，我会难受，你让我用，真香！</div>
             <div class="entry-meta-box">
               <div class="entry-meta">676点赞</div>
               <div class="entry-meta">&nbsp;·&nbsp;</div>
@@ -36,19 +37,41 @@
 </template>
 
 <script lang="ts" setup>
+import { getOhterUserInfo } from '@/api/user';
+
 type IUserInfo = {
   id: string;
   avatar: string;
   nickName: string;
-};
-type IProps = {
-  userInfo: IUserInfo;
+  likeTotal: number;
+  readTotal: number;
+  signText: string;
+  isFollow: boolean;
 };
 
-withDefaults(defineProps<IProps>(), {});
+type IProps = {
+  userId: number;
+};
+
+const props = withDefaults(defineProps<IProps>(), {});
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
+
+const userInfo = ref<IUserInfo>({
+  id: '',
+  avatar: '',
+  nickName: '',
+  likeTotal: 0,
+  signText: '',
+  readTotal: 0,
+  isFollow: false,
+});
+
+const { data } = await getOhterUserInfo(props.userId);
+userInfo.value = data.value;
+
+console.log(userInfo.value, 'userInfo');
 </script>
 
 <style lang="less" scoped>
@@ -69,8 +92,7 @@ const imgUrl: string = env.public.VITE_FILE_URL;
       .user-item {
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #e4e6eb;
-        padding-bottom: 1.416rem;
+        padding-bottom: 15px;
         img {
           flex: 0 0 auto;
           width: 50px;
@@ -81,6 +103,19 @@ const imgUrl: string = env.public.VITE_FILE_URL;
           flex: 1 1 auto;
           min-width: 0;
           margin-left: 15px;
+        }
+      }
+      .operate-btn {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #e4e6eb;
+        padding-bottom: 15px;
+        margin-bottom: 10px;
+        .n-button {
+          flex: 1;
+        }
+        span {
+          width: 15px;
         }
       }
       .stat-item {

@@ -27,7 +27,7 @@
     "dayjs": "^1.11.6",
     "less": "^4.1.3",
     "less-loader": "^11.0.0",
-    "naive-ui": "^2.31.0",
+    "naive-ui": "^2.34.3",
     "unplugin-auto-import": "^0.12.1",
     "unplugin-vue-components": "^0.22.12",
     "vfonts": "^0.0.3"

@@ -13,8 +13,8 @@
         </span>
       </div>
     </div>
-    <LoadingGroup :isEmpty="followList.length === 0">
-      <div class="link" v-for="item in followList" :key="item.id" @click="handleGoDetail(item.id)">
+    <LoadingGroup :isEmpty="data.length === 0">
+      <div class="link" v-for="item in data" :key="item.id" @click="handleGoDetail(item.id)">
         <img
           :src="imgUrl + item.avatar"
           :alt="item.nickName + '的头像'"
@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
 import { NButton } from 'naive-ui';
-import { getUserFollow, postFollow, deleteFollow } from '~~/api/user';
+import { getUserFollow, postFollow, deleteFollow } from '@/api/user';
 
 const route = useRoute();
 const isLogin = useIsLogin();
@@ -75,16 +75,11 @@ const isMe = computed(() => isLogin.value && +id === myInfo.value?.id);
 const active = ref(1);
 const followList = ref([]);
 
-const getFollowList = async () => {
-  const { pending, data } = await getUserFollow(id, { type: active.value });
-  followList.value = data.value;
-};
-
-await getFollowList();
+const { pending, data, refresh } = await getUserFollow(id, { type: active.value });
 
 const handleTabClick = (value: number) => {
   active.value = value;
-  getFollowList();
+  refresh();
 };
 
 // 关注

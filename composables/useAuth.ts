@@ -12,7 +12,6 @@ export const useRefreshUserInfo = async () => {
   const isLogin = useIsLogin();
   // 用户已登录，直接获取用户信息
   let { data, error } = await getMeUserInfo();
-  console.log(data.value, 'data');
   if (data) {
     userInfo.value = data.value.userInfo;
     isLogin.value = true;

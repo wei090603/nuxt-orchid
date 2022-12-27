@@ -4,33 +4,23 @@
     <ul>
       <li v-for="item in articleData.list" :key="item.id">
         <div class="item" @click="handleToDetail(item.id)">
-          <!-- 文章缩略图 -->
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
-            <span class="tags_blue">{{ item.category.title }}</span>
+            <span class="tags_blue">{{ item.category?.title }}</span>
           </div>
 
-          <!-- 文章内容 -->
           <div class="right">
-            <!-- 文章标题 -->
             <h2>
-              <!-- <span class="tags_purple">精品</span>
-                    <span class="tags_red">置顶</span>
-                    <span class="tags_yellow">推荐</span> -->
               {{ item.title }}
             </h2>
-
-            <!-- 文章摘要 -->
             <p class="summary">
               {{ item.summary }}
             </p>
 
-            <!-- 文章信息 -->
             <div class="meta">
-              <!-- 作者头像 -->
-              <div class="author" @click.stop="handleGoUserDetail(item.author.id)">
-                <img :src="imgUrl + item.author.avatar" alt="" />
-                <span>{{ item.author.nickName }}</span>
+              <div class="author" @click.stop="handleGoUserDetail(item.author?.id)">
+                <img :src="imgUrl + item.author?.avatar" alt="" />
+                <span>{{ item.author?.nickName }}</span>
               </div>
 
               <div class="interact">
@@ -42,7 +32,6 @@
                   <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
                   {{ item.reading }}
                 </span>
-                <!-- 文章发布时间 -->
                 <span>
                   <i class="iconfont icon-shijian"></i>
                   {{ item.createdAt }}
@@ -63,7 +52,7 @@ import { getArticle, articleLike, articleLikeDel } from '@/api/article';
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
-const articleData = reactive({
+const articleData = reactive<any>({
   list: [],
   total: 0,
   page: 1,
@@ -74,15 +63,14 @@ const articleData = reactive({
 
 const getArticleList = async () => {
   articleData.loading = true;
-  if (!articleData.finished) {
-    const { data } = await getArticle({ page: articleData.page, size: 10 });
-    articleData.total = data.value.total;
-    articleData.list = articleData.list.concat(data.value.list);
-    articleData.page += 1;
-    articleData.loading = false;
-    if (articleData.list.length >= articleData.total) {
-      articleData.finished = true;
-    }
+  if (articleData.finished) return false;
+  const { data } = await getArticle({ page: articleData.page, size: 10 });
+  articleData.total = data.value.total;
+  articleData.list = articleData.list.concat(data.value.list);
+  articleData.page += 1;
+  articleData.loading = false;
+  if (articleData.list.length >= articleData.total) {
+    articleData.finished = true;
   }
 };
 
@@ -97,7 +85,7 @@ const handleGoUserDetail = (id: string) => {
 };
 
 // 文章点赞
-const handleLikeClick = async (item: { isLike: number; likeCount: number; id: string }) => {
+const handleLikeClick = async (item: { isLike: number; likeCount: number; id: number }) => {
   if (item.isLike) {
     try {
       await articleLikeDel(item.id);
@@ -232,6 +220,7 @@ onMounted(() => {
         margin-right: 3px;
       }
       p {
+        flex: 1;
         color: var(--Yuexing-a-vice) !important;
         font-size: 14px;
         transition: all 0.3s;

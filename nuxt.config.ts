@@ -7,9 +7,13 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
+      VITE_API_URL: 'http://127.0.0.1:4000',
       VITE_FILE_URL: 'http://127.0.0.1:4000/uploads/',
       VITE_FILE_ACTION_URL: 'http://127.0.0.1:4000/upload/file',
     },
+    // autoImports: {
+    //   dirs: ['api'],
+    // },
   },
   typescript: {
     shim: false,

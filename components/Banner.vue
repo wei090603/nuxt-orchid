@@ -1,13 +1,15 @@
 <template>
   <n-carousel show-arrow autoplay>
-    <img
-      v-for="(item, index) in data"
-      v-if="data.length > 0"
-      :key="index"
-      class="carousel-img"
-      :src="imgUrl + item.picture"
-      :alt="item.title"
-    />
+    <template v-if="data.length > 0">
+      <img
+        v-for="(item, index) in data"
+        :key="index"
+        class="carousel-img"
+        :src="imgUrl + item.picture"
+        :alt="item.title"
+      />
+    </template>
+
     <template #arrow="{ prev, next }">
       <div class="custom-arrow">
         <button type="button" class="curtom-arrow--left" @click="prev">

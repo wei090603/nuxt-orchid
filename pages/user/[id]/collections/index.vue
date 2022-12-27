@@ -2,33 +2,33 @@
   <div class="wrapper">
     <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
       <div class="article-container">
-        <div class="article-item" v-for="item in data" @click="handleGoDetail(item.article.id)">
+        <div class="article-item" v-for="item in data" @click="handleGoDetail(item.id)">
           <div class="top">
-            {{ item.article.author.nickName }} | {{ item.createdAt }} |
-            {{ item.article.category?.title }}
+            {{ item.author?.nickName }} | {{ item.createdAt }} |
+            {{ item.category?.title }}
           </div>
 
           <div class="content-wrapper">
             <div class="content-main">
-              <div class="title">{{ item.article.title }}</div>
-              <div class="abstract">{{ item.article.summary }}</div>
+              <div class="title">{{ item.title }}</div>
+              <div class="abstract">{{ item.summary }}</div>
               <div class="bottom">
                 <span>
-                  <i class="iconfont icon-huo" :class="{ active: item.article.reading >= 100 }"></i>
-                  {{ item.article.reading }}
+                  <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
+                  {{ item.reading }}
                 </span>
                 <span class="dianzan">
-                  <i class="iconfont icon-dianzan" :class="{ active: item.article.isLike }"></i>
-                  {{ item.article.likeCount }}
+                  <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
+                  {{ item.likeCount }}
                 </span>
                 <!-- 文章发布时间 -->
                 <span>
                   <i class="iconfont icon-shijian"></i>
-                  {{ item.article.commentCount }}
+                  {{ item.commentCount }}
                 </span>
               </div>
             </div>
-            <img class="thumb" :src="imgUrl + item.article.coverPicture" alt="" />
+            <img class="thumb" :src="imgUrl + item.coverPicture" alt="" />
           </div>
         </div>
       </div>

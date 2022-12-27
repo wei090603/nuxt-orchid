@@ -3,31 +3,38 @@
     <div class="main">
       <div class="left-container">
         <div class="content-top">
-          <h2 class="title">{{ data.title }}</h2>
+          <h2 class="title">{{ articleDetail.title }}</h2>
           <div class="author-block">
-            <nuxt-link target="_blank" :to="{ path: `/user/${data.author.id}` }">
-              <img class="avatar" :src="imgUrl + data.author.avatar" alt="" />
+            <nuxt-link target="_blank" :to="{ path: `/user/${articleDetail.author.id}` }">
+              <img class="avatar" :src="imgUrl + articleDetail.author.avatar" alt="" />
             </nuxt-link>
             <div class="author-info-box">
               <div class="nickname">
-                <nuxt-link target="_blank" :to="{ path: `/user/${data.author.id}` }">
-                  {{ data.author.nickName }}
+                <nuxt-link target="_blank" :to="{ path: `/user/${articleDetail.author.id}` }">
+                  {{ articleDetail.author.nickName }}
                 </nuxt-link>
               </div>
-              <div class="date">{{ data.createdAt }}· 阅读 {{ data.reading }}</div>
+              <div class="date">
+                {{ articleDetail.createdAt }} · 阅读 {{ articleDetail.reading }}
+              </div>
             </div>
-            <n-button type="tertiary">关注</n-button>
           </div>
-          <div class="content" v-html="data.content"></div>
+          <div class="content" v-html="articleDetail.content"></div>
           <div class="article-end-box">
             <div class="category">
               <span>分类:</span>
-              <n-button tertiary>{{ data.category.title }}</n-button>
+              <n-button tertiary>{{ articleDetail.category.title }}</n-button>
             </div>
             <div class="tag">
               <span>标签:</span>
               <n-space>
-                <n-button strong secondary type="primary" v-for="item in data.tag" :key="item.id">
+                <n-button
+                  strong
+                  secondary
+                  type="primary"
+                  v-for="item in articleDetail.tag"
+                  :key="item.id"
+                >
                   {{ item.name }}
                 </n-button>
               </n-space>
@@ -38,21 +45,28 @@
         <ArticleComment></ArticleComment>
         <ArticlePartMor></ArticlePartMor>
       </div>
-      <ArticleRightContainer :userInfo="userInfo"></ArticleRightContainer>
+      <ArticleRightContainer :userId="articleDetail.author.id"></ArticleRightContainer>
+
       <div class="article-suspended-panel">
         <div
-          @click="handleLikeClick"
+          @click="handleLikeClick(articleDetail.isLike, +id)"
           class="panel-btn with-badge"
-          :class="{ active: data.isLike }"
-          :badge="data.likeCount"
+          :class="{ active: articleDetail.isLike }"
+          :badge="articleDetail.likeCount"
         >
           <span class="icon">点赞</span>
         </div>
-        <div class="panel-btn with-badge" :badge="data.commentCount">
+
+        <div class="panel-btn with-badge" :badge="articleDetail.commentCount">
           <span class="icon">评论</span>
         </div>
-        <div class="panel-btn" @click="handleCollectClick">
-          <span class="icon" v-if="data.isCollect">已收藏</span>
+
+        <div
+          class="panel-btn"
+          :class="{ active: articleDetail.isCollect }"
+          @click="handleCollectClick(articleDetail.isCollect, +id)"
+        >
+          <span class="icon" v-if="articleDetail.isCollect">已收藏</span>
           <span class="icon" v-else>收藏</span>
         </div>
       </div>
@@ -61,15 +75,9 @@
 </template>
 
 <script lang="ts" setup>
-import { NButton, NSpace } from 'naive-ui';
-import {
-  articleLike,
-  articleLikeDel,
-  getArticleDetail,
-  articleCollect,
-  articleCollectDel,
-} from '@/api/article';
-import { getOhterUserInfo } from '@/api/user';
+import { getArticleDetail } from '@/api/article';
+
+import useArticleOperation from '@/hooks/useArticleOperation';
 
 const route = useRoute();
 
@@ -77,47 +85,24 @@ const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
 const id = route.params.id as string;
-const userInfo = ref(null);
 
-const { data } = await getArticleDetail(id);
+const { data: articleDetail } = await getArticleDetail(+id);
 
-useHead({ title: data.value.title || '' });
-
-const result = await getOhterUserInfo(data.value.author.id);
-userInfo.value = result.data.value;
-
-// 文章点赞
-const handleLikeClick = async () => {
-  if (data.value.isLike) {
-    try {
-      await articleLikeDel(id);
-      data.value.isLike = 0;
-      data.value.likeCount -= 1;
-    } catch (_error) {
-      console.log(_error, 'error');
-    }
-  } else {
-    try {
-      await articleLike({ articleId: Number(id) });
-      data.value.isLike = 1;
-      data.value.likeCount += 1;
-    } catch (_error) {}
-  }
+const handleAfterLike = (status: boolean) => {
+  status ? (articleDetail.value.likeCount -= 1) : (articleDetail.value.likeCount += 1);
+  articleDetail.value.isLike = !articleDetail.value.isLike;
 };
 
-const handleCollectClick = async () => {
-  if (data.value.isCollect) {
-    try {
-      await articleCollectDel(id);
-      data.value.isCollect = false;
-    } catch (_error) {}
-  } else {
-    try {
-      await articleCollect({ articleId: Number(id) });
-      data.value.isCollect = true;
-    } catch (_error) {}
-  }
+const handleAfterCollect = () => {
+  articleDetail.value.isCollect = !articleDetail.value.isCollect;
 };
+
+const { handleCollectClick, handleLikeClick } = useArticleOperation({
+  afterLike: handleAfterLike,
+  afterCollect: handleAfterCollect,
+});
+
+useHead({ title: articleDetail.value.title || '' });
 </script>
 
 <style lang="less" scoped>
