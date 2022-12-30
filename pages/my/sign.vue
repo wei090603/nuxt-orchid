@@ -4,22 +4,42 @@
       <span class="title">每日签到</span>
       <div class="rules">签到规则</div>
     </div>
-
     <div class="signin-content">
-      <div class="content-left"></div>
+      <div class="content-left">
+        <SignStatistics
+          :totalPoint="totalPoint"
+          :signContinuousCount="signContinuousCount"
+          :signCount="signCount"
+        />
+        <SignRecord
+          :currentYear="currentYear"
+          :currentMonth="currentMonth"
+          :dataCount="dataCount"
+          @handleSignClick="handleSignClick"
+          @handleSwitchMonthClick="handleSwitchMonthClick"
+        />
+      </div>
+      <SignRank :isSign="isSign" @handleSignClick="handleSignClick" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { NTooltip, NButton, NTabs, NTabPane } from 'naive-ui';
+import { useMessage } from 'naive-ui';
+
 import { sign, getSignRecord, getSignInfo } from '@/api/user';
+
+import SignStatistics from './components/signStatistics.vue';
+import SignRecord from './components/signRecord.vue';
+import SignRank from './components/signRank.vue';
+
+const message = useMessage();
 
 const userInfo = useUserInfo();
 
-const isSign = ref(userInfo.value?.isSign);
-
-const totalPoint = ref(userInfo.value?.favs);
+const isSign = ref(false);
+// 积分总数
+const totalPoint = ref(userInfo.value?.favs || 0);
 // 连续签到天数
 const signContinuousCount = ref(0);
 // 签到总数
@@ -32,10 +52,19 @@ const currentMonth = ref(date.getMonth() + 1);
 const currentDate = ref(date.getDate()); //获取当前日(1-31)
 const currentDay = ref(date.getDay()); // 星期几
 // 固定月份
-const fixedMonth = new Date().getMonth() + 1;
+const fixedMonth = date.getMonth() + 1;
 
 // 固定日期
 const fixedDate = new Date().toLocaleDateString().replace(/\//g, '-');
+
+const dataCount = ref<
+  {
+    value: number;
+    status: number;
+    favs: number;
+    isCurrentDate: boolean;
+  }[]
+>([]);
 
 console.log(userInfo.value, currentMonth.value, 'userInfo');
 
@@ -46,22 +75,23 @@ const [signRecord, signInfo] = await Promise.all([
   getSignInfo(),
 ]);
 
-const dataCount = ref([]);
+signContinuousCount.value = signInfo.data.value.continuousCount;
+signCount.value = signInfo.data.value.signCount;
+isSign.value = signInfo.data.value.isSign;
 
-const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-
-const handleSignClick = async (value?: number) => {
-  if (!value || isCurrentDate(value)) {
-    await sign();
-    isSign.value = true;
-    await signRecord.refresh();
-    getDateCount();
-  }
+const handleSignClick = async () => {
+  await sign();
+  isSign.value = true;
+  await signRecord.refresh();
+  getDateCount();
+  message.success('签到成功');
 };
 
 const getDateCount = () => {
   dataCount.value = [];
+  // 当月总天数
   const count = new Date(currentYear.value, currentMonth.value, 0).getDate();
+  // 第一个周的第某天
   const firstWeekDay = new Date(currentYear.value, currentMonth.value - 1, 1).getDay();
 
   for (let i = 1; i <= count + firstWeekDay; i++) {
@@ -75,7 +105,12 @@ const getDateCount = () => {
         isCurrentDate: isCurrentDate(val),
       });
     } else {
-      dataCount.value.push({ value: val });
+      dataCount.value.push({
+        value: val,
+        status: 3, // 对应状态
+        favs: 0, // 签到获得积分
+        isCurrentDate: false,
+      });
     }
   }
 };
@@ -107,7 +142,7 @@ const handleSwitchMonthClick = (type: string) => {
 
 // 日期是否签到
 const isSignList = (date: string) => {
-  return signRecord.data.value.some((item) => item.createdAt === date);
+  return signRecord.data.value.some((item: { createdAt: string }) => item.createdAt === date);
 };
 
 // 获取签到积分
@@ -115,7 +150,8 @@ const changeSignFav = (date: number) => {
   const day = date < 10 ? `0${date}` : date;
   return (
     signRecord.data.value.find(
-      (item) => item.createdAt === `${currentYear.value}-${currentMonth.value}-${day}`
+      (item: { createdAt: string }) =>
+        item.createdAt === `${currentYear.value}-${currentMonth.value}-${day}`
     )?.favs || 0
   );
 };
@@ -140,12 +176,7 @@ const dateListStatus = (date: number) => {
   }
 };
 
-onMounted(() => {
-  getDateCount();
-
-  signContinuousCount.value = signInfo.data.value.continuousCount;
-  signCount.value = signInfo.data.value.signCount;
-});
+getDateCount();
 </script>
 
 <style lang="less" scoped>

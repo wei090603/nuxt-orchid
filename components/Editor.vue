@@ -78,7 +78,6 @@ editorConfig.MENU_CONF['uploadImage'] = {
   // 自定义插入图片
   customInsert(res: any, insertFn: InsertFnType) {
     // res 即服务端的返回结果
-    console.log(res, 'res');
     if (res.code === 200) {
       // 从 res 中找到 url alt href ，然后插入图片
       insertFn(fileUrl + res.data.url, res.data.filename, '');

@@ -16,6 +16,7 @@
 <style lang="less" scoped>
 .wrapper {
   padding-top: 100px;
+  background-color: var(--Yuexing-body-bg);
 }
 
 .main {
@@ -24,7 +25,7 @@
   .container {
     display: flex;
     justify-content: space-between;
-    width: 1250px;
+    width: 1200px;
     margin: 0 auto;
 
     // .function {

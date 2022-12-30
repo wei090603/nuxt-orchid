@@ -77,7 +77,7 @@
 <script lang="ts" setup>
 import { getArticleDetail } from '@/api/article';
 
-import useArticleOperation from '@/hooks/useArticleOperation';
+import useArticleOperation from '~~/composables/useArticleOperation';
 
 const route = useRoute();
 
@@ -114,7 +114,7 @@ useHead({ title: articleDetail.value.title || '' });
 .main {
   display: flex;
   justify-content: space-between;
-  width: 1250px;
+  width: 1200px;
   margin: 0 auto;
   padding-bottom: 20px;
 }

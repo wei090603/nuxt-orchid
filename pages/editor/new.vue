@@ -301,7 +301,7 @@ const handlePreview = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1250px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
     .left {
@@ -335,7 +335,7 @@ const handlePreview = () => {
 }
 
 .main {
-  width: 1250px;
+  width: 1200px;
   margin: 20px auto 70px;
   padding: 0 15px;
   background: #fff;
@@ -425,7 +425,7 @@ const handlePreview = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 1250px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
     padding: 0 20px;

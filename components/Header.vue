@@ -23,6 +23,7 @@
         </div>
         <client-only>
           <div class="center" v-if="isLogin">
+            <Message />
             <Avatar />
           </div>
           <div class="login-btn" @click="handleLoginRegisterBtn" v-else>登录/注册</div>
@@ -79,7 +80,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1250px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
   }

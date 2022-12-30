@@ -2,9 +2,9 @@
   <div class="content-body">
     <div class="first-line">
       <div class="time">
-        <span @click="handleSwitchMonthClick('prev')">《</span>
+        <span @click="emits('handleSwitchMonthClick', 'prev')">《</span>
         <span class="time-label">{{ currentYear }}年 {{ currentMonth }}月</span>
-        <span @click="handleSwitchMonthClick('next')">》</span>
+        <span @click="emits('handleSwitchMonthClick', 'next')">》</span>
       </div>
     </div>
 
@@ -18,7 +18,7 @@
           class="calendar-day day"
           v-if="item.value > 0"
           :class="{ 'today-miss': item.isCurrentDate, 'pre-signed': item.status === 2 }"
-          @click="handleSignClick(item.value)"
+          @click="emits('handleSignClick')"
         >
           <span class="dot" v-if="item.status === 2">✔</span>
           <div class="future-day universal">
@@ -38,6 +38,20 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+interface IProps {
+  dataCount: any[];
+  currentYear: number;
+  currentMonth: number;
+}
+
+withDefaults(defineProps<IProps>(), {});
+
+const emits = defineEmits(['handleSignClick', 'handleSwitchMonthClick']);
+
+const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+</script>
 
 <style lang="less" scoped>
 .content-body {
@@ -72,7 +86,7 @@
       flex: none;
       width: 72px;
       height: 68px;
-      margin-right: 12px;
+      margin-right: 16px;
       margin-bottom: 16px;
       border-radius: 2px;
     }
@@ -81,13 +95,18 @@
       flex: none;
       width: 72px;
       height: 68px;
-      margin-right: 12px;
+      margin-right: 16px;
       margin-bottom: 16px;
       border-radius: 2px;
       background: #f2f3f6;
+      pointer-events: none;
+      &:nth-child(7n + 7) {
+        margin-right: 0px;
+      }
       &.today-miss {
         cursor: pointer;
         background-color: #e8f3ff;
+        pointer-events: initial;
       }
 
       &.pre-signed {
@@ -108,7 +127,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border-radius: 2px;
+        border-radius: 4px;
 
         .figure {
           color: #1d2129;

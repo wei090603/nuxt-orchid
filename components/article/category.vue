@@ -25,7 +25,7 @@ const { data } = await getCategoryTop();
     display: flex;
     align-items: center;
     line-height: 1;
-    width: 1250px;
+    width: 1200px;
     height: 100%;
     margin: 0 auto;
     .item {

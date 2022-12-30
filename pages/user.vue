@@ -54,14 +54,14 @@
             <div class="stat-item">
               <span class="content">
                 文章被阅读量
-                <span class="count">{{ userInfo.likeTotal }}</span>
+                <span class="count">{{ userInfo.readTotal }}</span>
               </span>
             </div>
 
             <div class="stat-item">
               <span class="content">
                 文章获得点赞量
-                <span class="count">{{ userInfo.readTotal }}</span>
+                <span class="count">{{ userInfo.likeTotal }}</span>
               </span>
             </div>
           </div>
@@ -104,7 +104,6 @@
 
 <script lang="ts" setup>
 import { getOhterUserInfo, postFollow, deleteFollow } from '~~/api/user';
-import { NButton } from 'naive-ui';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入本地化语言
@@ -192,7 +191,6 @@ const handleFollowDelClick = async () => {
   width: 100%;
   padding-top: 70px;
   min-height: 100vh;
-  padding-bottom: 50px;
   background: #f4f5f5;
 
   .head {
@@ -231,6 +229,7 @@ const handleFollowDelClick = async () => {
 .container {
   display: flex;
   width: 1100px;
+  padding-bottom: 50px;
   margin: 0 auto;
   .left-container {
     flex: 1;
@@ -376,7 +375,6 @@ const handleFollowDelClick = async () => {
         }
         .item-value {
           font-size: 14px;
-          color: #8590a6;
         }
       }
     }

@@ -70,8 +70,6 @@ const userInfo = ref<IUserInfo>({
 
 const { data } = await getOhterUserInfo(props.userId);
 userInfo.value = data.value;
-
-console.log(userInfo.value, 'userInfo');
 </script>
 
 <style lang="less" scoped>

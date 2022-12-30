@@ -1,5 +1,5 @@
 <template>
-  <n-dropdown trigger="click" :options="userOptions" @select="handleSelect">
+  <n-dropdown trigger="hover" :options="userOptions" @select="handleSelect">
     <n-avatar style="cursor: pointer" round size="large" :src="imgUrl + userInfo?.avatar" />
   </n-dropdown>
 </template>

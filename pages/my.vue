@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts" setup>
-import { NGrid, NGridItem, NAvatar } from 'naive-ui';
 const route = useRoute();
 const pageKey = computed(() => route.fullPath);
 
@@ -76,7 +75,7 @@ definePageMeta({
 
 <style lang="less" scoped>
 .wrapper {
-  width: 1250px;
+  width: 1200px;
   padding-top: 80px;
   margin: 0 auto;
 }

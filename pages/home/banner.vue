@@ -43,26 +43,24 @@
 </template>
 
 <script lang="ts" setup>
-import { NIcon, NCarousel } from 'naive-ui';
-import { ArrowBack, ArrowForward } from '@vicons/ionicons5';
 import { getAdvertise } from '@/api/home';
-
-type IProps = {
-  type: string;
-};
-
-const props = withDefaults(defineProps<IProps>(), {});
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
-const { data } = await getAdvertise({ position: props.type });
+const { data } = await getAdvertise({ position: 'home' });
 </script>
 
 <style lang="less" scoped>
+.n-carousel {
+  flex: 1;
+}
+
 .carousel-img {
   width: 100%;
-  height: 500px;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
   object-fit: cover;
 }
 

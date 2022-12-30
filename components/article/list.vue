@@ -34,7 +34,7 @@
                 </span>
                 <span>
                   <i class="iconfont icon-shijian"></i>
-                  {{ item.createdAt }}
+                  {{ dayjs(item.createdAt).format('YYYY-MM-DD') }}
                 </span>
               </div>
             </div>
@@ -48,6 +48,10 @@
 
 <script lang="ts" setup>
 import { getArticle, articleLike, articleLikeDel } from '@/api/article';
+
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 导入本地化语言
+dayjs.locale('zh-cn'); // 使用本地化语言
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;

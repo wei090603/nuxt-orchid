@@ -12,7 +12,6 @@
         <span class="text">累计签到天数</span>
       </div>
     </div>
-    <div class="divide web-only"></div>
     <div class="figure-card large-card">
       <span class="figure">{{ totalPoint }}</span>
       <div class="attention">
@@ -20,7 +19,7 @@
         <span class="tooltip web-only">
           <n-tooltip placement="bottom" trigger="hover" :style="{ maxWidth: '240px' }">
             <template #trigger>
-              <n-button>提示图标</n-button>
+              <n-button>!</n-button>
             </template>
             积分是兰苑内通用积分，用户可通过完成各种任务获得，暂无使用期限限制。
           </n-tooltip>
@@ -30,7 +29,15 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+interface IProps {
+  signContinuousCount: number;
+  signCount: number;
+  totalPoint: number;
+}
+
+withDefaults(defineProps<IProps>(), {});
+</script>
 
 <style lang="less" scoped>
 .figures {
@@ -44,8 +51,8 @@
   box-sizing: border-box;
   .figure-card {
     display: flex;
-    align-items: flex-end;
     justify-content: space-between;
+    flex-direction: column;
     .figure {
       font-weight: 700;
       font-size: 36px;
@@ -59,6 +66,9 @@
       &.active {
         color: #1abc9c;
       }
+    }
+    .text {
+      color: #86909c;
     }
   }
 }

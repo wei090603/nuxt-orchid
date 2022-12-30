@@ -1,7 +1,7 @@
 <template>
   <div class="article-item" @click="handleGoDetail(item.id)">
     <div class="top">
-      {{ item.author.nickName }} | {{ item.createdAt }} |
+      {{ item.author.nickName }} | {{ dayjs(item.createdAt).format('YYYY-MM-DD') }} |
       {{ item.category?.title }}
     </div>
 
@@ -30,6 +30,10 @@
 </template>
 
 <script lang="ts" setup>
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 导入本地化语言
+dayjs.locale('zh-cn'); // 使用本地化语言
+
 interface IArticleItem {
   id: number;
   title: string;
@@ -76,15 +80,17 @@ const handleGoDetail = (id: number) => {
   &:hover {
     background: #fafafa;
   }
+  &:last-child {
+    .content-wrapper {
+      border-bottom: none;
+    }
+  }
   .content-wrapper {
     display: flex;
     padding-bottom: 12px;
     border-bottom: 1px solid #e5e6eb;
     margin-top: 10px;
     width: 100%;
-    &:last-child {
-      border-bottom: none;
-    }
     .content-main {
       flex: 1 1 auto;
       .title {
