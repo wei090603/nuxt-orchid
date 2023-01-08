@@ -69,8 +69,8 @@ state.rankList = rankList.data.value;
 
 <style lang="less" scoped>
 .content-right {
-  flex: 0 0 auto;
-  width: 280px;
+  flex: 1;
+  margin-left: 20px;
   .sign-btn {
     height: 56px;
     margin-top: 22px;

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
-      <UserArticle v-for="(item, index) in data" :key="index" :item="item" />
+      <UserArticle v-for="(item, index) in data.list" :key="index" :item="item" />
     </LoadingGroup>
   </div>
 </template>

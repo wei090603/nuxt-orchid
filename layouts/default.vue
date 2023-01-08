@@ -11,6 +11,6 @@
 <style>
 .app {
   width: 100%;
-  height: inherit;
+  height: 100vh;
 }
 </style>

@@ -2,19 +2,21 @@
   <div class="right-container">
     <div class="sticky">
       <div class="sidebar-block author-block pure">
-        <nuxt-link class="user-item" target="_blank" :to="{ path: `/user/${userId}` }">
-          <img :src="imgUrl + userInfo.avatar" alt="" />
-          <div class="info-box">
-            <div class="nickname">{{ userInfo.nickName }}</div>
-            <div class="sign">{{ userInfo.signText || '个性一签，一见难忘' }}</div>
+        <div class="author-box">
+          <nuxt-link class="user-item" target="_blank" :to="{ path: `/user/${userId}` }">
+            <img :src="imgUrl + userInfo.avatar" alt="" />
+            <div class="info-box">
+              <div class="nickname">{{ userInfo.nickName }}</div>
+              <div class="sign">{{ userInfo.signText || '个性一签，一见难忘' }}</div>
+            </div>
+          </nuxt-link>
+          <div class="operate-btn" v-if="userId !== currentUser?.id">
+            <n-button type="primary" :disabled="userInfo.isFollow">
+              {{ userInfo.isFollow ? '已' : '' }}关注
+            </n-button>
+            <span></span>
+            <n-button type="primary" ghost>私信</n-button>
           </div>
-        </nuxt-link>
-        <div class="operate-btn">
-          <n-button type="primary" :disabled="userInfo.isFollow">
-            {{ userInfo.isFollow ? '已' : '' }}关注
-          </n-button>
-          <span></span>
-          <n-button type="primary" ghost>私信</n-button>
         </div>
         <div class="stat-item item">文章获得点赞量 {{ userInfo.likeTotal || 0 }}</div>
         <div class="stat-item item">文章被阅读量 {{ userInfo.readTotal || 0 }}</div>
@@ -40,7 +42,7 @@
 import { getOhterUserInfo } from '@/api/user';
 
 type IUserInfo = {
-  id: string;
+  id: number;
   avatar: string;
   nickName: string;
   likeTotal: number;
@@ -58,8 +60,10 @@ const props = withDefaults(defineProps<IProps>(), {});
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
+const currentUser = useUserInfo();
+
 const userInfo = ref<IUserInfo>({
-  id: '',
+  id: 0,
   avatar: '',
   nickName: '',
   likeTotal: 0,
@@ -87,6 +91,10 @@ userInfo.value = data.value;
       border-radius: 4px;
 
       padding: 20px 10px;
+      .author-box {
+        border-bottom: 1px solid #e4e6eb;
+        margin-bottom: 10px;
+      }
       .user-item {
         display: flex;
         align-items: center;
@@ -106,9 +114,7 @@ userInfo.value = data.value;
       .operate-btn {
         display: flex;
         justify-content: space-between;
-        border-bottom: 1px solid #e4e6eb;
         padding-bottom: 15px;
-        margin-bottom: 10px;
         .n-button {
           flex: 1;
         }

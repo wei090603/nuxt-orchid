@@ -8,11 +8,11 @@
       <div class="content-box">
         <div class="content">
           <h3 class="title">注册登录</h3>
-          <div class="wx-way" v-if="loginWayActive === 0">
+          <!-- <div class="wx-way" v-if="loginWayActive === 0">
             <div class="code"></div>
             <div class="tip">wx微信扫码登录</div>
-          </div>
-          <div class="email-way" v-if="loginWayActive === 1">
+          </div> -->
+          <div class="email-way" v-if="loginWayActive === 0">
             <n-space vertical>
               <n-input v-model:value="account" placeholder="请输入邮箱" size="large" />
               <n-input v-model:value="account" placeholder="请输入验证码" size="large" />
@@ -22,7 +22,7 @@
               登录
             </n-button>
           </div>
-          <div class="account-way" v-if="loginWayActive === 2">
+          <div class="account-way" v-if="loginWayActive === 1">
             <n-space vertical>
               <n-input v-model:value="account" placeholder="用户名/手机号/邮箱" size="large" />
               <n-input
@@ -69,7 +69,7 @@ const state = reactive({
   account: '',
   password: '123456',
   loginWayActive: 0, // 登录方式
-  loginWayList: ['微信登录', '免密码登录', '密码登录'],
+  loginWayList: ['免密码登录', '密码登录'],
 });
 
 const route = useRoute();
@@ -190,7 +190,7 @@ const { account, password, loginWayList, loginWayActive } = toRefs(state);
 }
 .select-way span:nth-child(2) {
   border-left: 1px solid #dee2e6 !important;
-  border-right: 1px solid #dee2e6 !important;
+  /* border-right: 1px solid #dee2e6 !important; */
 }
 
 .select-way span.active {

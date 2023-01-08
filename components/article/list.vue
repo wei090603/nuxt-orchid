@@ -10,12 +10,8 @@
           </div>
 
           <div class="right">
-            <h2>
-              {{ item.title }}
-            </h2>
-            <p class="summary">
-              {{ item.summary }}
-            </p>
+            <h2>{{ item.title }}</h2>
+            <p class="summary">{{ item.summary }}</p>
 
             <div class="meta">
               <div class="author" @click.stop="handleGoUserDetail(item.author?.id)">
@@ -29,7 +25,7 @@
                   {{ item.likeCount }}
                 </span>
                 <span>
-                  <i class="iconfont icon-huo" :class="{ active: item.reading >= 100 }"></i>
+                  <i class="iconfont icon-remen" :class="{ active: item.reading >= 100 }"></i>
                   {{ item.reading }}
                 </span>
                 <span>

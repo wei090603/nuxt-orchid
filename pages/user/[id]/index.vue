@@ -110,14 +110,14 @@
 </template>
 
 <script lang="ts" setup>
-import { NButton } from 'naive-ui';
-import { getUserArticle } from '~~/api/user';
+import { getUserArticle } from '~~/api/article';
 
 const route = useRoute();
 
 const id = route.params.id as string;
 
-const { pending, data, error } = await getUserArticle(id);
+const { data } = await getUserArticle({ userId: Number(id), page: 1, limit: 10 });
+console.log(data.value, 'data');
 </script>
 
 <style lang="less" scoped>

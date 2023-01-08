@@ -1,7 +1,7 @@
 <template>
   <div class="article-item" @click="handleGoDetail(item.id)">
     <div class="top">
-      {{ item.author.nickName }} | {{ dayjs(item.createdAt).format('YYYY-MM-DD') }} |
+      {{ item.author?.nickName }} | {{ dayjs(item.createdAt).format('YYYY-MM-DD') }} |
       {{ item.category?.title }}
     </div>
 

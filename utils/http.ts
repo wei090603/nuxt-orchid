@@ -2,7 +2,7 @@ import { createDiscreteApi } from 'naive-ui';
 import { Ref } from 'nuxt/dist/app/compat/capi';
 import { hash } from 'ohash';
 
-function responseVerify(code: number) {
+function responseVerify(code: number, msg?: string) {
   const { message } = createDiscreteApi(['message']);
   switch (code) {
     case 10400:
@@ -15,8 +15,8 @@ function responseVerify(code: number) {
     case 403:
       message.error('当前账号无权限访问！');
       break;
-    case 10404:
-      message.error('你所访问的资源不存在！');
+    case 404:
+      message.error(msg || '你所访问的资源不存在！');
       break;
     case 405:
       message.error('请求方式错误！请您稍后重试');
@@ -37,7 +37,7 @@ function responseVerify(code: number) {
       message.error('网关超时！');
       break;
     default:
-      message.error('请求失败！');
+      message.error(msg || '请求失败！');
   }
 }
 
@@ -80,7 +80,8 @@ const fetch = (url: string, options?: any): Promise<any> => {
       key,
       transform: (res: ResOptions<any>) => {
         if (res?.code !== 200) {
-          responseVerify(res.code);
+          console.log(res, 'res');
+          responseVerify(res.code, res.message);
           reject({ code: res.code, message: res.message });
         }
         return res.data;

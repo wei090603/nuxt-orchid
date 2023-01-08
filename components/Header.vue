@@ -13,13 +13,11 @@
       </div>
       <div class="header-right">
         <div class="search">
-          <n-input-group>
-            <n-input type="text" placeholder="请搜索" :style="{ width: '70%' }" />
-            <n-button type="primary" ghost>搜索</n-button>
-          </n-input-group>
+          <input class="search-input" type="text" placeholder="兰花怎么养" />
+          <button class="btn"><i class="iconfont icon-sousuo"></i></button>
         </div>
         <div class="write-btn">
-          <n-button type="primary" @click="handleToAdd">写文章</n-button>
+          <button>提问</button>
         </div>
         <client-only>
           <div class="center" v-if="isLogin">
@@ -34,7 +32,6 @@
 </template>
 
 <script lang="ts" setup>
-import { NInput, NButton, NInputGroup } from 'naive-ui';
 import { getNavgation } from '@/api/common';
 
 const route = useRoute();
@@ -92,10 +89,39 @@ header {
     display: flex;
     align-items: center;
     .search {
-      width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 390px;
+      height: 34px;
+      border-radius: 999px;
+      background: #f6f6f6;
+      padding-left: 16px;
+      border: 1px solid #f6f6f6;
+      .search-input {
+        flex: 1;
+        background: none;
+      }
+      .btn {
+        padding: 0 12px;
+        background: none;
+        outline: none;
+        border: none;
+        color: #8590a6;
+        line-height: 0;
+      }
     }
     .write-btn {
-      margin-right: 10px;
+      button {
+        width: 70px;
+        height: 34px;
+        margin-left: 15px;
+        border-radius: 999px;
+        background: #1abc9c;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+      }
     }
     .login-btn {
       height: 34px;
@@ -109,6 +135,7 @@ header {
       transition: background-color 0.3s, color 0.3s;
       cursor: pointer;
       padding: 0 14px;
+      margin-left: 15px;
     }
     .center {
       display: flex;
