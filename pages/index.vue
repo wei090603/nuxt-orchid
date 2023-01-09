@@ -82,8 +82,6 @@ useHead({
 
 const { data: recommendArticle } = await getArticleHot();
 
-console.log(recommendArticle.value, 'recommendArticle');
-
 const handleArticleClick = (item) => {
   window.open(`/article/${item.id}`, '_blank');
 };

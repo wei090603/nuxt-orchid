@@ -13,7 +13,7 @@
     <div class="creative-box">
       <div class="creative-title">创作中心</div>
       <div class="nav-top">
-        <NuxtLink class="item" :to="{ path: '/editor/new' }">
+        <NuxtLink class="item" :to="{ path: '/editor/new' }" target="_blank">
           <span class="icon"><i class="iconfont icon-bianjiwenzhang_huaban"></i></span>
           <span class="label">写文章</span>
         </NuxtLink>

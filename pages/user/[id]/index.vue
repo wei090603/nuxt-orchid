@@ -110,13 +110,13 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserArticle } from '~~/api/article';
+import { getArticle } from '~~/api/user';
 
 const route = useRoute();
 
 const id = route.params.id as string;
 
-const { data } = await getUserArticle({ userId: Number(id), page: 1, limit: 10 });
+const { pending, data, error } = await getArticle(Number(id), { page: 1, limit: 10 });
 console.log(data.value, 'data');
 </script>
 

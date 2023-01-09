@@ -1,37 +1,52 @@
 <template>
   <div class="list">
     <!-- 列表 -->
-    <ul>
-      <li v-for="item in articleData.list" :key="item.id">
-        <div class="item" @click="handleToDetail(item.id)">
+    <ul class="entry-list-wrap">
+      <li class="entry-item" v-for="item in articleData.list" :key="item.id">
+        <div class="article-item" @click="handleToDetail(item.id)">
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
             <span class="tags_blue">{{ item.category?.title }}</span>
           </div>
 
           <div class="right">
-            <h2>{{ item.title }}</h2>
+            <div class="meta-container">
+              <!-- <div class="author" @click.stop="handleGoUserDetail(item.author?.id)"> -->
+              <nuxt-link class="user-message" :to="{ path: `/user/${item.author.id}` }">
+                {{ item.author?.nickName }}
+              </nuxt-link>
+              <span class="date">
+                {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
+              </span>
+              <nuxt-link class="category" :to="{ path: `/user/${item.author.id}` }">
+                {{ item.category?.title }}
+              </nuxt-link>
+            </div>
+            <h2 class="title">{{ item.title }}</h2>
             <p class="summary">{{ item.summary }}</p>
 
             <div class="meta">
-              <div class="author" @click.stop="handleGoUserDetail(item.author?.id)">
-                <img :src="imgUrl + item.author?.avatar" alt="" />
-                <span>{{ item.author?.nickName }}</span>
-              </div>
-
-              <div class="interact">
-                <span @click.stop="handleLikeClick(item)" class="dianzan">
-                  <i class="iconfont icon-dianzan" :class="{ active: item.isLike }"></i>
-                  {{ item.likeCount }}
-                </span>
-                <span>
-                  <i class="iconfont icon-remen" :class="{ active: item.reading >= 100 }"></i>
-                  {{ item.reading }}
-                </span>
-                <span>
-                  <i class="iconfont icon-shijian"></i>
-                  {{ dayjs(item.createdAt).format('YYYY-MM-DD') }}
-                </span>
+              <ul class="interact">
+                <li class="item">
+                  <i class="iconfont icon-liulan"></i>
+                  <span>{{ item.reading }}</span>
+                </li>
+                <li
+                  @click.stop="handleLikeClick(item)"
+                  class="like item"
+                  :class="{ active: item.isLike }"
+                >
+                  <i class="iconfont icon-dianzan1" v-if="item.isLike"></i>
+                  <i class="iconfont icon-dianzan" v-else></i>
+                  <span>{{ item.likeCount }}</span>
+                </li>
+                <li class="item">
+                  <i class="iconfont icon-pinglun1"></i>
+                  <span>{{ item.commentCount }}</span>
+                </li>
+              </ul>
+              <div class="tag">
+                <span v-for="tag in item.tag">{{ tag.name }}</span>
               </div>
             </div>
           </div>
@@ -46,8 +61,11 @@
 import { getArticle, articleLike, articleLikeDel } from '@/api/article';
 
 import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn'; // 导入本地化语言
-dayjs.locale('zh-cn'); // 使用本地化语言
+//导相对时间插件
+import relativeTime from 'dayjs/plugin/relativeTime';
+//导国际化插件i18n
+import 'dayjs/locale/zh-cn';
+dayjs.extend(relativeTime);
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
@@ -64,7 +82,7 @@ const articleData = reactive<any>({
 const getArticleList = async () => {
   articleData.loading = true;
   if (articleData.finished) return false;
-  const { data } = await getArticle({ page: articleData.page, size: 10 });
+  const { data } = await getArticle({ page: articleData.page, limit: 10 });
   articleData.total = data.value.total;
   articleData.list = articleData.list.concat(data.value.list);
   articleData.page += 1;
@@ -78,10 +96,6 @@ await getArticleList();
 
 const handleToDetail = (id: string) => {
   window.open(`/article/${id}`, '_blank');
-};
-
-const handleGoUserDetail = (id: string) => {
-  window.open(`/user/${id}`, '_blank');
 };
 
 // 文章点赞
@@ -125,158 +139,247 @@ onMounted(() => {
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(26 26 26 / 20%);
   transition: all 0.3s;
-  ul li {
-    position: relative;
-    width: 100%;
-    height: 160px;
-    padding: 0 15px;
-    background-color: #fff;
-    transition: all 0.3s;
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0px;
-      width: 5px;
-      height: 0px;
-      border-radius: 3px;
-      background-color: var(--Yuexing-color);
-      transition: all 0.3s;
-      top: 20px;
-    }
-    &:hover::after {
-      height: 30px;
-    }
-    &:hover .left span {
-      right: 10px;
-    }
-    &:hover {
-      background-color: #fafafa;
-    }
-    .item {
+  .entry-list-wrap {
+    .entry-item {
       position: relative;
-      display: flex;
       width: 100%;
-      height: 100%;
-      padding: 15px 0;
-      border-bottom: 1px solid #ededed;
-      cursor: pointer;
-    }
-    .left {
-      overflow: hidden;
-      position: relative;
-      width: 250px;
-      height: 100%;
-      border-radius: 3px;
-      cursor: pointer;
-      &::before {
+      height: 140px;
+      padding: 0 15px;
+      background-color: #fff;
+      transition: all 0.3s;
+      &::after {
         content: '';
         position: absolute;
-        width: 60px;
-        top: -100px;
-        left: -70px;
-        height: 200%;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
-        transform: rotate(40deg);
+        left: 0px;
+        width: 5px;
+        height: 0px;
+        border-radius: 3px;
+        background-color: var(--Yuexing-color);
+        transition: all 0.3s;
+        top: 20px;
+      }
+      &:hover::after {
+        height: 30px;
+      }
+      &:hover .left span {
+        right: 10px;
+      }
+      &:hover {
+        background-color: #fafafa;
+      }
+      .article-item {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        padding: 15px 0;
+        border-bottom: 1px solid #ededed;
         cursor: pointer;
       }
-      span {
-        position: absolute;
-        top: 10px;
-        right: -70px;
-        transition: all 0.4s;
-        font-size: 12px;
-      }
-      a {
-        display: block;
+      .left {
+        overflow: hidden;
+        position: relative;
+        width: 210px;
         height: 100%;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: fill;
-      }
-      .tags_blue {
-        background-color: var(--Yuexing-color);
-        padding: 4px;
-        color: #fff;
         border-radius: 3px;
-        font-size: 14px;
-        font-family: '黑体';
-      }
-    }
-    .right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      margin-left: 20px;
-      height: 100%;
-      h2 {
-        width: 100%;
-        font-size: 20px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-right: 3px;
-      }
-      p {
-        flex: 1;
-        color: var(--Yuexing-a-vice) !important;
-        font-size: 14px;
-        transition: all 0.3s;
-        /* 多行文本溢出省略号显示 */
-        display: -webkit-box !important;
-        overflow: hidden;
-        word-break: break-all;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-      }
-      .meta {
-        display: flex;
-        justify-content: space-between;
-        .author {
+        cursor: pointer;
+        &::before {
+          content: '';
+          position: absolute;
+          width: 60px;
+          top: -100px;
+          left: -70px;
+          height: 200%;
+          background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
+          transform: rotate(40deg);
+          cursor: pointer;
+        }
+        span {
+          position: absolute;
+          top: 10px;
+          right: -70px;
+          transition: all 0.4s;
+          font-size: 12px;
+        }
+        a {
+          display: block;
+          height: 100%;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: fill;
+        }
+        .tags_blue {
+          background-color: var(--Yuexing-color);
+          padding: 4px;
+          color: #fff;
+          border-radius: 3px;
           font-size: 14px;
-          &:hover {
-            color: #1abc9c;
+          font-family: '黑体';
+        }
+      }
+      .right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-left: 20px;
+        height: 100%;
+        .meta-container {
+          display: flex;
+          align-items: center;
+          color: #86909c;
+          .user-message {
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+            max-width: 162px;
+            font-size: 13px;
+            line-height: 22px;
+            color: #4e5969;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
           }
-          img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            vertical-align: bottom;
-            margin-right: 5px;
+          .date {
+            position: relative;
+            padding: 0 10px;
+            font-size: 13px;
+            flex-shrink: 0;
+            &::after,
+            &::before {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              display: block;
+              width: 1px;
+              height: 14px;
+              background: #e5e6eb;
+              content: ' ';
+            }
+            &::after {
+              right: 0;
+            }
+            &::before {
+              left: 0;
+            }
+          }
+          .category {
+            margin-left: 8px;
+            color: #86909c;
           }
         }
-        .interact {
-          span {
-            margin: 0 14px;
-            i {
-              margin-right: 3px;
-              color: #ededed;
-              &.icon-dianzan {
-                cursor: pointer;
+        h2 {
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-right: 3px;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 24px;
+          color: #1d2129;
+          width: 100%;
+          display: -webkit-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+        }
+        p {
+          color: #86909c;
+          font-size: 13px;
+          line-height: 22px;
+          display: -webkit-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+        }
+        .meta {
+          display: flex;
+          justify-content: space-between;
+          .author {
+            font-size: 14px;
+            &:hover {
+              color: #1abc9c;
+            }
+            img {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              vertical-align: bottom;
+              margin-right: 5px;
+            }
+          }
+          .interact {
+            display: flex;
+            align-items: center;
+            .item {
+              display: flex;
+              align-items: center;
+              position: relative;
+              margin-right: 20px;
+              font-size: 13px;
+              color: #4e5969;
+              flex-shrink: 0;
+              &.like {
                 &.active {
                   color: var(--Yuexing-color);
                 }
               }
-              &.icon-huo.active {
-                color: red;
-              }
-            }
-            &.dianzan {
-              &:hover {
-                .icon-dianzan {
+              i {
+                cursor: pointer;
+                &.icon-dianzan1 {
                   color: var(--Yuexing-color);
                 }
+                &:hover {
+                  .icon-dianzan {
+                    color: var(--Yuexing-color);
+                  }
+                }
+              }
+              span {
+                margin-left: 4px;
+              }
+            }
+          }
+          .tag {
+            display: flex;
+            align-items: center;
+            color: #4e5969;
+            span {
+              display: flex;
+              align-items: center;
+              position: relative;
+              flex-shrink: 0;
+              font-size: 13px;
+              padding: 0 8px;
+              color: #4e5969;
+              &:not(:last-child):after {
+                position: absolute;
+                right: -1px;
+                display: block;
+                content: ' ';
+                width: 2px;
+                height: 2px;
+                border-radius: 50%;
+                background: #4e5969;
+              }
+              &:hover {
+                color: var(--Yuexing-color);
+              }
+              &:last-child {
+                padding-right: 0;
               }
             }
           }
         }
       }
-    }
-    &:last-child {
-      border: 0;
+      &:last-child {
+        border: 0;
+      }
     }
   }
   .not-data {
@@ -285,17 +388,6 @@ onMounted(() => {
     padding: 15px 0;
     color: #ccc;
     font-size: 16px;
-  }
-}
-
-/* 鼠标经过图片动画 */
-@keyframes imgMove {
-  0% {
-    left: -70px;
-  }
-
-  100% {
-    left: 340px;
   }
 }
 </style>

@@ -143,8 +143,6 @@ const env = useRuntimeConfig();
 const actionUrl: string = env.public.VITE_FILE_ACTION_URL;
 const fileUrl: string = env.public.VITE_FILE_URL;
 
-const token = useCookie<string>('token');
-
 const form = ref<IArticleForm>({
   title: '',
   content: '',

@@ -11,10 +11,10 @@ export const msgOptions = [
     label: '关注',
     key: 'notification-follow',
   },
-  {
-    label: '私信',
-    key: 'notification-im',
-  },
+  // {
+  //   label: '私信',
+  //   key: 'notification-im',
+  // },
   {
     label: '系统消息',
     key: 'notification-system',

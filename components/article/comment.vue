@@ -34,13 +34,17 @@
         <div class="content-box">
           <div class="user-box">
             <span class="name">{{ item.user.nickName }}</span>
-            <time :datetime="item.createdAt">{{ item.createdAt }}</time>
+            <time :datetime="item.createdAt">
+              {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
+            </time>
           </div>
           <div class="content">{{ item.content }}</div>
           <div class="action-box">
             <div class="item dig-item">
-              点赞
+              <i class="iconfont icon-dianzan1" v-if="item.isLike"></i>
+              <i class="iconfont icon-dianzan" v-else></i>
               <span v-if="item.likeCount > 0">{{ item.likeCount }}</span>
+              <span v-else>点赞</span>
             </div>
             <div v-show="currentReply === item.id" class="item cancel" @click="handleCancelClick">
               取消回复
@@ -50,8 +54,9 @@
               class="item"
               @click="handleCommentClick(item.id)"
             >
-              回复
+              <i class="iconfont icon-pinglun1"></i>
               <span v-if="item.children.length > 0">{{ item.children.length }}</span>
+              <span v-else>回复</span>
             </div>
           </div>
           <div class="comment-form" v-show="currentReply === item.id">
@@ -79,14 +84,16 @@
                       </span>
                     </div>
                     <time :datetime="item.createdAt">
-                      {{ children.createdAt }}
+                      {{ dayjs(children.createdAt).locale('zh-cn').from(dayjs()) }}
                     </time>
                   </div>
                   <div class="content">{{ children.content }}</div>
                   <div class="action-box">
                     <div class="item dig-item">
-                      点赞
+                      <i class="iconfont icon-dianzan1" v-if="children.isLike"></i>
+                      <i class="iconfont icon-dianzan" v-else></i>
                       <span v-if="children.likeCount > 0">{{ children.likeCount }}</span>
+                      <span v-else>点赞</span>
                     </div>
                     <div
                       v-show="currentReply === children.id"
@@ -100,7 +107,8 @@
                       class="item"
                       @click="handleSubCommentClick(children.id, item.id, children.user.id)"
                     >
-                      回复
+                      <i class="iconfont icon-pinglun1"></i>
+                      <span>回复</span>
                     </div>
                   </div>
                 </div>
@@ -126,6 +134,13 @@
 import { createDiscreteApi } from 'naive-ui';
 import { getCommentList, createComment, createSubComment } from '@/api/article';
 import CommentInput from './commentInput.vue';
+
+import dayjs from 'dayjs';
+//导相对时间插件
+import relativeTime from 'dayjs/plugin/relativeTime';
+//导国际化插件i18n
+import 'dayjs/locale/zh-cn';
+dayjs.extend(relativeTime);
 
 const route = useRoute();
 const isLogin = useIsLogin();

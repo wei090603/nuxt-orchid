@@ -3,10 +3,6 @@ import http from '~~/utils/http';
 // 获取文章列表
 export const getArticle = (params: { limit: number; page: number }) => http.get(`/article`, params);
 
-// 获取用户文章列表
-export const getUserArticle = (params: { limit: number; page: number; userId: number }) =>
-  http.get(`/article/user`, params);
-
 // 获取文章详情
 export const getArticleDetail = (id: number) => http.get(`/article/${id}`);
 

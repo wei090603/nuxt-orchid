@@ -54,11 +54,12 @@
           :class="{ active: articleDetail.isLike }"
           :badge="articleDetail.likeCount"
         >
-          <span class="icon">点赞</span>
+          <i class="iconfont icon-dianzan1" v-if="articleDetail.isLike"></i>
+          <i class="iconfont icon-dianzan" v-else></i>
         </div>
 
         <div class="panel-btn with-badge" :badge="articleDetail.commentCount">
-          <span class="icon">评论</span>
+          <i class="iconfont icon-pinglun"></i>
         </div>
 
         <div
@@ -66,8 +67,8 @@
           :class="{ active: articleDetail.isCollect }"
           @click="handleCollectClick(articleDetail.isCollect, +id)"
         >
-          <span class="icon" v-if="articleDetail.isCollect">已收藏</span>
-          <span class="icon" v-else>收藏</span>
+          <i class="iconfont icon-shoucangfill" v-if="articleDetail.isCollect"></i>
+          <i class="iconfont icon-shoucang" v-else></i>
         </div>
       </div>
     </div>
@@ -141,6 +142,10 @@ useHead({ title: articleDetail.value.title || '' });
     cursor: pointer;
     text-align: center;
     font-size: 1rem;
+    color: #4e5969;
+    i {
+      font-size: 30px;
+    }
     &.active {
       color: var(--Yuexing-color);
     }

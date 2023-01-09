@@ -115,6 +115,7 @@ header {
       button {
         width: 70px;
         height: 34px;
+        line-height: 34px;
         margin-left: 15px;
         border-radius: 999px;
         background: #1abc9c;

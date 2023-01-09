@@ -13,8 +13,9 @@ export const login = (body: { account: string; password: string }) =>
 // 退出登录
 export const loginOut = () => http.get(`/auth/loginOut`);
 
-// 获取用户文章
-export const getUserArticle = (id: string) => http.get(`/user/article/${id}`);
+// 获取用户文章列表
+export const getArticle = (id: number, params: { limit: number; page: number }) =>
+  http.get(`/user/article/${id}`, params);
 
 // 获取用户收藏
 export const getUserCollect = (id: string) => http.get(`/collect/list/${id}`);

@@ -7,14 +7,14 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserArticle } from '@/api/user';
+import { getArticle } from '@/api/user';
 import UserArticle from '../components/userArticle.vue';
 
 const route = useRoute();
 
 const id = route.params.id as string;
 
-const { pending, data, error } = await getUserArticle(id);
+const { pending, data, error } = await getArticle(+id, { page: 1, limit: 10 });
 </script>
 
 <style lang="less" scoped>

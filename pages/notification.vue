@@ -55,7 +55,7 @@ definePageMeta({
     .item {
       display: flex;
       align-items: center;
-      margin: 0 8px;
+      margin: 0 20px;
       cursor: pointer;
       &:first-child {
         margin-left: 0px;
