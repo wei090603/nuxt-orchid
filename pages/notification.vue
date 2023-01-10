@@ -71,6 +71,5 @@ definePageMeta({
   width: 960px;
   height: auto;
   margin: 15px auto 0;
-  background: #fff;
 }
 </style>

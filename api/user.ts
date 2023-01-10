@@ -40,3 +40,7 @@ export const getSignRecord = (params: object) => http.get(`/sign/record`, params
 
 // 签到信息
 export const getSignInfo = () => http.get(`/sign/signInfo`);
+
+// 用户动态列表
+export const getDynamic = (id: number, params: { limit: number; page: number }) =>
+  http.get(`/user/dynamic/${id}`, params);

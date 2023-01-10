@@ -66,8 +66,6 @@ const dataCount = ref<
   }[]
 >([]);
 
-console.log(userInfo.value, currentMonth.value, 'userInfo');
-
 // const { pending, data: signList, error, refresh } = await signRecord();
 
 const [signRecord, signInfo] = await Promise.all([

@@ -1,31 +1,42 @@
 <template>
   <div class="wrapper">
-    <div class="head">
-      <div class="left">
-        <div class="avatar"><img :src="imgUrl + userInfo.avatar" alt="头像" /></div>
-        <div class="nick-name">
-          <h1>{{ userInfo.nickName }}</h1>
-          <div class="sign">{{ userInfo.sign }}</div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="jifen">100</div>
-        <div class="btn">
-          <n-button v-if="Number(id) === myInfo?.id" type="primary" ghost @click="handleGoEdit">
-            编辑个人资料
-          </n-button>
-          <template v-else>
-            <n-button
-              strong
-              secondary
-              type="tertiary"
-              @click="handleFollowDelClick"
-              v-if="userInfo.isFollow"
-            >
-              已关注
-            </n-button>
-            <n-button type="primary" ghost @click="handleFollowClick" v-else>+关注</n-button>
-          </template>
+    <div class="profile-header">
+      <div class="header-user-cover"></div>
+      <div class="header-wrapper">
+        <div class="header-main">
+          <div class="header-content">
+            <div class="avatar"><img :src="imgUrl + userInfo.avatar" alt="头像" /></div>
+            <div class="left">
+              <div class="nick-name">
+                <h1>{{ userInfo.nickName }}</h1>
+                <div class="sign">{{ userInfo.signText }}</div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="btn">
+                <n-button
+                  v-if="Number(id) === myInfo?.id"
+                  type="primary"
+                  ghost
+                  @click="handleGoEdit"
+                >
+                  编辑个人资料
+                </n-button>
+                <template v-else>
+                  <n-button
+                    strong
+                    secondary
+                    type="tertiary"
+                    @click="handleFollowDelClick"
+                    v-if="userInfo.isFollow"
+                  >
+                    已关注
+                  </n-button>
+                  <n-button type="primary" ghost @click="handleFollowClick" v-else>+关注</n-button>
+                </template>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -193,39 +204,65 @@ const handleFollowDelClick = async () => {
   min-height: 100vh;
   background: #f4f5f5;
 
-  .head {
+  .profile-header {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     position: relative;
     width: 1100px;
     margin: 0 auto 10px;
-    background-color: #fff;
     box-shadow: 0 1px 3px hsl(0deg 0% 7% / 10%);
-    .left {
-      display: flex;
-      align-items: center;
-      .avatar {
-        flex: 0 0 auto;
-        margin-right: 20px;
-        width: 90px;
-        height: 90px;
-        background-color: #f9f9f9;
-        border-radius: 50%;
-        img {
-          display: block;
-          width: 100%;
+    .header-user-cover {
+      width: 100%;
+      height: 132px;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url(@/assets/images/guide-cover.jpg);
+      background-repeat: no-repeat;
+    }
+    .header-wrapper {
+      background: #fff;
+      position: relative;
+      width: 100%;
+      .header-main {
+        height: 94px;
+        margin: 0 20px 24px;
+        position: relative;
+        .header-content {
+          display: flex;
+          justify-content: space-between;
+          border-left: 164px solid transparent;
+          padding-left: 32px;
+          padding-top: 16px;
+          height: 100%;
+          .avatar {
+            position: absolute;
+            left: 0;
+            top: -74px;
+            width: 160px;
+            height: 160px;
+            background-color: #f9f9f9;
+            border: 4px solid #fff;
+            border-radius: 4px;
+            img {
+              display: block;
+              width: 100%;
+            }
+          }
+          .left {
+          }
+          .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+          }
         }
       }
     }
-    .right {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
   }
 }
-
 .container {
   display: flex;
   width: 1100px;
