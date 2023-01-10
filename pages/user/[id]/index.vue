@@ -13,43 +13,50 @@
               <div class="article-header">
                 <div class="author-info author-bar">
                   <div class="popover-box user-popover">
-                    <a href="/user/3518877442254759" target="_blank" rel="" class="user-link">
+                    <nuxt-link :to="{ path: `/user/${item.article.author.id}` }" target="_blank">
                       <img
-                        src="https://p3-passport.byteimg.com/img/user-avatar/57119c7e9db623b30c8d9a0d3851f73f~100x100.awebp"
-                        alt="楼仔的头像"
+                        :src="imgUrl + item.article.author.avatar"
                         class="lazy avatar"
                         loading="lazy"
                       />
-                    </a>
+                    </nuxt-link>
                   </div>
                   <div class="author-info-content">
                     <div class="author-info-head">
                       <div class="popover-box user-popover">
-                        <a href="/user/3518877442254759" target="_blank" rel="" class="username">
-                          楼仔
-                        </a>
+                        <nuxt-link
+                          :to="{ path: `/user/${item.article.author.id}` }"
+                          target="_blank"
+                          class="username"
+                        >
+                          {{ item.article.author.nickName }}
+                        </nuxt-link>
                       </div>
                     </div>
                     <div class="meta-box">
                       <div class="position ellipsis">
-                        一枚小小的Go/Java代码搬运工 @ 武汉小米科技
+                        {{ item.article.author.signText }}
                       </div>
                       <div class="dot">·</div>
-                      6天前
+                      {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
                     </div>
                   </div>
                   <n-button class="btn" type="primary" ghost>关注</n-button>
                 </div>
               </div>
               <div class="post-item-content">
-                <a href="/post/7153214385236738055" target="_blank" class="post-link">
+                <nuxt-link
+                  :to="{ path: `/article/${item.article.id}` }"
+                  target="_blank"
+                  class="post-link"
+                >
                   <div class="post-item-title">
-                    <h3>76 张图，剖析 Spring AOP 源码，小白居然也能看懂，大神，请收下我的膝盖！</h3>
+                    <h3>{{ item.article.title }}</h3>
                   </div>
                   <div class="rich-content">
-                    <div class="post-item-excerpt">111</div>
+                    <div class="post-item-excerpt">{{ item.article.summary }}</div>
                   </div>
-                </a>
+                </nuxt-link>
               </div>
             </div>
 
@@ -78,7 +85,7 @@
           </div>
 
           <div class="dynamic-item" v-if="item.type === 3">
-            <div class="action-item content-item" rank="16">
+            <div class="action-item content-item">
               <div class="author-info">
                 <div class="popover-box user-popover">
                   <img
@@ -119,6 +126,13 @@
 
 <script lang="ts" setup>
 import { getDynamic } from '~~/api/user';
+
+import dayjs from 'dayjs';
+//导相对时间插件
+import relativeTime from 'dayjs/plugin/relativeTime';
+//导国际化插件i18n
+import 'dayjs/locale/zh-cn';
+dayjs.extend(relativeTime);
 
 const route = useRoute();
 
