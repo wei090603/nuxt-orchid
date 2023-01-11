@@ -13,7 +13,7 @@
     <div class="creative-box">
       <div class="creative-title">创作中心</div>
       <div class="nav-top">
-        <NuxtLink class="item" :to="{ path: '/editor/new' }" target="_blank">
+        <NuxtLink class="item" :to="{ path: '/editor/new' }">
           <span class="icon"><i class="iconfont icon-bianjiwenzhang_huaban"></i></span>
           <span class="label">写文章</span>
         </NuxtLink>
@@ -31,7 +31,9 @@
         </NuxtLink>
       </div>
 
-      <div class="btn">进入创作中心 ></div>
+      <div class="btn">
+        <nuxt-link :to="{ path: '/creator' }">进入创作中心 ></nuxt-link>
+      </div>
     </div>
 
     <div class="activity-box">活动卡片位</div>
@@ -209,19 +211,20 @@ const handleGoSign = () => {
     }
   }
   .btn {
-    box-sizing: border-box;
-    min-width: 0px;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    display: flex;
     border: 1px solid var(--Yuexing-color);
     color: var(--Yuexing-color);
     border-radius: 4px;
-    cursor: pointer;
     height: 40px;
     font-size: 14px;
+    a {
+      color: var(--Yuexing-color);
+      -webkit-box-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      align-items: center;
+      display: flex;
+      height: 100%;
+    }
   }
   .notice-title {
     font-size: 16px;

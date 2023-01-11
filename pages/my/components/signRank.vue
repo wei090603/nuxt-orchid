@@ -24,7 +24,8 @@
       </n-button>
     </div>
     <div class="divide"></div>
-    <div class="sign-rank">签到活跃榜-TOP</div>
+    <!-- <div class="sign-rank">签到活跃榜-TOP</div> -->
+    <div class="share-img"><img src="@/assets/images/invitation.png" alt="" /></div>
     <n-tabs type="line" animated>
       <n-tab-pane name="最新签到" tab="最新签到">
         <SignRankItem v-for="(item, index) in state.newList" :item="item" :index="index" />
@@ -90,6 +91,13 @@ state.rankList = rankList.data.value;
     background: #e5e8ef;
     padding: 10px 0px 10px 5px;
     color: #1abc9c;
+  }
+  .share-img {
+    width: 100%;
+    img {
+      display: block;
+      width: 100%;
+    }
   }
 }
 </style>

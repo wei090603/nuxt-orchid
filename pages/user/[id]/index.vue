@@ -41,7 +41,15 @@
                       {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
                     </div>
                   </div>
-                  <n-button class="btn" type="primary" ghost>关注</n-button>
+                  <n-button
+                    class="btn"
+                    color="#1abc9c"
+                    type="primary"
+                    ghost
+                    v-if="item.article.author.id !== userInfo?.id"
+                  >
+                    关注
+                  </n-button>
                 </div>
               </div>
               <div class="post-item-content">
@@ -138,6 +146,8 @@ const route = useRoute();
 
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
+
+const userInfo = useUserInfo();
 
 const id = route.params.id as string;
 

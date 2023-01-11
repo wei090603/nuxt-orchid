@@ -260,7 +260,7 @@ const publishClick = async () => {
     if (!errors) {
       await addArticle(form.value);
       message.success('发布成功');
-      router.back();
+      router.push({ path: '/published' });
     } else {
       message.error('验证失败，请填写完整信息');
     }

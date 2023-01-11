@@ -21,7 +21,8 @@
         </div>
         <client-only>
           <div class="center" v-if="isLogin">
-            <Message />
+            <HeaderMessage />
+            <HeaderCreator />
             <Avatar />
           </div>
           <div class="login-btn" @click="handleLoginRegisterBtn" v-else>登录/注册</div>
@@ -117,6 +118,7 @@ header {
         height: 34px;
         line-height: 34px;
         margin-left: 15px;
+        margin-right: 24px;
         border-radius: 999px;
         background: #1abc9c;
         border: none;

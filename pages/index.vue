@@ -82,7 +82,7 @@ useHead({
 
 const { data: recommendArticle } = await getArticleHot();
 
-const handleArticleClick = (item) => {
+const handleArticleClick = (item: { id: number }) => {
   window.open(`/article/${item.id}`, '_blank');
 };
 </script>

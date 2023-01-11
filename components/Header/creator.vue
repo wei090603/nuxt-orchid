@@ -1,19 +1,13 @@
 <template>
-  <n-dropdown trigger="hover" :options="msgOptions" @select="handleSelect">
-    <div class="msg-box">
-      <span class="icon"><i class="iconfont icon-xiaoxi1"></i></span>
-      <span class="label">消息</span>
-    </div>
-  </n-dropdown>
+  <div class="msg-box" @click="handleToClick">
+    <span class="icon"><i class="iconfont icon-xiaoxi1"></i></span>
+    <span class="label">创作中心</span>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { msgOptions } from '@/constants/message';
-
-const handleSelect = (k: string) => {
-  navigateTo({
-    name: k,
-  });
+const handleToClick = () => {
+  navigateTo('/creator');
 };
 </script>
 
@@ -22,8 +16,11 @@ const handleSelect = (k: string) => {
   display: flex;
   flex-direction: column;
   height: 40px;
-  margin: 0 24px;
+  margin-right: 24px;
   cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
   .icon {
     width: 20px;
     height: 20px;
