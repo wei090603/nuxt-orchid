@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-    <!-- 列表 -->
     <ul class="entry-list-wrap">
       <li class="entry-item" v-for="item in articleData.list" :key="item.id">
         <div class="article-item" @click="handleToDetail(item.id)">
@@ -134,6 +133,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .list {
+  flex: 1;
   overflow: hidden;
   background-color: #fff;
   border-radius: 3px;

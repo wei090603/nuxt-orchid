@@ -44,7 +44,7 @@ const categoryList = [
 ];
 
 // 专栏
-const specialColumn = ['新手上路', '养兰知识', '市场行情', '兰园认证', '兰花鉴赏', '兰花植料'];
+const specialColumn = ['新手上路', '养兰知识', '市场行情', '兰花科普', '兰花鉴赏', '兰园认证'];
 </script>
 
 <style lang="less" scoped>

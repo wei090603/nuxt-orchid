@@ -2,7 +2,6 @@
   <div class="wrapper">
     <HeadChannel />
 
-    <!-- 主体内容 -->
     <div class="main">
       <div class="feed1-layout">
         <Banner />

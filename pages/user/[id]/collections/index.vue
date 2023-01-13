@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { getUserCollect } from '@/api/user';
-import UserArticle from '../components/userArticle.vue';
+import UserArticle from '../../../../components/Article/userArticle.vue';
 
 const route = useRoute();
 

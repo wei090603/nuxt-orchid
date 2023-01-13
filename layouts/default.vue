@@ -13,4 +13,9 @@
   width: 100%;
   height: 100vh;
 }
+
+main {
+  width: 100%;
+  min-height: 100vh;
+}
 </style>

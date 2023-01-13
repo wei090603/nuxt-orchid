@@ -17,7 +17,7 @@
                     <span class="icon icon-location"></span>
                     <span>线上</span>
                   </div>
-                  <div class="btn-join">报名参加</div>
+                  <div class="btn-join">立即参加</div>
                 </div>
               </div>
             </div>
@@ -35,34 +35,46 @@
   position: relative;
   margin: 0 auto;
   width: 100%;
-  max-width: 960px;
-  padding-top: 80px;
+  max-width: 1000px;
+  padding-top: 70px;
   .activity-wrap {
-    overflow: hidden;
     width: 100%;
     .activity-list {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      margin: 13px 0px;
+      margin-bottom: 13px;
       width: 100%;
       flex-flow: row wrap; /*按照行排列，一行排不下换行。flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。*/
       .activity-item {
-        width: calc((100% - 60px) / 4);
+        width: calc((100% - 56px) / 4);
         height: auto;
         border-radius: 20px;
-        margin-right: 20px;
-        margin-bottom: 30px;
-        &:nth-of-type(4n + 0) {
-          margin-right: 0px;
-        }
+        margin: 0 7px 30px;
         .activity {
+          position: relative;
           display: block;
           width: 100%;
           height: 100%;
           transition: all 0.2s linear;
           &:hover {
             transform: translateY(-3px);
+            &::before {
+              box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+            }
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: -1;
+            border-radius: 2px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 1px 1px 1px rgb(0 0 0 / 15%);
           }
           .activity-inner {
             border-radius: 2px;
@@ -98,7 +110,7 @@
                   width: 100px;
                   height: 25px;
                   border-radius: 30px;
-                  background-color: #4d91fd;
+                  background-color: var(--Yuexing-color);
                   line-height: 25px;
                   color: #fff;
                   text-align: center;

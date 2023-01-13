@@ -1,14 +1,13 @@
 <template>
   <div class="wrapper">
     <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
-      <UserArticle v-for="(item, index) in data.list" :key="index" :item="item" />
+      <ArticleUserArticle v-for="(item, index) in data.list" :key="index" :item="item" />
     </LoadingGroup>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { getArticle } from '@/api/user';
-import UserArticle from '../components/userArticle.vue';
 
 const route = useRoute();
 

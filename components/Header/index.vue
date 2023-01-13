@@ -110,6 +110,7 @@ header {
         border: none;
         color: #8590a6;
         line-height: 0;
+        cursor: pointer;
       }
     }
     .write-btn {
