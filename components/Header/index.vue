@@ -139,7 +139,6 @@ header {
       transition: background-color 0.3s, color 0.3s;
       cursor: pointer;
       padding: 0 14px;
-      margin-left: 15px;
     }
     .center {
       display: flex;

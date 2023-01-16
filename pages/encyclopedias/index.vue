@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <ArticleCategory />
+    <Category v-model:categoryId="categoryId" />
     <div class="encyclopedias-carousel"><Banner /></div>
     <div class="encyclopedias-wrap">
       <div class="main-column">
-        <ArticleUserArticle v-for="(item, index) in data.list" :key="index" :item="item" />
+        <ArticleItem v-for="(item, index) in data.list" :key="index" :item="item" />
       </div>
       <CommunityAside />
     </div>
@@ -12,11 +12,26 @@
 </template>
 
 <script lang="ts" setup>
+import { getEncyclopediasList } from '@/api/encyclopedias';
+
 import Banner from '../home/banner.vue';
+import Category from './category.vue';
+import ArticleItem from './articleItem.vue';
 
-import { getArticle } from '@/api/user';
+const categoryId = ref(null);
 
-const { pending, data, error } = await getArticle(+1, { page: 1, limit: 10 });
+const { pending, data, error, refresh } = await getEncyclopediasList({
+  page: 1,
+  limit: 10,
+  categoryId: categoryId.value,
+});
+
+watch(
+  () => categoryId.value,
+  () => {
+    refresh();
+  }
+);
 </script>
 
 <style lang="less" scoped>
@@ -25,7 +40,7 @@ const { pending, data, error } = await getArticle(+1, { page: 1, limit: 10 });
   min-height: 100vh;
   padding-top: 100px;
   .encyclopedias-carousel {
-    height: 240px;
+    height: 440px;
     margin: 10px auto;
     width: 1200px;
   }

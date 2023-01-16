@@ -79,6 +79,7 @@ const fetch = (url: string, options?: any): Promise<any> => {
       ...option,
       key,
       transform: (res: ResOptions<any>) => {
+        // console.log(res, 'res');
         if (res?.code !== 200) {
           responseVerify(res.code, res.message);
           reject({ code: res.code, message: res.message });

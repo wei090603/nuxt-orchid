@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <LoadingGroup :pending="pending" :error="error" :isEmpty="data.length === 0">
+    <LoadingGroup :pending="pending" :error="error" :isEmpty="data.list.length === 0">
       <div class="dynamic-container">
         <template v-for="item in data.list" :key="item.id">
           <div class="dynamic-item" v-if="item.type === 1 || item.type === 2">
@@ -69,24 +69,26 @@
             </div>
 
             <div class="action-box post-item-actions">
-              <div class="action like-action">
+              <div class="action like-action" :class="{ active: item.article.isLike }">
                 <div class="action-title-box">
                   <i class="iconfont icon-dianzan1" v-if="item.article.isLike"></i>
                   <i class="iconfont icon-dianzan" v-else></i>
-                  <span class="action-title">{{ item.article.likeCount }}</span>
+                  <span class="action-count">
+                    {{ item.article.likeCount || '赞' }}
+                  </span>
                 </div>
               </div>
               <div class="action comment-action">
                 <div class="action-title-box">
                   <i class="iconfont icon-pinglun1"></i>
-                  <span class="action-title">{{ item.article.commentCount }}</span>
+                  <span class="action-count">{{ item.article.commentCount || '评论' }}</span>
                 </div>
               </div>
-              <div class="action share-action">
+              <div class="action collect-action" :class="{ active: item.article.isCollect }">
                 <div class="action-title-box">
                   <i class="iconfont icon-shoucangfill" v-if="item.article.isCollect"></i>
                   <i class="iconfont icon-shoucang" v-else></i>
-                  <span class="action-title">收藏</span>
+                  <span class="action-count">收藏</span>
                 </div>
               </div>
             </div>
@@ -271,6 +273,36 @@ const { pending, data, error } = await getDynamic(Number(id), { page: 1, limit: 
         width: 1px;
         height: 2rem;
         background-color: #ebebeb;
+      }
+      &.like-action {
+        &.active {
+          .icon-dianzan1 {
+            color: var(--Yuexing-color);
+          }
+          .action-count {
+            color: var(--Yuexing-color);
+          }
+        }
+      }
+      &.collect-action {
+        &.active {
+          .icon-shoucangfill {
+            color: var(--Yuexing-color);
+          }
+          .action-count {
+            color: var(--Yuexing-color);
+          }
+        }
+      }
+      .action-title-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .action-count {
+        margin-left: 5px;
+        font-size: 13px;
+        color: #8a93a0;
       }
     }
   }
