@@ -1,6 +1,6 @@
 <template>
   <n-dropdown trigger="hover" :options="msgOptions" @select="handleSelect">
-    <div class="msg-box">
+    <div class="msg-box" @click="handleToDetail">
       <span class="icon"><i class="iconfont icon-xiaoxi1"></i></span>
       <span class="label">消息</span>
     </div>
@@ -13,6 +13,12 @@ import { msgOptions } from '@/constants/message';
 const handleSelect = (k: string) => {
   navigateTo({
     name: k,
+  });
+};
+
+const handleToDetail = () => {
+  navigateTo({
+    name: 'notification',
   });
 };
 </script>

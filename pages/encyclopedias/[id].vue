@@ -109,3 +109,15 @@ useHead({ title: data.value.title || '' });
   }
 }
 </style>
+
+<style lang="less">
+.content {
+  h3 {
+    font-size: 1.4rem;
+    line-height: 190%;
+    margin: 2px -25px 10px -25px;
+    padding: 0 20px;
+    border-left: 5px solid var(--Yuexing-color);
+  }
+}
+</style>

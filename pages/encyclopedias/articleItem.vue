@@ -1,13 +1,18 @@
 <template>
-  <div class="article-item">
+  <div class="article-item" @click="handleToDetail(item.id)">
     <div class="top">
-      <nuxt-link class="user-message" :to="{ path: `/user/${item.author.id}` }">
+      <nuxt-link
+        class="user-message"
+        :to="{ path: `/user/${item.author.id}` }"
+        target="_blank"
+        @click.stop
+      >
         {{ item.author?.nickName }}
       </nuxt-link>
       <span class="date">
         {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
       </span>
-      <div class="tag-list">
+      <div class="tag-list" @click.stop="handleCategoryClick(item)">
         <span class="category">
           {{ item.category?.title }}
         </span>
@@ -17,12 +22,12 @@
     <div class="content-wrapper">
       <div class="content-main">
         <div class="title">
-          <nuxt-link :to="{ path: `/encyclopedias/${item.id}` }" target="_blank">
+          <nuxt-link :to="{ path: `/encyclopedias/${item.id}` }" target="_blank" @click.stop>
             {{ item.title }}
           </nuxt-link>
         </div>
         <div class="abstract">
-          <nuxt-link :to="{ path: `/encyclopedias/${item.id}` }" target="_blank">
+          <nuxt-link :to="{ path: `/encyclopedias/${item.id}` }" target="_blank" @click.stop>
             {{ item.summary }}
           </nuxt-link>
         </div>
@@ -69,8 +74,12 @@ const props = withDefaults(defineProps<IPorps>(), {});
 const env = useRuntimeConfig();
 const imgUrl: string = env.public.VITE_FILE_URL;
 
-const handleGoDetail = (id: number) => {
-  window.open(``, '_blank');
+const handleToDetail = (id: number) => {
+  window.open(`/encyclopedias/${id}`, '_blank');
+};
+
+const handleCategoryClick = (item: any) => {
+  console.log(item, 'item');
 };
 </script>
 

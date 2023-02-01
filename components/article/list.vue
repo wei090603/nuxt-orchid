@@ -5,19 +5,35 @@
         <div class="article-item" @click="handleToDetail(item.id)">
           <div class="left">
             <img :src="imgUrl + item.coverPicture" alt="" />
-            <span class="tags_blue">{{ item.category?.title }}</span>
+            <nuxt-link
+              class="tags_blue"
+              :to="{ path: `/category/${item.category.id}` }"
+              target="_blank"
+              @click.stop
+            >
+              {{ item.category?.title }}
+            </nuxt-link>
           </div>
 
           <div class="right">
             <div class="meta-container">
-              <!-- <div class="author" @click.stop="handleGoUserDetail(item.author?.id)"> -->
-              <nuxt-link class="user-message" :to="{ path: `/user/${item.author.id}` }">
+              <nuxt-link
+                class="user-message"
+                :to="{ path: `/user/${item.author.id}` }"
+                target="_blank"
+                @click.stop
+              >
                 {{ item.author?.nickName }}
               </nuxt-link>
               <span class="date">
                 {{ dayjs(item.createdAt).locale('zh-cn').from(dayjs()) }}
               </span>
-              <nuxt-link class="category" :to="{ path: `/user/${item.author.id}` }">
+              <nuxt-link
+                class="category"
+                :to="{ path: `/category/${item.category.id}` }"
+                target="_blank"
+                @click.stop
+              >
                 {{ item.category?.title }}
               </nuxt-link>
             </div>
@@ -45,7 +61,14 @@
                 </li>
               </ul>
               <div class="tag">
-                <span v-for="tag in item.tag">{{ tag.name }}</span>
+                <nuxt-link
+                  v-for="tag in item.tag"
+                  :to="{ path: `/tag/${tag.id}` }"
+                  target="_blank"
+                  @click.stop
+                >
+                  {{ tag.name }}
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -161,7 +184,7 @@ onMounted(() => {
       &:hover::after {
         height: 30px;
       }
-      &:hover .left span {
+      &:hover .left .tags_blue {
         right: 10px;
       }
       &:hover {
@@ -194,29 +217,21 @@ onMounted(() => {
           transform: rotate(40deg);
           cursor: pointer;
         }
-        span {
+        .tags_blue {
           position: absolute;
           top: 10px;
           right: -70px;
           transition: all 0.4s;
           font-size: 12px;
-        }
-        a {
-          display: block;
-          height: 100%;
+          background-color: var(--Yuexing-color);
+          padding: 4px;
+          color: #fff;
+          border-radius: 3px;
         }
         img {
           width: 100%;
           height: 100%;
           object-fit: fill;
-        }
-        .tags_blue {
-          background-color: var(--Yuexing-color);
-          padding: 4px;
-          color: #fff;
-          border-radius: 3px;
-          font-size: 14px;
-          font-family: '黑体';
         }
       }
       .right {
@@ -269,6 +284,9 @@ onMounted(() => {
           .category {
             margin-left: 8px;
             color: #86909c;
+            &:hover {
+              color: var(--Yuexing-color);
+            }
           }
         }
         h2 {
@@ -349,7 +367,7 @@ onMounted(() => {
             display: flex;
             align-items: center;
             color: #4e5969;
-            span {
+            a {
               display: flex;
               align-items: center;
               position: relative;

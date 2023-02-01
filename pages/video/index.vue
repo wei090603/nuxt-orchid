@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import Banner from './home/banner.vue';
+import Banner from '../home/banner.vue';
 </script>
 
 <style lang="less" scoped>

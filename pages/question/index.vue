@@ -17,7 +17,7 @@
                 </div>
               </div>
               <div class="content">
-                <nuxt-link>
+                <nuxt-link :to="{ path: '/question/1' }">
                   <div class="text">前端程序员如何使用节点操作隐藏一个 dom 元素？</div>
                 </nuxt-link>
                 <div class="css-190zqi3"></div>
@@ -26,7 +26,9 @@
                 <div class="css-zkfaav">试试帮他解答~ · 0 回答 · 0 关注</div>
               </div>
             </div>
-            <div class="question-btn"><nuxt-link class="btn">写回答</nuxt-link></div>
+            <div class="question-btn">
+              <nuxt-link :to="{ path: '/question/1' }" class="btn">写回答</nuxt-link>
+            </div>
           </li>
         </ul>
       </div>
